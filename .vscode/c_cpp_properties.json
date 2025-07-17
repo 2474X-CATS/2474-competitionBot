@@ -35,7 +35,7 @@
 			"intelliSenseMode": "macos-clang-x86"
 		},
 		{
-			"name": "VEX V5",
+			"name": "Linux",
 			"includePath": [
 				"${vex_sdkIncludes}"
 			],
