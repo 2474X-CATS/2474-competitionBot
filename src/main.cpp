@@ -60,7 +60,8 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
-  // User control code here, inside the loop
+  // User control code here, inside the loop 
+  
   while (1) {
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
@@ -80,7 +81,8 @@ void usercontrol(void) {
 // Main will set up the competition functions and callbacks.
 //
 int main() {
-  // Set up callbacks for autonomous and driver control periods.
+  // Set up callbacks for autonomous and driver control periods. 
+  
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
 
