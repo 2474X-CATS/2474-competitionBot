@@ -6,7 +6,7 @@
 #include <stdexcept> 
 #include <iostream> 
 #include <cstdlib>  
-#include <thread>
+
 
 
 struct ICommand { 
@@ -51,7 +51,6 @@ void Command<T>::run(){
    this->start(); 
    do { 
       this->periodic();  
-      std::cout<<"Waiting"<<std::endl<<std::endl;
    } while (!this->isOver()); 
    this->end(); 
    this->sub->runningCommands = 0;

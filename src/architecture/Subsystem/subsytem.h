@@ -8,22 +8,21 @@ class Subsystem {
    public:  
      inline static std::vector<Subsystem*> systems; 
 
-
-     inline static initSystems(){ 
+     inline static void initSystems(){ 
          for (Subsystem* system : systems){ 
-            system.init();
+            system->init();
          }
      }  
 
-     inline static updateSystemsPeriodically(){ 
+     inline static void updateSystemsPeriodically(){ 
          for (Subsystem* system : systems){ 
-            system.runPeriodic();
+            system->periodic();
          }
      } 
 
-     inline static shutdown(){ 
+     inline static void shutdown(){ 
          for (Subsystem* system : systems){ 
-            system.disable();
+            system->disable();
          }
      }
 
@@ -34,8 +33,6 @@ class Subsystem {
      virtual void disable() = 0;   
      
      int runningCommands = 0;
-
-     void runPeriodic();
 
 };  
 
