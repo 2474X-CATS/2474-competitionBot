@@ -5,7 +5,9 @@
 #include <vector> 
 #include <stdexcept> 
 #include <iostream> 
-#include <cstdlib>  
+#include <cstdlib>   
+#include <atomic> 
+
 
 
 
@@ -18,6 +20,8 @@ struct ICommand {
   virtual void resetSubsystemCom() = 0;
   
   static void runCommandGroup(std::vector<std::vector<ICommand*>> systems); 
+  
+  static std::atomic<int> completedTasks;
 
 };
 
