@@ -1,17 +1,27 @@
 #ifndef __ROBOT_H__
 #define __ROBOT_H__ 
 
-#include "vex.h" 
+#include <vector> 
+#include <command.h>
+#include "vex.h"  
+
+
 
 class Robot { 
-    private:  
-       static Robot instance;    
-       void start(); 
+    private:      
+
        vex::competition competition; 
-       vex::brain brain; 
-    public: 
+       vex::brain brain;   
        vex::controller controller;  
-       static void createRobot();  
+
+       void registerSystemSubtable(); 
+       void updateSystemSubtable(); 
+
+    public:   
+       void driverControl();  
+
+       void startTelemetry(); 
+       
 };
 
 

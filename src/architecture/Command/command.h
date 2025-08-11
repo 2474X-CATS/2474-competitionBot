@@ -51,7 +51,7 @@ void Command<T>::run(){
    this->start(); 
    do { 
       this->periodic();  
-      this_thread::wait_for(20, vex::msec);
+      this_thread::sleep_for(20);
    } while (!this->isOver()); 
    this->end(); 
    this->sub->inCommand = false;
