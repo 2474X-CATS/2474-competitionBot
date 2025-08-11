@@ -1,23 +1,12 @@
 #pragma once
 #include "vex.h"
 #include <memory>
-#include <functional>  
+#include <functional>
 
 using namespace vex;
 
-class LambdaTaskWrapper {
-public:
-  std::function<int()> func;
-
-  LambdaTaskWrapper(std::function<int()> f) : func(f) {}
-
-  static int run(void* obj) {
-    std::unique_ptr<LambdaTaskWrapper> self(static_cast<LambdaTaskWrapper*>(obj));
-    return self->func();
-  }
-}; 
-
-class Barrier {
+class Barrier
+{
 private:
   int thread_count;
   int arrived = 0;
@@ -28,23 +17,39 @@ private:
 public:
   explicit Barrier(int count) : thread_count(count) {}
 
-  void wait() {
+  void wait()
+  {
     lock.lock();
     int my_gen = generation;
     arrived++;
-    if (arrived == thread_count) {
+    if (arrived == thread_count)
+    {
       arrived = 0;
       generation++;
       lock.unlock();
       return;
     }
     lock.unlock();
-    while (generation == my_gen) {
+    while (generation == my_gen)
+    {
       this_thread::yield();
     }
   }
 };
 
+class LambdaTaskWrapper
+{
+public:
+  std::function<int()> func;
+
+  LambdaTaskWrapper(std::function<int()> f) : func(f) {}
+
+  static int run(void *obj)
+  {
+    std::unique_ptr<LambdaTaskWrapper> self(static_cast<LambdaTaskWrapper *>(obj));
+    return self->func();
+  }
+};
 
 #define make_task(lambda_expr) \
   vex::task(LambdaTaskWrapper::run, new LambdaTaskWrapper(std::function<int()>(lambda_expr)))

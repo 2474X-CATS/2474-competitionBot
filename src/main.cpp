@@ -12,19 +12,24 @@
 using namespace vex;
 
 // A global instance of competition
-competition Competition; 
+competition Competition;  
+Robot robot; 
+//Call set "setAutonomousCommand(...)" on robot to initialize auotnomous command
+
+void driverControl(){ 
+  robot.driverControl();
+} 
+
+void autonControl(){ 
+  robot.autonControl();
+}
 
 int main() {
    
-  
-  Competition.autonomous(autonomous);
-  Competition.drivercontrol(usercontrol);
-
+  Competition.drivercontrol(driverControl);
+  Competition.autonomous(autonControl);
   // Run the pre-autonomous function.
-  pre_auton();
-
-  // Prevent main from exiting with an infinite loop.
-  while (true) {
-    wait(100, msec);
-  }
+  robot.initialize(); 
+  // Prevent main from exiting with an infinite loop, and updates telemetry in a seperate thread.
+  robot.runTelemetry();
 }
