@@ -1,10 +1,8 @@
 #include "./command.h" 
-//#include "./threadpool.h" 
 #include <functional>    
 #include "taskUtils.hpp" 
 #include "vex.h" 
-using namespace vex;
-  
+
 
 std::atomic<int> ICommand::completedTasks = {0}; 
 
@@ -23,15 +21,14 @@ void ICommand::runCommandGroup(std::vector<std::vector<ICommand*>> systems) {
             completedTasks = 0;   
             auto barrier = new Barrier(numTasks);
             for (ICommand* cmd : group) { 
-                cmd->signalSubsystem();
-                if (cmd->isSubsystemFull()){ 
+                if (cmd->isSubsystemOccupied()){ 
                   throw std::invalid_argument("Subsystem pointer must not already be use by a Command");   
                   std::exit(1);  
-                }  
+                }   
+                cmd->occupySubsystem();
                 make_task(([cmd, barrier](){   
                     barrier->wait();
-                    cmd->run(); 
-                    cmd->resetSubsystemCom();  
+                    cmd->run();   
                     commandCompletion.broadcast();
                     return 0;
                 }));

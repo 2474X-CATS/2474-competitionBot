@@ -33,10 +33,8 @@ public:
     int my_gen = generation;
     arrived++;
     if (arrived == thread_count) {
-      // Last thread resets
       arrived = 0;
       generation++;
-      
       lock.unlock();
       return;
     }
