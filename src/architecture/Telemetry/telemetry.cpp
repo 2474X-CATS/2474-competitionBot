@@ -1,7 +1,8 @@
-#include <iostream>  
 #include "telemetry.h" 
 #include <sstream> 
-#include <string>
+#include <string>  
+#include <stdexcept> 
+
 
 Telemetry Telemetry::inst; 
 
@@ -11,7 +12,6 @@ void Telemetry::registerSubtable(string tableKey, vector<EntrySet> subKeys){
    }
 };  
 
-//-------------
 
 template <typename T> 
 void placeValueAt(T val, string directory, string entryKey){ 
@@ -80,19 +80,27 @@ string Telemetry::getValueAt<string>(string directory, string entryKey){
 
 template<>
 int Telemetry::getValueAt<int>(string directory, string entryKey){ 
-   if (table.at(directory).at(entryKey).type == EntryType::INT){
-     return stoi(table[directory][entryKey].value); 
+   if (table.at(directory).at(entryKey).type == EntryType::INT){ 
+     stringstream strVal(table[directory][entryKey].value); 
+     int val;
+     strVal >> val;
+     return val; 
    } else {  
      throw logic_error("Template type must match registered type for this table entry");
      return -1;
    }
-  
 }; 
+
+
+
 
 template<>
 double Telemetry::getValueAt<double>(string directory, string entryKey){ 
    if (table.at(directory).at(entryKey).type == EntryType::DOUBLE){
-     return stod(table[directory][entryKey].value); 
+     stringstream strVal(table[directory][entryKey].value); 
+     double val;
+     strVal >> val; 
+     return val;
    } else {  
      throw logic_error("Template type must match registered type for this table entry");
      return -1.0;

@@ -7,7 +7,8 @@
 #include "vex.h"
 
 class Subsystem {  
-      
+   protected: 
+     std::string label;
    public:  
      inline static std::vector<Subsystem*> systems; 
 

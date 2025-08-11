@@ -1,12 +1,10 @@
 #ifndef __TELEMETRY_H__ 
 #define __TELEMETRY_H__  
 
-#include <map> 
-#include <string> 
-#include <cstdlib>   
+#include <map>   
 #include <vector>  
-#include <iostream> 
-#include <stdexcept>
+
+
 using namespace std; 
 
 
@@ -39,8 +37,6 @@ class Telemetry {
       T getValueAt(string directory, string entryKey);   
       
 };   
-
-
 
 
 #endif
