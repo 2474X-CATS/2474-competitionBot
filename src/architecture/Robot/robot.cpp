@@ -5,6 +5,7 @@
 #include <command.h>
 
 
+Robot::autonomousCommand = nullptr;
 void Robot::driverControl()
 {
     Subsystem::initSystems();
