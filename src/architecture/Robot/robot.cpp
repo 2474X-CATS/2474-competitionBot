@@ -3,7 +3,7 @@
 #include "vex.h"
 #include "telemetry.h"
 #include <command.h>
-using namespace vex;
+
 
 void Robot::driverControl()
 {
@@ -11,7 +11,7 @@ void Robot::driverControl()
     while (true)
     {
         Subsystem::updateSystems(this->controller);
-        this_thread::sleep_for(20);
+        vex::this_thread::sleep_for(20);
     }
 };
 

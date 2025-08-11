@@ -3,7 +3,6 @@
 #include <memory>
 #include <functional>
 
-using namespace vex;
 
 class Barrier
 {
