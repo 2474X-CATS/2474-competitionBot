@@ -1,7 +1,7 @@
 #ifndef __COMMAND_H__
 #define __COMMAND_H__
 
-#include "./subsystem.h"
+#include "subsystem.h"
 #include <vector>
 #include <stdexcept>
 #include <iostream>
@@ -22,8 +22,9 @@ struct ICommand
 
 template <class T>
 class Command : public ICommand
-{
-  static_assert(std::is_base_of_v<Subsystem, T>, "Command<T> must have T derive from Subsystem");
+{   
+
+  static_assert(is_base_of<Subsystem, T>::value, "Command must wrap around a Subsystem type");
 
 public:
   Command(T *sys) : sub(sys) {}
@@ -35,7 +36,7 @@ public:
     do
     {
       this->periodic();
-      this_thread::sleep_for(20);
+      vex::this_thread::sleep_for(20);
     } while (!this->isOver());
     this->end();
     this->sub->inCommand = false;

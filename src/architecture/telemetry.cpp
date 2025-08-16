@@ -16,7 +16,7 @@ void Telemetry::registerSubtable(string tableKey, vector<EntrySet> subKeys)
 template <typename T>
 void placeValueAt(T val, string directory, string entryKey)
 {
-    throw logic_error("Val type must be an int, double, bool, or a string");
+    __throw_logic_error("Val type must be an int, double, bool, or a string");
     return;
 };
 
@@ -29,7 +29,7 @@ void Telemetry::placeValueAt<string>(string val, string directory, string entryK
     }
     else
     {
-        throw logic_error("Placement value must be the same type as the registered type / Table value must exist");
+        __throw_logic_error("Placement value must be the same type as the registered type / Table value must exist");
     }
 };
 template <>
@@ -43,7 +43,7 @@ void Telemetry::placeValueAt<int>(int val, string directory, string entryKey)
     }
     else
     {
-        throw logic_error("Placement value must be the same type as the registered type / Table value must exist");
+        __throw_logic_error("Placement value must be the same type as the registered type / Table value must exist");
     }
 };
 
@@ -58,7 +58,7 @@ void Telemetry::placeValueAt<double>(double val, string directory, string entryK
     }
     else
     {
-        throw logic_error("Placement value must be the same type as the registered type / Table value must exist");
+        __throw_logic_error("Placement value must be the same type as the registered type / Table value must exist");
     }
 };
 
@@ -73,7 +73,7 @@ void Telemetry::placeValueAt<bool>(bool val, string directory, string entryKey)
     }
     else
     {
-        throw logic_error("Placement value must be the same type as the registered type / Table value must exist");
+        __throw_logic_error("Placement value must be the same type as the registered type / Table value must exist");
     }
 };
 
@@ -81,7 +81,7 @@ void Telemetry::placeValueAt<bool>(bool val, string directory, string entryKey)
 template <typename T>
 T getValueAt(string directory, string entryKey)
 {
-    throw logic_error("Type must be int, double, bool, or string");
+    __throw_logic_error("Type must be int, double, bool, or string");
     return T{};
 };
 
@@ -94,7 +94,7 @@ string Telemetry::getValueAt<string>(string directory, string entryKey)
     }
     else
     {
-        throw logic_error("Template type must match registered type for this table entry");
+        __throw_logic_error("Template type must match registered type for this table entry");
         return "None";
     }
 };
@@ -111,7 +111,7 @@ int Telemetry::getValueAt<int>(string directory, string entryKey)
     }
     else
     {
-        throw logic_error("Template type must match registered type for this table entry");
+        __throw_logic_error("Template type must match registered type for this table entry");
         return -1;
     }
 };
@@ -128,7 +128,7 @@ double Telemetry::getValueAt<double>(string directory, string entryKey)
     }
     else
     {
-        throw logic_error("Template type must match registered type for this table entry");
+        __throw_logic_error("Template type must match registered type for this table entry");
         return -1.0;
     }
 };
@@ -142,7 +142,7 @@ bool Telemetry::getValueAt<bool>(std::string directory, std::string entryKey)
     }
     else
     {
-        throw logic_error("Template type must match registered type for this table entry");
+        __throw_logic_error("Template type must match registered type for this table entry");
         return false;
     }
 };

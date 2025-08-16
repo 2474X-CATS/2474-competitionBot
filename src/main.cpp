@@ -1,20 +1,15 @@
-/*----------------------------------------------------------------------------*/
-/*                                                                            */
-/*    Module:       main.cpp                                                  */
-/*    Author:       talon-robotics                                            */
-/*    Created:      7/14/2025, 12:27:36 PM                                    */
-/*    Description:  V5 project                                                */
-/*                                                                            */
-/*----------------------------------------------------------------------------*/
 
-#include "vex.h"
-#include "robot.h"
+#include "vex.h" 
+#include "architecture/robot.h" 
+#include <iostream>
+#include "architecture/telemetry.h" 
+#include "architecture/robotConfig.cpp"
 using namespace vex;
 
 // A global instance of competition
 competition Competition;  
-Robot robot; 
-//Call set "setAutonomousCommand(...)" on robot to initialize auotnomous command
+Robot robot;
+
 
 void driverControl(){ 
   robot.driverControl();
@@ -22,14 +17,21 @@ void driverControl(){
 
 void autonControl(){ 
   robot.autonControl();
+} 
+
+//----------------For displaying telemetry data 
+void displayGraphicalData(){  
+  //
+   //Brain.Screen.drawRectangle(0,0,100,100);
 }
 
-int main() {
-   
-  Competition.drivercontrol(driverControl);
-  Competition.autonomous(autonControl);
-  // Run the pre-autonomous function.
+int main() {     
+  //Competition.autonomous(autonControl); 
+  //Competition.drivercontrol(driverControl);
   robot.initialize(); 
-  // Prevent main from exiting with an infinite loop, and updates telemetry in a seperate thread.
-  robot.runTelemetry();
+  while (true){  
+    displayGraphicalData();
+    robot.runTelemetry();  
+    
+  }
 }

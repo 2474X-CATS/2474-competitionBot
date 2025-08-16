@@ -1,7 +1,8 @@
-#include "./command.h"
+#include "command.h"
 #include <functional>
 #include "taskUtils.hpp"
-#include "vex.h"
+#include "vex.h" 
+
 
 std::atomic<int> ICommand::completedTasks = {0};
 
@@ -10,7 +11,7 @@ void incrementCompletedTasks()
     ICommand::completedTasks++;
 }
 
-event commandCompletion(incrementCompletedTasks);
+vex::event commandCompletion(incrementCompletedTasks);
 
 void ICommand::runCommandGroup(std::vector<std::vector<ICommand *>> systems)
 {
@@ -29,8 +30,9 @@ void ICommand::runCommandGroup(std::vector<std::vector<ICommand *>> systems)
             {
                 if (cmd->isSubsystemOccupied())
                 {
-                    throw std::invalid_argument("Subsystem pointer must not already be use by a Command");
-                    std::exit(1);
+                    __throw_invalid_argument("Subsystem pointer must not already be use by a Command");
+                    std::exit(1); 
+                    
                 }
                 cmd->occupySubsystem();
                 make_task(([cmd, barrier]()
@@ -42,7 +44,7 @@ void ICommand::runCommandGroup(std::vector<std::vector<ICommand *>> systems)
             }
             while (numTasks != completedTasks.load())
             {
-                this_thread::yield();
+                vex::this_thread::yield();
             }
             delete barrier;
         }

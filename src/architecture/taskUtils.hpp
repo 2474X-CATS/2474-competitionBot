@@ -31,7 +31,7 @@ public:
     lock.unlock();
     while (generation == my_gen)
     {
-      this_thread::yield();
+      vex::this_thread::yield();
     }
   }
 };
