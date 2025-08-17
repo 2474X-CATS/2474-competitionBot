@@ -3,7 +3,7 @@
 #include "architecture/robot.h" 
 #include <iostream>
 #include "architecture/telemetry.h" 
-#include "architecture/robotConfig.cpp"
+#include "architecture/robotConfig.h"
 using namespace vex;
 
 // A global instance of competition
@@ -19,19 +19,13 @@ void autonControl(){
   robot.autonControl();
 } 
 
-//----------------For displaying telemetry data 
-void displayGraphicalData(){  
-  //
-   //Brain.Screen.drawRectangle(0,0,100,100);
-}
 
 int main() {     
   //Competition.autonomous(autonControl); 
-  //Competition.drivercontrol(driverControl);
-  robot.initialize(); 
-  while (true){  
-    displayGraphicalData();
-    robot.runTelemetry();  
-    
+  //Competition.drivercontrol(driverControl); 
+  robot.initialize();   
+  while (true){   
+    robot.runTelemetry(true);  
+    vex::this_thread::sleep_for(10); 
   }
 }

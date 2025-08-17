@@ -18,7 +18,7 @@ public:
    void initialize();
    void driverControl();
    void autonControl();
-   void runTelemetry();    
+   void runTelemetry(bool showGraphics);    
    void setAutonomousCommand();
    
    

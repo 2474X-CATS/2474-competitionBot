@@ -1,23 +1,34 @@
 #include "vex.h"
 
-const vex::brain Brain; 
+brain Brain; 
 
-const vex::controller Controller = vex::controller(vex::controllerType::primary); 
+controller Controller = controller(controllerType::primary); 
+/* 
+ TO-DO: 
+   o- Correctly set the all of the device ports
+*/ 
 
-// Subsystems 
+// Constants
 
 //-----Channel
-const vex::motor channelMotor1 = vex::motor(vex::PORT1); 
-const vex::motor channelMotor2 = vex::motor(vex::PORT1);   
-const vex::motor channelMotor3 = vex::motor(vex::PORT1); 
-const vex::pneumatics channelPneumatics = vex::pneumatics(Brain.ThreeWirePort.A);
+motor channelMotor1 = motor(PORT1); 
+motor channelMotor2 = motor(PORT1);   
+motor channelMotor3 = motor(PORT1); 
+pneumatics channelPneumatics = pneumatics(Brain.ThreeWirePort.A);
 //-----Drivebase 
-const vex::motor driveFrontLeft = vex::motor(vex::PORT1); 
-const vex::motor driveFrontRight = vex::motor(vex::PORT1); 
-const vex::motor driveBackLeft = vex::motor(vex::PORT1); 
-const vex::motor driveBackRight = vex::motor(vex::PORT1); 
-const vex::motor driveMidLeft = vex::motor(vex::PORT1); 
-const vex::motor driveMidRight = vex::motor(vex::PORT1);
+motor driveFrontLeft = motor(PORT1); 
+motor driveFrontRight = motor(PORT1); 
+motor driveBackLeft = motor(PORT1); 
+motor driveBackRight = motor(PORT1); 
+motor driveMidLeft = motor(PORT1); 
+motor driveMidRight = motor(PORT1); 
+
+motor_group leftDriveMotors = motor_group(driveFrontLeft, driveBackLeft, driveMidLeft); 
+motor_group rightDriveMotors = motor_group(driveBackRight, driveMidRight, driveFrontRight); 
+
+encoder driveRotationEncoder = encoder(Brain.ThreeWirePort.C); 
+
+drivetrain driveMotors = drivetrain(leftDriveMotors, rightDriveMotors);
 
 
 

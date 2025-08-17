@@ -3,8 +3,63 @@
 #include "vex.h"
 #include "telemetry.h"
 #include "command.h"  
-#include "robotConfig.cpp"
 
+
+void drawCircleButton(int x, int y, string buttonName){ 
+  color Color;  
+  uint32_t designatedColor; 
+  bool isBeingPressed = Telemetry::inst.getValueAt<bool>("system","Controller/Button_" + buttonName); 
+  if (isBeingPressed){ 
+    designatedColor = Color.red;
+  } else { 
+    designatedColor = Color.black;
+  }
+  Brain.Screen.drawCircle(x,y,15, designatedColor);
+} 
+
+void drawRectButton(int x, int y, int width, int height, string buttonName){ 
+  color Color;  
+  uint32_t designatedColor; 
+  bool isBeingPressed = Telemetry::inst.getValueAt<bool>("system","Controller/Button_" + buttonName); 
+  if (isBeingPressed){ 
+    designatedColor = Color.red;
+  } else { 
+    designatedColor = Color.black;
+  }
+  Brain.Screen.drawRectangle(x-(width/2),y-(height/2),width,height, designatedColor);
+}
+
+void drawJoystick(int x, int y, string location){  
+  color Color; 
+  Brain.Screen.drawCircle(x,y, 30, Color.black); 
+  int horizontalPower = Telemetry::inst.getValueAt<int>("system","Controller/Axis-Hori-" + location); 
+  int verticalPower = Telemetry::inst.getValueAt<int>("system","Controller/Axis-Vert-" + location);  
+  Brain.Screen.drawCircle(x + ((30/2) * (horizontalPower / 100)), y - ((30/2) * (verticalPower / 100)), 30);
+}
+
+void displayGraphicalData(){  
+  color Color;
+  Brain.Screen.drawRectangle(70,20,355,195, Color.rgb(100,100,100));   
+
+  drawJoystick(115,70,"Left"); 
+  drawJoystick(375,70,"Right");  
+
+  drawCircleButton(330+22,150,"A");   
+  drawCircleButton(330,150+22,"B"); 
+  drawCircleButton(330,150-22,"X");   
+  drawCircleButton(330-22,150,"Y");  
+  
+  drawCircleButton(160-22,150,"LEFT");   
+  drawCircleButton(160+22,150,"RIGHT"); 
+  drawCircleButton(160,150-22,"UP");   
+  drawCircleButton(160,150+22,"DOWN");
+  
+  drawRectButton(142,12,35,20,"L2");
+  drawRectButton(142,25,50,30,"L1"); 
+  drawRectButton(350,12,35,20,"R2");
+  drawRectButton(350,25,50,30,"R1"); 
+  
+} 
 
 void Robot::driverControl()
 {
@@ -56,7 +111,7 @@ void Robot::registerSystemSubtable()
 };
 
 void Robot::updateSystemSubtable()
-{ 
+{   
     //Telemetry::inst.placeValueAt<double>(Brain.Battery.temperature(), "system", "Battery/Temperature");
     //Telemetry::inst.placeValueAt<double>(Brain.Battery.voltage(), "system", "Battery/Voltage");
     //Telemetry::inst.placeValueAt<double>(Brain.Battery.current(), "system", "Battery/Current");
@@ -79,12 +134,11 @@ void Robot::updateSystemSubtable()
 };
 
 
-void Robot::runTelemetry()
-{
-    while (true)
-    {
-        updateSystemSubtable();
-        Subsystem::refreshTelemetry();
-        vex::this_thread::sleep_for(20);
+void Robot::runTelemetry(bool showGraphics)
+{ 
+    updateSystemSubtable();
+    Subsystem::refreshTelemetry(); 
+    if (showGraphics){ 
+        displayGraphicalData();
     }
 };
