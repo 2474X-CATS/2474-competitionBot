@@ -1,6 +1,5 @@
 #include "robot.h"
 #include "subsystem.h"
-#include "vex.h"
 #include "telemetry.h"
 #include "command.h"  
 

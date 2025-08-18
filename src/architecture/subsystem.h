@@ -2,9 +2,9 @@
 #define __SUBSYSTEM_H__
 
 #include <vector>
-#include <string>
+#include <string> 
 #include "telemetry.h"
-#include "vex.h"
+
 
 class Subsystem
 {
@@ -12,9 +12,13 @@ protected:
    std::string label;
 
    template <typename T>
-   void set(std::string entryName, T val);
+   void set(std::string entryName, T val); 
 
-public:
+
+public: 
+   template<typename T> 
+   T get(std::string entryName); 
+   
    static std::vector<Subsystem*> systems;
 
    static void initSystems();

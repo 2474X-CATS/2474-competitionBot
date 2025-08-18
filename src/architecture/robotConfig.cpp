@@ -8,7 +8,11 @@ controller Controller = controller(controllerType::primary);
    o- Correctly set the all of the device ports
 */ 
 
-// Constants
+// Constants 
+double ROBOT_RADIUS_MM = 1; 
+double ENCODER_WHEEL_RADIUS_MM = 3; 
+double DRIVE_WHEEL_RADIUS_MM = 5; 
+double ROT_ENCODER_DIST_FROM_CENTER_MM = 3;
 
 //-----Channel
 motor channelMotor1 = motor(PORT1); 

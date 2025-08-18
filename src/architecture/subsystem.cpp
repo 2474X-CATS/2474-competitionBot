@@ -12,7 +12,15 @@ template <typename T>
 void Subsystem::set(string entryName, T val)
 {
    Telemetry::inst.placeValueAt<T>(val, this->label, entryName);
-};
+};  
+
+template <typename T>
+T Subsystem::get(string entryName)
+{
+   return Telemetry::inst.getValueAt<T>(this->label, entryName);
+}; 
+
+
 
 void Subsystem::updateSystems()
 {

@@ -44,7 +44,7 @@ public:
 
   void occupySubsystem() override
   {
-    this->sub->runningCommands = true;
+    this->sub->inCommand = true;
   };
 
   bool isSubsystemOccupied() override

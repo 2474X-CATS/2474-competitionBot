@@ -5,6 +5,12 @@ extern brain Brain;
 
 extern controller Controller; 
 
+
+//Constants 
+extern double ROBOT_RADIUS_MM; 
+extern double ENCODER_WHEEL_RADIUS_MM; 
+extern double DRIVE_WHEEL_RADIUS_MM; 
+extern double ROT_ENCODER_DIST_FROM_CENTER_MM;
 // Subsystems 
 
 //-----Channel
