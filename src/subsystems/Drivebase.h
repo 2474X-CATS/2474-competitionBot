@@ -68,7 +68,8 @@ class DriveForward : public Command<Drivebase> {
 
 class TurnTo : public Command<Drivebase> {  
     
-   private:   
+   private:    
+     int direction; 
      double startingPoint[2];    
      pidcontroller control; 
 

@@ -348,6 +348,10 @@ Discarded input sections
                 0x0000000000000000       0x20 build/src/subsystems/Drivebase.o
  .ARM.exidx.text._ZN12DriveForward6isOverEv
                 0x0000000000000000        0x8 build/src/subsystems/Drivebase.o
+ .text._ZN6TurnToC2EP9Drivebased
+                0x0000000000000000       0xc0 build/src/subsystems/Drivebase.o
+ .ARM.exidx.text._ZN6TurnToC2EP9Drivebased
+                0x0000000000000000        0x8 build/src/subsystems/Drivebase.o
  .text._ZN7CommandI9DrivebaseE3runEv
                 0x0000000000000000       0x6c build/src/subsystems/Drivebase.o
  .ARM.exidx.text._ZN7CommandI9DrivebaseE3runEv

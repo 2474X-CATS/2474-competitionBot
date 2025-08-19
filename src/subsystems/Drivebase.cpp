@@ -97,6 +97,16 @@ void DriveForward::end(){
 
 bool DriveForward::isOver(){ 
    return control.atSetpoint();
+}; 
+
+TurnTo::TurnTo(Drivebase* drive, double degrees) :  
+Command<Drivebase>(drive), 
+control(drive->getTurningController(degrees)){ 
+  double currentDegrees = sub->get<double>("Angle_Degrees");
+  
+  if (currentDegrees > degrees){ 
+    
+  }
 };
 
 

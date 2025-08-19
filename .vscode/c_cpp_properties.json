@@ -41,7 +41,6 @@
 				"${workspaceFolder}/include",
 				"${workspaceFolder}/src/**",
 				"${workspaceFolder}/src/architecture/*"
-				//"${workspaceFolder}/src/helpers/**"
 			],
 			"compilerPath": "${vex_compilerPath}",
 			"cStandard": "gnu99",
