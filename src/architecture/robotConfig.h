@@ -14,10 +14,10 @@ extern double ROT_ENCODER_DIST_FROM_CENTER_MM;
 // Subsystems 
 
 //-----Channel
-extern motor channelMotor1; 
-extern motor channelMotor2;   
-extern motor channelMotor3; 
-extern pneumatics channelPneumatics;
+//extern motor channelMotor1; 
+//extern motor channelMotor2;   
+//extern motor channelMotor3; 
+//extern pneumatics channelPneumatics;
 //-----Drivebase 
 extern motor driveFrontLeft; 
 extern motor driveFrontRight; 
@@ -26,7 +26,9 @@ extern motor driveBackRight;
 extern motor driveMidLeft; 
 extern motor driveMidRight;  
 
-extern encoder driveRotationEncoder; 
-extern encoder drivePowerEncoder;
+//extern encoder driveRotationEncoder; 
+//extern encoder drivePowerEncoder;
 
-extern drivetrain driveMotors; // Drivetrain
+extern drivetrain driveMotors; // Drivetrain 
+
+void vexcodeInit();

@@ -21,7 +21,6 @@ T Subsystem::get(string entryName)
 }; 
 
 
-
 void Subsystem::updateSystems()
 {
    for (Subsystem* system : systems)

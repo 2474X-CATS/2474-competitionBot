@@ -1,21 +1,21 @@
 #include "command.h"
 #include <functional>
 #include "taskUtils.hpp"
-#include "vex.h" 
 
 
-std::atomic<int> ICommand::completedTasks = {0};
+
+std::atomic<int> CommandInterface::completedTasks = {0};
 
 void incrementCompletedTasks()
 {
-    ICommand::completedTasks++;
+    CommandInterface::completedTasks++;
 }
 
 vex::event commandCompletion(incrementCompletedTasks);
 
-void ICommand::runCommandGroup(std::vector<std::vector<ICommand *>> systems)
+void CommandInterface::runCommandGroup(std::vector<std::vector<CommandInterface*>> systems)
 {
-    for (std::vector<ICommand *> group : systems)
+    for (std::vector<CommandInterface *> group : systems)
     {
         if (group.size() == 1)
         {
@@ -26,7 +26,7 @@ void ICommand::runCommandGroup(std::vector<std::vector<ICommand *>> systems)
             int numTasks = group.size();
             completedTasks = 0;
             auto barrier = new Barrier(numTasks);
-            for (ICommand *cmd : group)
+            for (CommandInterface *cmd : group)
             {
                 if (cmd->isSubsystemOccupied())
                 {
@@ -49,4 +49,5 @@ void ICommand::runCommandGroup(std::vector<std::vector<ICommand *>> systems)
             delete barrier;
         }
     }
-};
+}; 
+

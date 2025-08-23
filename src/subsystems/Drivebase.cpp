@@ -1,56 +1,46 @@
 #include "vex.h" 
 #include "Drivebase.h"   
-#include "math.h"
+#include "math.h" 
 
-void Drivebase::arcadeDrive(double speed, double rotation){ 
-    driveMotors.arcade(speed, rotation);
-};   
+//---Drivebase: SUBSYSTEM 
 
-void Drivebase::manualDriveForward(double speedMM){   
-    double absSpeedMM = fabs(speedMM);  
-    absSpeedMM /= (ROBOT_RADIUS_MM * 2 * M_PI); // Converting speed to rotations per second
-    absSpeedMM *= 60; // Converts rotations per second to rotations per minute
-    if (speedMM < 0){
-       driveMotors.drive(directionType::rev, absSpeedMM, rpm); 
-    } else { 
-       driveMotors.drive(directionType::fwd, absSpeedMM, rpm);
-    }
-}; 
-
-void Drivebase::manualTurnClockwise(double turnDeg){ 
-    double absTurnDeg = fabs(turnDeg);   
-    if (turnDeg < 0){ 
-       driveMotors.turn(turnType::left, absTurnDeg,velocityUnits::dps);
-    } else { 
-       driveMotors.turn(turnType::right,absTurnDeg,velocityUnits::dps);
-    }
-    
-}
-
-void Drivebase::stop(){ 
-    driveMotors.stop();
+Drivebase::Drivebase() :  
+   Subsystem ( 
+      "drivebase",
+      { 
+         (EntrySet){"Pos_X", EntryType::DOUBLE}, 
+         (EntrySet){"Pos_Y",EntryType::DOUBLE}, 
+         (EntrySet){"Angle_Degrees",EntryType::DOUBLE}
+      }){  
+         /* 
+           TO-DO: Tune and set PID Values
+         */
+         powerPID.P = 1; 
+         powerPID.I = 0.1; 
+         powerPID.D = 0;   
+         powerPID.errorTolerance = 2;
+         //------------------------------
+         turnPID.P = 0; 
+         turnPID.I = 0; 
+         turnPID.D = 0;  
+         turnPID.errorTolerance = 2;
+         
 };  
 
-pidcontroller Drivebase::getTurningController(double setpoint){ 
-   return pidcontroller(turnPID.P, turnPID.I, turnPID.D, setpoint, turnPID.errorTolerance, turnPID.iLimit);
-} 
-
-pidcontroller Drivebase::getPowerController(double setpoint){ 
-   return pidcontroller(powerPID.P, powerPID.I, powerPID.D, setpoint, powerPID.errorTolerance, powerPID.iLimit);
-}
-
-
 void Drivebase::init(){ 
-    driveMotors.setStopping(brakeType::brake); 
-    drivePowerEncoder.resetRotation(); 
-    driveRotationEncoder.resetRotation();
+    driveMotors.setStopping(brakeType::brake);  
+    /*
+      drivePowerEncoder.resetRotation(); 
+      driveRotationEncoder.resetRotation(); 
+    *///Uncomment when encoder wheels come
 };  
 
 void Drivebase::periodic(){ 
-    arcadeDrive(Controller.Axis3.position() / 100, Controller.Axis1.position() / 100);
+    driveMotors.arcade(Controller.Axis1.position(), Controller.Axis3.position()); 
 };   
 
-void Drivebase::updateTelemetry(){  
+void Drivebase::updateTelemetry(){   
+   /*
     double distTurned = driveRotationEncoder.rotation(rotationUnits::rev) * (ENCODER_WHEEL_RADIUS_MM * 2) * M_PI; 
     double angle = fmod(distTurned / ROT_ENCODER_DIST_FROM_CENTER_MM, 360);
     if (angle < 0) 
@@ -66,48 +56,122 @@ void Drivebase::updateTelemetry(){
 
     set<double>("Pos_X",x); 
     set<double>("Pos_Y",y); 
-    set<double>("Angle_Degrees",angle);    
+    set<double>("Angle_Degrees",angle);     
+    */ //Uncomment when encoder wheels come
 };  
 
-DriveForward::DriveForward(Drivebase* drive, double distForward) :  
-Command<Drivebase>(drive),  
-control(drive->getPowerController(distForward)){ 
-     
+void Drivebase::arcadeDrive(double speed, double rotation){ 
+    driveMotors.arcade(speed, rotation);
+};    
+
+void Drivebase::manualDriveForward(double speedMM){   
+    double absSpeedMM = fabs(speedMM);  
+    absSpeedMM /= (ROBOT_RADIUS_MM * 2 * M_PI); // Converting speed to rotations per second
+    absSpeedMM *= 60; // Converts rotations per second to rotations per minute
+    if (speedMM < 0){
+       driveMotors.turn(turnType::left, absSpeedMM, rpm); 
+    } else { 
+       driveMotors.turn(turnType::right, absSpeedMM, rpm);
+    }
 }; 
 
-double DriveForward::getDistTraveled(){ 
+void Drivebase::manualTurnClockwise(double turnDeg){ 
+    double absTurnDeg = fabs(turnDeg);   
+    if (turnDeg < 0){ 
+       driveMotors.drive(directionType::rev, absTurnDeg,velocityUnits::dps);
+    } else { 
+       driveMotors.drive(directionType::fwd,absTurnDeg,velocityUnits::dps);
+    }
+    
+}
+
+void Drivebase::stop(){ 
+    driveMotors.stop();
+};  
+
+PIDConstants Drivebase::getPowerPID(){ 
+   return this->powerPID;
+}; 
+
+PIDConstants Drivebase::getTurningPID(){ 
+   return this->turnPID;
+};
+
+//---Drive Linear: COMMAND 
+
+DriveLinear::DriveLinear(Drivebase& drive, double displacement) :  
+Command<Drivebase>(drive),   
+driveRef(drive){ 
+   control = new pidcontroller(driveRef.getPowerPID(), displacement);
+}; 
+
+void DriveLinear::start(){  
+   /*
+     startingPoint[0] = sub->get<double>("Pos_X"); 
+     startingPoint[1] = sub->get<double>("Pos_Y");  
+   */
+}; 
+
+void DriveLinear::periodic(){  
+   driveRef.manualDriveForward(control->calculate(getDistTraveled()));   
+}; 
+
+bool DriveLinear::isOver(){  
+   return control->atSetpoint();
+};   
+
+void DriveLinear::end(){ 
+   driveRef.stop();
+}; 
+
+DriveLinear::~DriveLinear(){ 
+   delete control;
+}; 
+
+double DriveLinear::getDistTraveled(){  
+   /*
     double currentPoint[2] = {sub->get<double>("Pos_X"), sub->get<double>("Pos_Y")}; 
     double xDiff = currentPoint[0] - startingPoint[0]; 
     double yDiff = currentPoint[1] - startingPoint[1]; 
-    return sqrt(((xDiff * xDiff) + (yDiff + yDiff)));
+    return sqrt(((xDiff * xDiff) + (yDiff + yDiff)));  
+   */ 
+  //Uncomment when encoder wheels come 
+  return 0;
 }; 
 
-void DriveForward::start(){ 
-   startingPoint[0] = sub->get<double>("Pos_X"); 
-   startingPoint[1] = sub->get<double>("Pos_Y");
-}; 
+//---Turn to Heading: COMMAND
 
-void DriveForward::periodic(){ 
-   sub->manualDriveForward(control.calculate(getDistTraveled())); 
-}; 
-
-void DriveForward::end(){ 
-   sub->stop();
-}; 
-
-bool DriveForward::isOver(){ 
-   return control.atSetpoint();
-}; 
-
-TurnTo::TurnTo(Drivebase* drive, double degrees) :  
-Command<Drivebase>(drive), 
-control(drive->getTurningController(degrees)){ 
-  double currentDegrees = sub->get<double>("Angle_Degrees");
-  
-  if (currentDegrees > degrees){ 
-    
-  }
+TurnTo::TurnTo(Drivebase& drive, double degrees) :  
+Command<Drivebase>(drive),
+driveRef(drive){ 
+  setpoint = degrees;  
+  control = new pidcontroller(driveRef.getTurningPID(), 0);
 };
+
+void TurnTo::start(){ 
+  return;
+};  
+
+void TurnTo::periodic(){ 
+  driveRef.manualTurnClockwise(control->calculate(getError())); 
+}; 
+
+bool TurnTo::isOver(){ 
+  return control->atSetpoint();
+}; 
+
+void TurnTo::end(){ 
+  driveRef.stop();
+}; 
+
+TurnTo::~TurnTo(){ 
+   delete control;
+}; 
+
+double TurnTo::getError(){ 
+   return -(fmod(((0 - setpoint) + 540), 360) - 180);
+}; 
+
 
 
 

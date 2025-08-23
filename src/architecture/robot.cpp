@@ -68,6 +68,10 @@ void Robot::driverControl()
         Subsystem::updateSystems();
         vex::this_thread::sleep_for(20);
     }
+}; 
+
+void Robot::setAutonomousCommand(std::vector<std::vector<CommandInterface*>> comm){ 
+   autonomousCommand = comm;
 };
 
 void Robot::initialize()
@@ -79,7 +83,7 @@ void Robot::initialize()
 
 void Robot::autonControl()
 {
-    ICommand::runCommandGroup(Robot::autonomousCommand); 
+    CommandInterface::runCommandGroup(Robot::autonomousCommand); 
 };
 
 void Robot::registerSystemSubtable()

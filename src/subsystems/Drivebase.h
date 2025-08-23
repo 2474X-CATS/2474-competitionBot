@@ -3,34 +3,16 @@
 
 #include "../architecture/subsystem.h" 
 #include "../architecture/command.h" 
-#include "../helpers/pidcontroller.cpp"
+#include "../helpers/pidcontroller.h"
+
+
 
 class Drivebase : public Subsystem {     
     private: 
        PIDConstants powerPID; 
-       PIDConstants turnPID;  
+       PIDConstants turnPID;    
     public:     
-       Drivebase() :  
-       Subsystem( 
-        "drivebase",
-         { 
-            (EntrySet){"Pos_X", EntryType::DOUBLE}, 
-            (EntrySet){"Pos_Y",EntryType::DOUBLE}, 
-            (EntrySet){"Angle_Degrees",EntryType::DOUBLE}
-         }
-       ){  
-         /* 
-           TO-DO: Tune and set PID Values
-         */
-         powerPID.P = 0; 
-         powerPID.I = 0; 
-         powerPID.D = 0;  
-         //------------------------------
-         turnPID.P = 0; 
-         turnPID.I = 0; 
-         turnPID.D = 0; 
-         
-       };
+       Drivebase();
     
        void init() override; 
        void periodic() override; 
@@ -38,27 +20,34 @@ class Drivebase : public Subsystem {
 
        void arcadeDrive(double speed, double rotation);    
        void manualDriveForward(double speedMM); 
-       void manualTurnClockwise(double turnDeg); 
+       void manualTurnClockwise(double turnDeg);  
 
        void stop(); 
 
-       pidcontroller getTurningController(double setpoint); 
+       PIDConstants getTurningPID(); 
 
-       pidcontroller getPowerController(double setpoint);
+       PIDConstants getPowerPID();
     
 }; 
 
-class DriveForward : public Command<Drivebase> {  
+class DriveLinear : public Command<Drivebase> {  
     
-   private:   
-     double startingPoint[2];    
-   
-     double getDistTraveled();
+   private:  
+     Drivebase& driveRef; 
+     pidcontroller* control = nullptr; 
 
+  
+     //------Whatever is below must be uncommented when the encoder wheels come
+     /*
+       double startingPoint[2]; *Uncomment once the encoder wheels come    
+     */ 
+    double getDistTraveled();
+    
+     
     public:  
-     pidcontroller control;
-     DriveForward(Drivebase* drive, double distForward);  
-
+     DriveLinear(Drivebase& drive, double displacement);  
+     ~DriveLinear();
+     
      void start() override; 
      void periodic() override; 
      bool isOver() override; 
@@ -68,69 +57,59 @@ class DriveForward : public Command<Drivebase> {
 
 class TurnTo : public Command<Drivebase> {  
     
-   private:    
-     int direction; 
-     double startingPoint[2];    
-     pidcontroller control; 
+   private:     
+     Drivebase& driveRef; 
+     pidcontroller* control = nullptr;  
 
-     double getDistTraveled();
+     double setpoint;
+     double getError();
 
     public:  
 
-     TurnTo(Drivebase* drive, double degrees);  
-
+     TurnTo(Drivebase& drive, double degrees);  
+     ~TurnTo();
      void start() override; 
      void periodic() override; 
      bool isOver() override; 
-     void end() override;
+     void end() override; 
 
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

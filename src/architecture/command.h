@@ -4,55 +4,68 @@
 #include "subsystem.h"
 #include <vector>
 #include <stdexcept>
-#include <iostream>
+#include <vex.h>
 #include <cstdlib>
-#include <atomic>
+#include <atomic> 
+#include <functional>
 
-struct ICommand
-{ // Interface made for autonomous commands that use various types of subsystems
 
-  virtual void run() = 0;
-  virtual void occupySubsystem() = 0;
-  virtual bool isSubsystemOccupied() = 0;
+class CommandInterface
+{ // Interface made for autonomous commands that use various types of subsystems 
+  public: 
+    CommandInterface(){};
+  protected: 
+     virtual void run() = 0;
+     virtual void occupySubsystem() = 0;
+     virtual bool isSubsystemOccupied() = 0;
+  public:
+     static void runCommandGroup(std::vector<std::vector<CommandInterface*>> systems);
 
-  static void runCommandGroup(std::vector<std::vector<ICommand *>> systems);
+     static std::atomic<int> completedTasks; 
 
-  static std::atomic<int> completedTasks;
-};
+ };
 
-template <class T>
-class Command : public ICommand
+template <typename...Subsystems>
+class Command : protected CommandInterface
 {   
 
-  static_assert(is_base_of<Subsystem, T>::value, "Command must wrap around a Subsystem type");
+  static_assert((is_base_of<Subsystem, Subsystems>::value && ...) , "Command must wrap around a Subsystem type");
 
 public:
-  Command(T *sys) : sub(sys) {}
-  T *sub;
+  Command(Subsystems&...systems) : subsystems_{std::ref(static_cast<Subsystem&>(systems))...}, CommandInterface(){};
 
   void run() override
   {
     this->start();
-    do
-    {
-      this->periodic();
+    while (!isOver()){
+      this->periodic(); 
       vex::this_thread::sleep_for(20);
-    } while (!this->isOver());
-    this->end();
-    this->sub->inCommand = false;
+    } 
+    this->end(); 
+    for (Subsystem& sub : subsystems_){ 
+        sub.inCommand = false;
+    }
   };
 
   void occupySubsystem() override
   {
-    this->sub->inCommand = true;
+    for (Subsystem& sub : subsystems_){ 
+          sub.inCommand = true;
+       }
   };
 
-  bool isSubsystemOccupied() override
-  {
-    return this->sub->inCommand;
+  bool isSubsystemOccupied() override {
+    for (Subsystem& sub : subsystems_){ 
+          if (sub.inCommand){
+             return false; 
+          }
+    }  
+    return true;
   };
 
-protected:
+protected: 
+  std::vector<std::reference_wrapper<Subsystem>> subsystems_; 
+
   virtual void start() {};
   virtual void periodic() = 0;
   virtual bool isOver() { return true; };
