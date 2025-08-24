@@ -2,8 +2,6 @@
 #include <functional>
 #include "taskUtils.hpp"
 
-
-
 std::atomic<int> CommandInterface::completedTasks = {0};
 
 void incrementCompletedTasks()
