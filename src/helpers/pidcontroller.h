@@ -1,6 +1,9 @@
 #ifndef __PID_H__ 
 #define __PID_H__ 
- 
+/* 
+Uses Proportional Integral Derviative control to insure motion smoothness,  
+and setpoint precision (given some tuning)
+*/
 typedef struct { 
     double P; 
     double I; 

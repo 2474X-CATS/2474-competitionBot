@@ -19,7 +19,8 @@ void CommandInterface::runCommandGroup(std::vector<std::vector<CommandInterface*
     {
         if (group.size() == 1)
         {
-            group[0]->run();
+            group[0]->run();   
+            delete group[0];
         }
         else
         {
@@ -40,7 +41,8 @@ void CommandInterface::runCommandGroup(std::vector<std::vector<CommandInterface*
                     barrier->wait();
                     cmd->run();   
                     commandCompletion.broadcast();
-                    return 0; }));
+                    return 0; })); 
+                delete cmd; // Don't need it after the task was made
             }
             while (numTasks != completedTasks.load())
             {

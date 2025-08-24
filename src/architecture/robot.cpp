@@ -137,11 +137,14 @@ void Robot::updateSystemSubtable()
 };
 
 
-void Robot::runTelemetry(bool showGraphics)
-{ 
+void Robot::runTelemetryThread(bool showGraphics)
+{  
+  while (true){
     updateSystemSubtable();
     Subsystem::refreshTelemetry(); 
     if (showGraphics){ 
         displayGraphicalData();
-    }
+    }  
+    vex::this_thread::sleep_for(19);
+  }
 };

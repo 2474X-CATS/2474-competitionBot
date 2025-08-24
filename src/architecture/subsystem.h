@@ -5,6 +5,46 @@
 #include <string> 
 #include "telemetry.h"
 
+/* 
+//Generalizes the creation of subsystem logic 
+
+//Ex: (You want a subsystem that handles everything "drivebase") 
+
+class Drivebase : public Subsystem { 
+   public Drivebase() : Subsystem( 
+     "drivebase", 
+     {  
+      (EntrySet){"Pos_X", EntryType::DOUBLE}, 
+      (EntrySet){"Pos_Y", EntryType::DOUBLE}, 
+      (EntrySet){"Angle_Degrees", EntryType::Double}
+     } 
+   ) {...} 
+   //This section basically creates a telemetry subtable for setting and  
+   //getting of subsystem values using a descriptive name, and declaring names and  
+   //types for each entry [Reference "telemetry.h"]--
+   
+   public void init() override { 
+     //Prep drive motors, set them to brake mode
+   }
+   public void periodic() override{ 
+     //Drive around the field using the controller
+   }  
+   
+   public void updateTelemetry() override {  
+     // Use set<T>(entryName, val) [T being a certain type (int, double, bool,...)] to 
+     // update the subtable at: ["drivebase", entryName] so that it is val
+   }
+
+   //A static container for every subsystem and static methods are used to enable abstraction 
+
+   //initSystems() -> Calls every subsystems' "init" method 
+   //updateSystems() -> Calls every subsystems' "periodic" method 
+   //refreshTelemetry() -> Calls every subsystems' "updateTelemetry" method 
+
+   //Don't have to worry about those though
+}
+
+*/
 
 class Subsystem
 {
