@@ -1,5 +1,5 @@
 #include "vex.h" 
-#include "Drivebase.h"   
+#include "drivebase.h"   
 #include "math.h" 
 
 //---Drivebase: SUBSYSTEM 
@@ -90,6 +90,7 @@ PIDConstants Drivebase::getTurningPID(){
    return this->turnPID;
 };
 
+//---Drive Linear: COMMAND
 
 DriveLinear::DriveLinear(Drivebase& drive, double displacement) :  
 Command<Drivebase>(drive),   
@@ -157,5 +158,5 @@ TurnTo::~TurnTo(){
 }; 
 
 double TurnTo::getError(){ 
-   return -(fmod(((driveRef.get<double>("Angle_Radians") - setpoint) + 540), 360) - 180);
+   return -(fmod(((driveRef.get<double>("Angle_Degrees") - setpoint) + 540), 360) - 180);
 };

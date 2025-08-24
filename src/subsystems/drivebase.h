@@ -6,7 +6,6 @@
 #include "../helpers/pidcontroller.h"
 
 
-
 class Drivebase : public Subsystem {     
     private: 
        PIDConstants powerPID; 
@@ -42,7 +41,11 @@ class DriveLinear : public Command<Drivebase> {
      
     public:  
      DriveLinear(Drivebase& drive, double displacement);  
-     ~DriveLinear();
+     ~DriveLinear(); 
+
+     static CommandInterface* getCommand(Drivebase& drive, double displacement){ 
+       return new DriveLinear(drive, displacement);
+     }
      
      void start() override; 
      void periodic() override; 
@@ -63,12 +66,19 @@ class TurnTo : public Command<Drivebase> {
     public:  
 
      TurnTo(Drivebase& drive, double degrees);  
-     ~TurnTo();
+     ~TurnTo(); 
+
+     static CommandInterface* getCommand(Drivebase& drive, double degrees){ 
+       return new TurnTo(drive, degrees);
+     } 
+
      void start() override; 
      void periodic() override; 
      bool isOver() override; 
      void end() override; 
 
-};
+}; 
+
+
 
 #endif
