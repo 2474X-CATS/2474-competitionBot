@@ -17,21 +17,27 @@
 		{
 			"name": "Win32",
 			"includePath": [
-				"${vex_sdkIncludes}"
+				"${vex_sdkIncludes}",
+				"${workspaceFolder}/include",
+				"${workspaceFolder}/src/**",
+				"${workspaceFolder}/src/architecture/*"
 			],
 			"compilerPath": "${vex_compilerPath}",
 			"cStandard": "gnu99",
-			"cppStandard": "gnu++11",
+			"cppStandard": "gnu++17",
 			"intelliSenseMode": "windows-clang-x86"
 		},
 		{
 			"name": "Mac",
 			"includePath": [
-				"${vex_sdkIncludes}"
+				"${vex_sdkIncludes}",
+				"${workspaceFolder}/include",
+				"${workspaceFolder}/src/**",
+				"${workspaceFolder}/src/architecture/*"
 			],
 			"compilerPath": "${vex_compilerPath}",
 			"cStandard": "gnu99",
-			"cppStandard": "gnu++11",
+			"cppStandard": "gnu++17",
 			"intelliSenseMode": "macos-clang-x86"
 		},
 		{
