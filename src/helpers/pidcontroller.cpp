@@ -10,8 +10,6 @@ kD(conts.D),
 errorTolerance(conts.errorTolerance), 
 iLimit(conts.iLimit){  
     setpoint = destination;
-    prevError = destination; 
-    error = destination;
 }; 
 
 bool pidcontroller::atSetpoint(){ 
