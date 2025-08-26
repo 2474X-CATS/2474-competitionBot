@@ -26,7 +26,7 @@ class pidcontroller {
      double errorTolerance;  
      double iLimit;
 
-     double prevError;  
+     double prevError = 0;  
 
      double setpoint; 
 
