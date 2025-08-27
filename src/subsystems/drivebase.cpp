@@ -25,9 +25,7 @@ Drivebase::Drivebase() :
 };  
 
 void Drivebase::init(){ 
-    driveMotors.setStopping(brakeType::brake);  
-    drivePowerEncoder.resetRotation(); 
-    driveRotationEncoder.resetRotation(); 
+    driveMotors.setStopping(vex::brakeType::brake);  
 };  
 
 void Drivebase::periodic(){ 
@@ -35,22 +33,7 @@ void Drivebase::periodic(){
 };   
 
 void Drivebase::updateTelemetry(){   
-    double distTurned = driveRotationEncoder.rotation(rotationUnits::rev) * (ENCODER_WHEEL_RADIUS_MM * 2) * M_PI; 
-    double angle = fmod(distTurned / ROT_ENCODER_DIST_FROM_CENTER_MM, 360);
-    if (angle < 0) 
-      angle += 360;  
     
-    double forwardPower = drivePowerEncoder.velocity(velocityUnits::rpm) * (DRIVE_WHEEL_RADIUS_MM * 2 * M_PI) / (60 * 50); 
-    
-    double x = get<double>("Pos_X"); 
-    double y = get<double>("Pos_Y"); 
-    
-    x += cos(angle / 360 * M_PI * 2) * forwardPower;  
-    y += sin(angle / 360 * M_PI * 2) * forwardPower; 
-
-    set<double>("Pos_X",x); 
-    set<double>("Pos_Y",y); 
-    set<double>("Angle_Degrees",angle);     
 };  
 
 void Drivebase::arcadeDrive(double speed, double rotation){ 
@@ -59,21 +42,21 @@ void Drivebase::arcadeDrive(double speed, double rotation){
 
 void Drivebase::manualDriveForward(double speedMM){   
     double absSpeedMM = fabs(speedMM);  
-    absSpeedMM /= (ROBOT_RADIUS_MM * 2 * M_PI);  
-    absSpeedMM *= 60; 
+    absSpeedMM /= (DRIVE_WHEEL_RADIUS_MM * 2 * M_PI); // Converting to rotations per second  
+    absSpeedMM *= 60; // Converting to rotations per minute 
     if (speedMM < 0){
-       driveMotors.turn(turnType::left, absSpeedMM, rpm); 
+       driveMotors.turn(vex::turnType::left, absSpeedMM, vex::rpm); 
     } else { 
-       driveMotors.turn(turnType::right, absSpeedMM, rpm);
+       driveMotors.turn(vex::turnType::right, absSpeedMM, vex::rpm);
     }
 }; 
 
 void Drivebase::manualTurnClockwise(double turnDeg){ 
     double absTurnDeg = fabs(turnDeg);   
     if (turnDeg < 0){ 
-       driveMotors.drive(directionType::rev, absTurnDeg,velocityUnits::dps);
+       driveMotors.drive(vex::directionType::rev, absTurnDeg, vex::velocityUnits::dps);
     } else { 
-       driveMotors.drive(directionType::fwd,absTurnDeg,velocityUnits::dps);
+       driveMotors.drive(vex::directionType::fwd,absTurnDeg, vex::velocityUnits::dps);
     }
     
 };

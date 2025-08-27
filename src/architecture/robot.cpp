@@ -1,7 +1,8 @@
 #include "robot.h"
 #include "subsystem.h"
 #include "telemetry.h"
-#include "command.h"  
+#include "command.h"   
+using namespace vex;
 
 
 void drawCircleButton(int x, int y, string buttonName){ 
@@ -84,6 +85,25 @@ void Robot::initialize()
 void Robot::autonControl()
 {
     CommandInterface::runCommandGroup(Robot::autonomousCommand); 
+}; 
+
+void Robot::start(bool isFieldControlled){ 
+    if (isFieldControlled){ 
+       Competition.drivercontrol( 
+         [&](){ 
+          driverControl();
+         }); 
+       Competition.autonomous( 
+         [&](){ 
+          autonControl();
+         } 
+       ); 
+       runTelemetryThread(false);
+  } else { 
+    autonControl(); 
+    driverControl();   
+    thread([&](){runTelemetryThread(false);});
+  }
 };
 
 void Robot::registerSystemSubtable()

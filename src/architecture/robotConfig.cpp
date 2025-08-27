@@ -1,4 +1,6 @@
 #include "vex.h"
+#include "math.h" 
+using namespace vex;  
 
 brain Brain; 
 
@@ -14,18 +16,14 @@ controller Controller = controller(controllerType::primary);
 
 // Constants: PLACE HERE [regularly] 
 
-double ROBOT_RADIUS_MM = 1; 
-double ENCODER_WHEEL_RADIUS_MM = 3; 
-double DRIVE_WHEEL_RADIUS_MM = 5; 
-double ROT_ENCODER_DIST_FROM_CENTER_MM = 3;  
+double DRIVE_WHEEL_RADIUS_MM = 30; 
+double TRACK_WIDTH_MM = 30;
+double WHEEL_BASE_MM = 30;
+double EXTERNAL_GEAR_RATIO = 30;
 
 // Devices: PLACE HERE [regularly] 
 
-double ROBOT_RADIUS_MM = 1; 
-double ENCODER_WHEEL_RADIUS_MM = 3; 
-double DRIVE_WHEEL_RADIUS_MM = 5; 
-double ROT_ENCODER_DIST_FROM_CENTER_MM = 3; 
-
+inertial driveGyro = inertial(PORT20); 
 motor driveFrontLeft = motor(PORT1, ratio18_1, true); 
 motor driveFrontRight = motor(PORT10, ratio18_1, true);  
 
@@ -39,10 +37,19 @@ motor driveBackRight = motor(PORT8, ratio18_1);
 motor_group leftDriveMotors = motor_group(driveFrontLeft, driveBackLeft, driveMidLeft); 
 motor_group rightDriveMotors = motor_group(driveFrontRight, driveBackRight, driveMidRight); 
 
-encoder driveRotationEncoder = encoder(Brain.ThreeWirePort.C);  
-encoder driveForwardEncoder = encoder(Brain.ThreeWirePort.A);
+//encoder driveRotationEncoder = encoder(Brain.ThreeWirePort.C);  
+//encoder driveForwardEncoder = encoder(Brain.ThreeWirePort.A);
 
-drivetrain driveMotors = drivetrain(leftDriveMotors, rightDriveMotors);
+smartdrive driveMotors = smartdrive( 
+  leftDriveMotors,  
+  rightDriveMotors,  
+  driveGyro,  
+  (DRIVE_WHEEL_RADIUS_MM * 2 * M_PI), 
+  TRACK_WIDTH_MM, 
+  WHEEL_BASE_MM, 
+  vex::distanceUnits::mm, 
+  EXTERNAL_GEAR_RATIO
+);
 
 //-------
 

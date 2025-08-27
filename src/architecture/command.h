@@ -69,7 +69,7 @@ and Intake which spins the intake inwards for a certain amount of time you could
 class CommandInterface
 { // Interface made for autonomous commands that use various types of subsystems 
   public: 
-    CommandInterface(){}; 
+    //CommandInterface(){}; 
     ~CommandInterface(){};
   protected: 
      virtual void run() = 0;
@@ -89,7 +89,7 @@ class Command : protected CommandInterface
   static_assert((is_base_of<Subsystem, Subsystems>::value && ...) , "Command must wrap around a Subsystem type");
 
 public:
-  Command(Subsystems&...systems) : subsystems_{std::ref(static_cast<Subsystem&>(systems))...}, CommandInterface(){};
+  Command(Subsystems&...systems) : subsystems_{std::ref(static_cast<Subsystem&>(systems))...}{};
 
   void run() override
   {
