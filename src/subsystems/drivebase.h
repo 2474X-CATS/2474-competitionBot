@@ -11,7 +11,7 @@ class Drivebase : public Subsystem {
        PIDConstants powerPID; 
        PIDConstants turnPID;    
     public:     
-       Drivebase();
+       Drivebase(double startX, double startY);
     
        void init() override; 
        void periodic() override; 

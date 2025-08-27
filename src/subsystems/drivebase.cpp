@@ -4,7 +4,7 @@
 
 //---Drivebase: SUBSYSTEM 
 
-Drivebase::Drivebase() :  
+Drivebase::Drivebase(double startX, double startY) :  
    Subsystem ( 
       "drivebase",
       { 
@@ -20,7 +20,10 @@ Drivebase::Drivebase() :
          turnPID.P = 0; 
          turnPID.I = 0; 
          turnPID.D = 0;  
-         turnPID.errorTolerance = 2;
+         turnPID.errorTolerance = 2; 
+
+         set<double>("Pos_X", startX); 
+         set<double>("Pos_Y", startY); 
          
 };  
 
@@ -33,7 +36,13 @@ void Drivebase::periodic(){
 };   
 
 void Drivebase::updateTelemetry(){   
-    
+    set<double>("Angle_Degrees", driveMotors.heading()); 
+    double x = get<double>("Pos_X"); 
+    double y = get<double>("Pos_Y");  
+    x += (driveMotors.velocity() / 60 / 50) * cos(get<double>("Angle_Degrees") / 360 * (M_PI * 2)); 
+    y += (driveMotors.velocity() / 60 / 50) * sin(get<double>("Angle_Degrees") / 360 * (M_PI * 2));  
+    set<double>("Pos_X",x); 
+    set<double>("Pos_Y",y);
 };  
 
 void Drivebase::arcadeDrive(double speed, double rotation){ 

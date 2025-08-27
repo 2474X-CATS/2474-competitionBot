@@ -8,39 +8,25 @@ using namespace vex;
 competition Competition;  
 Robot robot;
 
-void driverControl(){ 
-  robot.driverControl();
-} 
 
-void autonControl(){ 
-  robot.autonControl();
-}    
-
-void updateTelemetry(){ 
-  robot.runTelemetryThread(false); 
-} 
-
-void initialize(){ 
-   vexcodeInit();  
-   vector<vector<CommandInterface*>> commandGroup;
-   Drivebase drive;   
-   commandGroup = {{DriveLinear::getCommand(drive, 20)}}; 
-   robot.setAutonomousCommand(commandGroup);
-} 
-
-void start(bool isFieldControlled){  
+void start(bool isFieldControlled){   
+  robot.initialize();
   if (isFieldControlled){ 
-    Competition.drivercontrol(driverControl); 
-    Competition.autonomous(autonControl); 
-    updateTelemetry(); 
+    Competition.drivercontrol([](){robot.driverControl();}); 
+    Competition.autonomous([](){robot.autonControl();}); 
+    robot.runTelemetryThread(false);
   } else { 
-    autonControl(); 
-    driverControl();   
-    thread(updateTelemetry);
+    robot.autonControl(); 
+    robot.driverControl();   
+    thread([](){robot.runTelemetryThread(false);});
   }
 } 
 
 int main() {      
-  initialize(); 
+  vexcodeInit();  
+  //------------
+ 
+  //-------------
+
   start(false);
 }

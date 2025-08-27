@@ -76,7 +76,8 @@ void Robot::setAutonomousCommand(std::vector<std::vector<CommandInterface*>> com
 };
 
 void Robot::initialize()
-{
+{ 
+   
     registerSystemSubtable();
     Subsystem::initSystems();
 };
@@ -87,24 +88,6 @@ void Robot::autonControl()
     CommandInterface::runCommandGroup(Robot::autonomousCommand); 
 }; 
 
-void Robot::start(bool isFieldControlled){ 
-    if (isFieldControlled){ 
-       Competition.drivercontrol( 
-         [&](){ 
-          driverControl();
-         }); 
-       Competition.autonomous( 
-         [&](){ 
-          autonControl();
-         } 
-       ); 
-       runTelemetryThread(false);
-  } else { 
-    autonControl(); 
-    driverControl();   
-    thread([&](){runTelemetryThread(false);});
-  }
-};
 
 void Robot::registerSystemSubtable()
 { 
