@@ -3,7 +3,7 @@
 #include <memory>
 #include <functional>
 
-// The Barrier basically waits until enough threads have met a certain condition 
+// The Barrier basically waits until enough threads have met a certain condition
 
 class Barrier
 {
@@ -36,7 +36,6 @@ public:
     }
   }
 };
-
 
 class LambdaTaskWrapper
 {

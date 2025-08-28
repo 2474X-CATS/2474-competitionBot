@@ -89,9 +89,9 @@ template <>
 string Telemetry::getValueAt<string>(string directory, string entryKey)
 {
     if (table.at(directory).at(entryKey).type == EntryType::STRING)
-    { 
+    {
         if (table.at(directory).at(entryKey).value == "None")
-           return "None";
+            return "None";
         return table[directory][entryKey].value;
     }
     else
@@ -104,10 +104,10 @@ template <>
 int Telemetry::getValueAt<int>(string directory, string entryKey)
 {
     if (table.at(directory).at(entryKey).type == EntryType::INT)
-    { 
+    {
         if (table.at(directory).at(entryKey).value == "None")
-           return 0;
-        
+            return 0;
+
         stringstream strVal(table[directory][entryKey].value);
         int val;
         strVal >> val;
@@ -123,9 +123,9 @@ template <>
 double Telemetry::getValueAt<double>(string directory, string entryKey)
 {
     if (table.at(directory).at(entryKey).type == EntryType::DOUBLE)
-    { 
+    {
         if (table.at(directory).at(entryKey).value == "None")
-           return 0.0;
+            return 0.0;
         stringstream strVal(table[directory][entryKey].value);
         double val;
         strVal >> val;
@@ -141,9 +141,9 @@ template <>
 bool Telemetry::getValueAt<bool>(std::string directory, std::string entryKey)
 {
     if (table.at(directory).at(entryKey).type == EntryType::BOOL)
-    { 
+    {
         if (table.at(directory).at(entryKey).value == "None")
-           return false;
+            return false;
         return table[directory][entryKey].value == "1";
     }
     else

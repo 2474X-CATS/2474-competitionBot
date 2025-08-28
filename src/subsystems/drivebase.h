@@ -1,105 +1,97 @@
-#ifndef __DRIVEBASE_H_ 
-#define __DRIVEBASE_H_   
+#ifndef __DRIVEBASE_H_
+#define __DRIVEBASE_H_
 
 #include "../architecture/subsystem.h"
-#include "../architecture/command.h" 
+#include "../architecture/command.h"
 #include "../helpers/pidcontroller.h"
 
+class Drivebase : public Subsystem
+{
+private:
+  PIDConstants powerPID;
+  PIDConstants turnPID;
+  double startX, startY;
 
-class Drivebase : public Subsystem {     
-    private:  
-       PIDConstants powerPID; 
-       PIDConstants turnPID;  
-       double startX, startY; 
-    protected:  
-    
-       using Subsystem::set; 
+protected:
+  using Subsystem::set;
 
-    public:     
+public:
+  using Subsystem::get;
 
-       using Subsystem::get; 
-         
+  Drivebase(double startX, double startY) : Subsystem::Subsystem(
+                                                "drivebase",
+                                                {(EntrySet){"Pos_X", EntryType::DOUBLE},
+                                                 (EntrySet){"Pos_Y", EntryType::DOUBLE},
+                                                 (EntrySet){"Angle_Degrees", EntryType::DOUBLE}}),
+                                            startX(startX), startY(startY) {};
 
-       Drivebase(double startX, double startY) :  
-       Subsystem::Subsystem( 
-        "drivebase", 
-        { 
-          (EntrySet){"Pos_X", EntryType::DOUBLE}, 
-          (EntrySet){"Pos_Y",EntryType::DOUBLE}, 
-          (EntrySet){"Angle_Degrees",EntryType::DOUBLE}
-        }
-       ), startX(startX), startY(startY){}; 
-      
-       double getPositionX(); 
-       double getPositionY(); 
-       double getAngleDegrees();
-    
-       void init() override; 
-       void periodic() override; 
-       void updateTelemetry() override;    
+  double getPositionX();
+  double getPositionY();
+  double getAngleDegrees();
 
-       void arcadeDrive(double speed, double rotation);    
-       void manualDriveForward(double speedMM); 
-       void manualTurnClockwise(double turnDeg);  
+  void init() override;
+  void periodic() override;
+  void updateTelemetry() override;
 
-       void stop(); 
+  void arcadeDrive(double speed, double rotation);
+  void manualDriveForward(double speedMM);
+  void manualTurnClockwise(double turnDeg);
 
-       PIDConstants getTurningPID(); 
+  void stop();
 
-       PIDConstants getPowerPID();
-    
-}; 
+  PIDConstants getTurningPID();
 
-class DriveLinear : public Command<Drivebase> {  
-    
-   private:  
-     Drivebase& driveRef; 
-     pidcontroller* control = nullptr; 
+  PIDConstants getPowerPID();
+};
 
-    double startingPoint[2];
-    double getDistTraveled();
-    
-     
-    public:  
-     DriveLinear(Drivebase& drive, double displacement);  
-     ~DriveLinear(); 
+class DriveLinear : public Command<Drivebase>
+{
 
-     static CommandInterface* getCommand(Drivebase& drive, double displacement){  
-       return new DriveLinear(drive, displacement);
-     }
-     
-     void start() override; 
-     void periodic() override; 
-     bool isOver() override; 
-     void end() override;
+private:
+  Drivebase &driveRef;
+  pidcontroller *control = nullptr;
 
-}; 
+  double startingPoint[2];
+  double getDistTraveled();
 
-class TurnTo : public Command<Drivebase> {  
-    
-   private:     
-     Drivebase& driveRef; 
-     pidcontroller* control = nullptr;  
+public:
+  DriveLinear(Drivebase &drive, double displacement);
+  ~DriveLinear();
 
-     double setpoint;
-     double getError();
+  static CommandInterface *getCommand(Drivebase &drive, double displacement)
+  {
+    return new DriveLinear(drive, displacement);
+  }
 
-    public:  
+  void start() override;
+  void periodic() override;
+  bool isOver() override;
+  void end() override;
+};
 
-     TurnTo(Drivebase& drive, double degrees);  
-     ~TurnTo(); 
+class TurnTo : public Command<Drivebase>
+{
 
-     static CommandInterface* getCommand(Drivebase& drive, double degrees){ 
-       return new TurnTo(drive, degrees);
-     } 
+private:
+  Drivebase &driveRef;
+  pidcontroller *control = nullptr;
 
-     void start() override; 
-     void periodic() override; 
-     bool isOver() override; 
-     void end() override; 
+  double setpoint;
+  double getError();
 
-}; 
+public:
+  TurnTo(Drivebase &drive, double degrees);
+  ~TurnTo();
 
+  static CommandInterface *getCommand(Drivebase &drive, double degrees)
+  {
+    return new TurnTo(drive, degrees);
+  }
 
+  void start() override;
+  void periodic() override;
+  bool isOver() override;
+  void end() override;
+};
 
 #endif
