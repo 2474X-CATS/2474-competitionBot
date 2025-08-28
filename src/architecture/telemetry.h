@@ -40,21 +40,21 @@ typedef enum
     STRING
 } EntryType;
 
-typedef struct
+struct EntrySet
 {
     string value;
     EntryType type;
-} EntrySet;
+};
 
 class Telemetry
 {
 private:
-    map<string, map<string, EntrySet>> table;
+    map<string, map<string, struct EntrySet>> table;
 
 public:
     static Telemetry inst;
 
-    void registerSubtable(string tableKeys, vector<EntrySet> subKeys);
+    void registerSubtable(string tableKeys, vector<struct EntrySet> subKeys);
 
     template <typename T>
     void placeValueAt(T val, string directory, string entryKey);

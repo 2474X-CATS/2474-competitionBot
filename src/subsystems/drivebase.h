@@ -1,17 +1,38 @@
 #ifndef __DRIVEBASE_H_ 
 #define __DRIVEBASE_H_   
 
-#include "../architecture/subsystem.h" 
+#include "../architecture/subsystem.h"
 #include "../architecture/command.h" 
 #include "../helpers/pidcontroller.h"
 
 
 class Drivebase : public Subsystem {     
-    private: 
+    private:  
        PIDConstants powerPID; 
-       PIDConstants turnPID;    
+       PIDConstants turnPID;  
+       double startX, startY; 
+    protected:  
+    
+       using Subsystem::set; 
+
     public:     
-       Drivebase(double startX, double startY);
+
+       using Subsystem::get; 
+         
+
+       Drivebase(double startX, double startY) :  
+       Subsystem::Subsystem( 
+        "drivebase", 
+        { 
+          (EntrySet){"Pos_X", EntryType::DOUBLE}, 
+          (EntrySet){"Pos_Y",EntryType::DOUBLE}, 
+          (EntrySet){"Angle_Degrees",EntryType::DOUBLE}
+        }
+       ), startX(startX), startY(startY){}; 
+      
+       double getPositionX(); 
+       double getPositionY(); 
+       double getAngleDegrees();
     
        void init() override; 
        void periodic() override; 
@@ -43,7 +64,7 @@ class DriveLinear : public Command<Drivebase> {
      DriveLinear(Drivebase& drive, double displacement);  
      ~DriveLinear(); 
 
-     static CommandInterface* getCommand(Drivebase& drive, double displacement){ 
+     static CommandInterface* getCommand(Drivebase& drive, double displacement){  
        return new DriveLinear(drive, displacement);
      }
      

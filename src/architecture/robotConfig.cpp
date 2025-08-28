@@ -1,10 +1,9 @@
 #include "vex.h"
 #include "math.h" 
-using namespace vex;  
 
-brain Brain; 
+vex::brain Brain; 
 
-controller Controller = controller(controllerType::primary);  
+vex::controller Controller = vex::controller(vex::controllerType::primary);  
 
 /* 
  TO-DO: 
@@ -16,31 +15,31 @@ controller Controller = controller(controllerType::primary);
 
 // Constants: PLACE HERE [regularly] 
 
-double DRIVE_WHEEL_RADIUS_MM = 30; 
-double TRACK_WIDTH_MM = 30;
-double WHEEL_BASE_MM = 30;
-double EXTERNAL_GEAR_RATIO = 30;
+double DRIVE_WHEEL_RADIUS_MM = (69 / 2); 
+double TRACK_WIDTH_MM = 32;
+double WHEEL_BASE_MM = 20;
+double EXTERNAL_GEAR_RATIO = 0.6;
 
 // Devices: PLACE HERE [regularly] 
 
-inertial driveGyro = inertial(PORT20); 
-motor driveFrontLeft = motor(PORT1, ratio18_1, true); 
-motor driveFrontRight = motor(PORT10, ratio18_1, true);  
+vex::inertial driveGyro = vex::inertial(vex::PORT20); 
+vex::motor driveFrontLeft = vex::motor(vex::PORT1, vex::ratio18_1, true); 
+vex::motor driveFrontRight = vex::motor(vex::PORT10, vex::ratio18_1, true);  
 
-motor driveMidLeft = motor(PORT2, ratio18_1, true); 
-motor driveMidRight = motor(PORT9, ratio18_1, true);   
+vex::motor driveMidLeft = vex::motor(vex::PORT2, vex::ratio18_1, true); 
+vex::motor driveMidRight = vex::motor(vex::PORT9, vex::ratio18_1, true);   
 
-motor driveBackLeft = motor(PORT3, ratio18_1); 
-motor driveBackRight = motor(PORT8, ratio18_1); 
+vex::motor driveBackLeft = vex::motor(vex::PORT3, vex::ratio18_1); 
+vex::motor driveBackRight = vex::motor(vex::PORT8, vex::ratio18_1); 
 
 
-motor_group leftDriveMotors = motor_group(driveFrontLeft, driveBackLeft, driveMidLeft); 
-motor_group rightDriveMotors = motor_group(driveFrontRight, driveBackRight, driveMidRight); 
+vex::motor_group leftDriveMotors = vex::motor_group(driveFrontLeft, driveBackLeft, driveMidLeft); 
+vex::motor_group rightDriveMotors = vex::motor_group(driveFrontRight, driveBackRight, driveMidRight); 
 
 //encoder driveRotationEncoder = encoder(Brain.ThreeWirePort.C);  
 //encoder driveForwardEncoder = encoder(Brain.ThreeWirePort.A);
 
-smartdrive driveMotors = smartdrive( 
+vex::smartdrive driveMotors = vex::smartdrive( 
   leftDriveMotors,  
   rightDriveMotors,  
   driveGyro,  

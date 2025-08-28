@@ -4,12 +4,11 @@
 
 std::atomic<int> CommandInterface::completedTasks = {0};
 
-void incrementCompletedTasks()
+void completeTask()
 {
     CommandInterface::completedTasks++;
 }
 
-vex::event commandCompletion(incrementCompletedTasks);
 
 void CommandInterface::runCommandGroup(std::vector<std::vector<CommandInterface*>> systems)
 {
@@ -22,31 +21,37 @@ void CommandInterface::runCommandGroup(std::vector<std::vector<CommandInterface*
         }
         else
         {
-            int numTasks = group.size();
-            completedTasks = 0;
-            auto barrier = new Barrier(numTasks);
+            int numTasks = group.size(); 
+
+            CommandInterface::completedTasks = 0; 
+
+            auto barrierOwner = std::make_unique<Barrier>(numTasks); 
+            Barrier* barrier = barrierOwner.get(); 
+
             for (CommandInterface *cmd : group)
             {
                 if (cmd->isSubsystemOccupied())
-                {
-                    __throw_invalid_argument("Subsystem pointer must not already be use by a Command");
-                    std::exit(1); 
-                    
+                { 
+                    while (true){ 
+                        vex::this_thread::yield();
+                    }
+                    //throw std::runtime_error("Subsystem pointer must not already be use by a Command");
                 }
-                cmd->occupySubsystem();
+                cmd->occupySubsystem(); 
                 make_task(([cmd, barrier]()
-                           {   
+                           {    
                     barrier->wait();
                     cmd->run();   
-                    commandCompletion.broadcast();
+                    completeTask();
+                    delete cmd;
                     return 0; })); 
-                delete cmd; // Don't need it after the task was made
+                 
             }
-            while (numTasks != completedTasks.load())
+            while (numTasks != CommandInterface::completedTasks.load())
             {
-                vex::this_thread::yield();
-            }
-            delete barrier;
+                vex::this_thread::yield();  
+            } 
+            
         }
     }
 }; 

@@ -1,8 +1,8 @@
 #pragma once 
 
-extern brain Brain; 
+extern vex::brain Brain; 
 
-extern controller Controller; 
+extern vex::controller Controller; 
 
 /* 
  TO-DO: 
@@ -20,18 +20,18 @@ extern double WHEEL_BASE_MM; // Dist between the center point of the front and r
 extern double EXTERNAL_GEAR_RATIO; //Final result of doing the gear ratio calculation on the drive gear train
 
 // Devices: PLACE HERE [using extern] 
-extern inertial driveGyro;
-extern motor driveFrontLeft; 
-extern motor driveFrontRight; 
-extern motor driveBackLeft; 
-extern motor driveBackRight; 
-extern motor driveMidLeft; 
-extern motor driveMidRight;  
+extern vex::inertial driveGyro;
+extern vex::motor driveFrontLeft; 
+extern vex::motor driveFrontRight; 
+extern vex::motor driveBackLeft; 
+extern vex::motor driveBackRight; 
+extern vex::motor driveMidLeft; 
+extern vex::motor driveMidRight;  
 
 //extern encoder driveRotationEncoder; 
 //extern encoder drivePowerEncoder;
 
-extern smartdrive driveMotors; // Drivetrain  
+extern vex::smartdrive driveMotors; // Drivetrain  
 
 //------- 
 

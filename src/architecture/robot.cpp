@@ -71,7 +71,7 @@ void Robot::driverControl()
     }
 }; 
 
-void Robot::setAutonomousCommand(std::vector<std::vector<CommandInterface*>> comm){ 
+void Robot::setAutonomousCommand(std::vector<std::vector<CommandInterface*>> comm){  
    autonomousCommand = comm;
 };
 
@@ -84,7 +84,7 @@ void Robot::initialize()
 
 
 void Robot::autonControl()
-{
+{ 
     CommandInterface::runCommandGroup(Robot::autonomousCommand); 
 }; 
 
@@ -94,9 +94,6 @@ void Robot::registerSystemSubtable()
     Telemetry::inst.registerSubtable(
         "system",
         {
-            //(EntrySet){"Battery/Temperature", EntryType::DOUBLE},
-            //(EntrySet){"Battery/Voltage", EntryType::DOUBLE},
-            //(EntrySet){"Battery/Current", EntryType::DOUBLE},
             (EntrySet){"Controller/Axis-Vert-Left", EntryType::INT},
             (EntrySet){"Controller/Axis-Hori-Left", EntryType::INT},
             (EntrySet){"Controller/Axis-Vert-Right", EntryType::INT},
@@ -118,9 +115,6 @@ void Robot::registerSystemSubtable()
 
 void Robot::updateSystemSubtable()
 {   
-    //Telemetry::inst.placeValueAt<double>(Brain.Battery.temperature(), "system", "Battery/Temperature");
-    //Telemetry::inst.placeValueAt<double>(Brain.Battery.voltage(), "system", "Battery/Voltage");
-    //Telemetry::inst.placeValueAt<double>(Brain.Battery.current(), "system", "Battery/Current");
     Telemetry::inst.placeValueAt<int>(Controller.Axis3.position(), "system", "Controller/Axis-Vert-Left");
     Telemetry::inst.placeValueAt<int>(Controller.Axis4.position(), "system", "Controller/Axis-Hori-Left");
     Telemetry::inst.placeValueAt<int>(Controller.Axis2.position(), "system", "Controller/Axis-Vert-Right");
@@ -142,12 +136,12 @@ void Robot::updateSystemSubtable()
 
 void Robot::runTelemetryThread(bool showGraphics)
 {  
-  while (true){
+  while (true){ 
     updateSystemSubtable();
     Subsystem::refreshTelemetry(); 
     if (showGraphics){ 
         displayGraphicalData();
     }  
-    vex::this_thread::sleep_for(19);
+    vex::this_thread::sleep_for(20);
   }
 };

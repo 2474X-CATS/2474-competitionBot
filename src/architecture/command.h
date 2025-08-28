@@ -70,7 +70,7 @@ class CommandInterface
 { // Interface made for autonomous commands that use various types of subsystems 
   public: 
     //CommandInterface(){}; 
-    ~CommandInterface(){};
+    virtual ~CommandInterface(){};
   protected: 
      virtual void run() = 0;
      virtual void occupySubsystem() = 0;
@@ -86,7 +86,7 @@ template <typename...Subsystems>
 class Command : protected CommandInterface
 {   
 
-  static_assert((is_base_of<Subsystem, Subsystems>::value && ...) , "Command must wrap around a Subsystem type");
+  static_assert((std::is_base_of<Subsystem, Subsystems>::value && ...) , "Command must wrap around a Subsystem type");
 
 public:
   Command(Subsystems&...systems) : subsystems_{std::ref(static_cast<Subsystem&>(systems))...}{};
