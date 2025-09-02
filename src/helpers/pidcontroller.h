@@ -19,10 +19,12 @@ private:
   double kP;
   double kI;
   double kD;
+  
+  double lastTimestamp = 0;
 
-  double error;
+  double error = 0;
   double integral = 0;
-  double derivative;
+  double derivative = 0;
 
   double errorTolerance;
   double iLimit;
@@ -34,9 +36,11 @@ private:
 public:
   pidcontroller(PIDConstants conts, double destination);
 
-  double calculate(double position);
+  double calculate(double position, double timestamp);
 
-  bool atSetpoint();
+  bool atSetpoint(); 
+
+  void setLastTimestamp(double timestamp);
 };
 
 #endif

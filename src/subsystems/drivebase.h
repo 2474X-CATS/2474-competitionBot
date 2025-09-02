@@ -25,9 +25,6 @@ public:
                                                  (EntrySet){"Angle_Degrees", EntryType::DOUBLE}}),
                                             startX(startX), startY(startY) {};
 
-  double getPositionX();
-  double getPositionY();
-  double getAngleDegrees();
 
   void init() override;
   void periodic() override;

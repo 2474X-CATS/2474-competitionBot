@@ -15,21 +15,21 @@ vex::controller Controller = vex::controller(vex::controllerType::primary);
 
 // Constants: PLACE HERE [regularly]
 
-double DRIVE_WHEEL_RADIUS_MM = (69 / 2);
-double TRACK_WIDTH_MM = 32;
-double WHEEL_BASE_MM = 20;
+double DRIVE_WHEEL_RADIUS_MM = 76.2;
+double TRACK_WIDTH_MM = 381;
+double WHEEL_BASE_MM = 203.2;
 double EXTERNAL_GEAR_RATIO = 0.6;
 
 // Devices: PLACE HERE [regularly]
 
-vex::inertial driveGyro = vex::inertial(vex::PORT20);
-vex::motor driveFrontLeft = vex::motor(vex::PORT1, vex::ratio18_1, true);
+vex::inertial driveGyro = vex::inertial(vex::PORT20); 
+
+vex::motor driveFrontLeft = vex::motor(vex::PORT1, vex::ratio18_1, true); 
+vex::motor driveMidLeft = vex::motor(vex::PORT2, vex::ratio18_1, true); 
+vex::motor driveBackLeft = vex::motor(vex::PORT3, vex::ratio18_1); 
+
 vex::motor driveFrontRight = vex::motor(vex::PORT10, vex::ratio18_1, true);
-
-vex::motor driveMidLeft = vex::motor(vex::PORT2, vex::ratio18_1, true);
 vex::motor driveMidRight = vex::motor(vex::PORT9, vex::ratio18_1, true);
-
-vex::motor driveBackLeft = vex::motor(vex::PORT3, vex::ratio18_1);
 vex::motor driveBackRight = vex::motor(vex::PORT8, vex::ratio18_1);
 
 vex::motor_group leftDriveMotors = vex::motor_group(driveFrontLeft, driveBackLeft, driveMidLeft);
@@ -37,7 +37,7 @@ vex::motor_group rightDriveMotors = vex::motor_group(driveFrontRight, driveBackR
 
 // encoder driveRotationEncoder = encoder(Brain.ThreeWirePort.C);
 // encoder driveForwardEncoder = encoder(Brain.ThreeWirePort.A);
-
+/*
 vex::smartdrive driveMotors = vex::smartdrive(
     leftDriveMotors,
     rightDriveMotors,
@@ -46,7 +46,8 @@ vex::smartdrive driveMotors = vex::smartdrive(
     TRACK_WIDTH_MM,
     WHEEL_BASE_MM,
     vex::distanceUnits::mm,
-    EXTERNAL_GEAR_RATIO);
+    EXTERNAL_GEAR_RATIO); 
+*/
 
 //-------
 

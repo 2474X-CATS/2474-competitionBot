@@ -71,9 +71,8 @@ class CommandInterface
 public:
   // CommandInterface(){};
   virtual ~CommandInterface() {};
-
-protected:
   virtual void run() = 0;
+protected:
   virtual void occupySubsystem() = 0;
   virtual bool isSubsystemOccupied() = 0;
 
@@ -94,13 +93,12 @@ public:
 
   void run() override
   {
-    this->start();
-    while (!isOver())
-    {
-      this->periodic();
+    start(); 
+    do { 
+     periodic();
       vex::this_thread::sleep_for(20);
-    }
-    this->end();
+    } while (!isOver()); 
+    end();
     for (Subsystem &sub : subsystems_)
     {
       sub.inCommand = false;

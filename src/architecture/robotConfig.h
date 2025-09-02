@@ -28,10 +28,12 @@ extern vex::motor driveBackRight;
 extern vex::motor driveMidLeft;
 extern vex::motor driveMidRight;
 
+extern vex::motor_group leftDriveMotors; 
+extern vex::motor_group rightDriveMotors;
 // extern encoder driveRotationEncoder;
 // extern encoder drivePowerEncoder;
 
-extern vex::smartdrive driveMotors; // Drivetrain
+//extern vex::smartdrive driveMotors; // Drivetrain
 
 //-------
 
