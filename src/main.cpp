@@ -26,6 +26,5 @@ int main()
   //Set the autonomous command 
 
   //--------
-  robot.initialize();   
   start();
 }
