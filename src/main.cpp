@@ -9,10 +9,6 @@ competition Competition;
 Robot robot;
 
 
-void runTelemetry(){ 
-   robot.runTelemetryThread(true);
-}
-
 void start()
 { 
   robot.initialize(); 
@@ -26,9 +22,11 @@ void start()
 int main()
 {
   vexcodeInit();   
-  
-  Drivebase drive = Drivebase(0, 0);  // Always assumes that the robot starts at angle 0 (May change)
-  robot.initialize();  
+  //Initialize subsystems
+  Drivebase drive = Drivebase(0, 0);  // Always assumes that the robot starts at angle 0 (May change) 
+  //Set the autonomous command 
 
+  //--------
+  robot.initialize();   
   start();
 }
