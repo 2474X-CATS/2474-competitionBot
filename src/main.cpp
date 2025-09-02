@@ -27,38 +27,8 @@ int main()
 {
   vexcodeInit();   
   
-  Drivebase drive = Drivebase(0, 0);  
-  //drive.init();
+  Drivebase drive = Drivebase(0, 0);  // Always assumes that the robot starts at angle 0 (May change)
   robot.initialize();  
-  /*
-  robot.setAutonomousCommand( 
-    { 
-     {DriveLinear::getCommand(drive,500)},
-     {TurnTo::getCommand(drive, 90)}, 
-     {DriveLinear::getCommand(drive, 250)}
-    } 
-  );  
-  */
-  thread telem = thread(runTelemetry); 
-  DriveLinear::getCommand(drive,500)->run(); 
-  TurnTo::getCommand(drive, 90)->run(); 
-  DriveLinear::getCommand(drive, 250)->run();
-  robot.driverControl();  
-  /*
-  while (true){   
-    if (Controller.ButtonA.pressing()){ 
-      drive.manualDriveForward(-90);
-    } else if (Controller.ButtonB.pressing()) {  
-      drive.manualTurnClockwise(-60);
-    } else { 
-      drive.stop();
-    } 
-    Brain.Screen.print(driveGyro.heading()); 
-    Brain.Screen.newLine();
-    wait(20, msec);
-  }  
-  */
-  //-------------
 
-  //start();
+  start();
 }

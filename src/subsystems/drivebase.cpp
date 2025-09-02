@@ -50,27 +50,6 @@ void Drivebase::updateTelemetry()
 
    set<double>("Pos_X", x);
    set<double>("Pos_Y", y);    
-   
-   /*
-   Brain.Screen.print("X Position"); 
-   Brain.Screen.print(this->get<double>("Pos_X"));  
-   Brain.Screen.newLine();   
-   */
-   /*
-   Brain.Screen.print("Y Position");
-   Brain.Screen.print(this->get<double>("Pos_Y"));  
-   Brain.Screen.newLine(); 
-   */  
-   /*
-   Brain.Screen.print("Angle Degrees");
-   Brain.Screen.print(this->get<double>("Angle_Degrees")); 
-   Brain.Screen.newLine();    
-   */
-   /*
-   Brain.Screen.print("Angle in radians"); 
-   Brain.Screen.print(angleRadians); 
-   Brain.Screen.newLine(); 
-   */
 
 }; 
 
