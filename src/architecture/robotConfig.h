@@ -14,9 +14,9 @@ extern controller Controller;
 //------- 
 
 // Constants: PLACE HERE [using extern]
-
+extern double ABSOLUTE_INDEXER_SPEED; 
 // Devices: PLACE HERE [using extern]
-
+extern motor indexerMotor; 
 //------- 
 
 void vexcodeInit();

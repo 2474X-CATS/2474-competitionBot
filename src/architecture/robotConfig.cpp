@@ -13,9 +13,9 @@ controller Controller = controller(controllerType::primary);
 //------- 
 
 // Constants: PLACE HERE [regularly]
-
+double ABSOLUTE_INDEXER_SPEED = 1;
 // Devices: PLACE HERE [regularly]
-
+motor indexerMotor = motor(PORT14);
 //-------
 
 void vexcodeInit(){ 
