@@ -25,7 +25,7 @@ int main()
   //Initialize subsystems
   Drivebase drive = Drivebase(0, 0);  // Always assumes that the robot starts at angle 0 (May change) 
   //Set the autonomous command 
-
+  robot.setAutonomousCommand({{}}); 
   //--------  
   start();
 }

@@ -10,7 +10,8 @@ class Drivebase : public Subsystem
 private:
   PIDConstants powerPID;
   PIDConstants turnPID;
-  double startX, startY;
+  double startX, startY; 
+  double speedFactor = (1 - 0.15);
 
 protected:
   using Subsystem::set;

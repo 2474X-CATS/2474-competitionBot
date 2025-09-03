@@ -29,12 +29,12 @@ void Drivebase::init()
 
 void Drivebase::periodic()
 { 
-   arcadeDrive(Controller.Axis3.position(), Controller.Axis1.position());
+   arcadeDrive(Controller.Axis3.position() * speedFactor, Controller.Axis1.position() * speedFactor);
 };
 //TO-DO: FIX
 void Drivebase::updateTelemetry()
 { 
-
+   
    set<double>("Angle_Degrees", driveGyro.heading()); 
 
    double x = get<double>("Pos_X");
