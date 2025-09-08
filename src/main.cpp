@@ -25,7 +25,16 @@ int main()
   //Initialize subsystems
   Drivebase drive = Drivebase(0, 0);  // Always assumes that the robot starts at angle 0 (May change) 
   //Set the autonomous command 
-  robot.setAutonomousCommand({{}}); 
+  robot.setAutonomousCommand({ 
+    {DriveLinear::getCommand(drive, 500)},
+    {TurnTo::getCommand(drive, 90)}, 
+    {DriveLinear::getCommand(drive, 500)}, 
+    {TurnTo::getCommand(drive, 180)}, 
+    {DriveLinear::getCommand(drive, 500)}, 
+    {TurnTo::getCommand(drive, 270)}, 
+    {DriveLinear::getCommand(drive, 500)}, 
+    {TurnTo::getCommand(drive, 0)}
+  }); 
   //--------  
   start();
 }
