@@ -3,6 +3,7 @@
 brain Brain; 
 
 controller Controller = controller(controllerType::primary);  
+competition Competition; 
 
 /* 
  TO-DO: 

@@ -4,7 +4,7 @@
 #include "architecture/taskUtils.hpp"
 using namespace vex;
 
-competition Competition;
+//competition Competition;
 Robot robot;
 
 

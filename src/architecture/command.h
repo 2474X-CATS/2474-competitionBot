@@ -7,7 +7,8 @@
 #include <vex.h>
 #include <cstdlib>
 #include <atomic> 
-#include <functional>
+#include <functional> 
+#include "robotConfig.h"
 
 /* 
 Makes a task that can be stacked on other tasks to run in the autonomous period 
@@ -94,7 +95,7 @@ public:
   void run() override
   {
     this->start();
-    while (!isOver()){
+    while (!isOver() && Competition.isAutonomous()){
       this->periodic(); 
       vex::this_thread::sleep_for(20);
     } 
