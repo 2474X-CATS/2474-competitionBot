@@ -19,7 +19,7 @@ protected:
 
 public:
   using Subsystem::get;
-
+  using Subsystem::getFromInputs; 
   Drivebase(double startX, double startY) : Subsystem::Subsystem(
                                                 "drivebase",
                                                 {(EntrySet){"Pos_X", EntryType::DOUBLE},

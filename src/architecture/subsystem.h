@@ -61,6 +61,12 @@ public:
   T get(std::string entry)
   {
     return Telemetry::inst.getValueAt<T>(this->label, entry);
+  }; 
+
+  template <typename T>
+  T getFromInputs(std::string entry)
+  {
+    return Telemetry::inst.getValueAt<T>("system", entry);
   };
 
   static std::vector<Subsystem *> systems;

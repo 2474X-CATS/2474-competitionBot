@@ -29,7 +29,7 @@ void Drivebase::init()
 
 void Drivebase::periodic()
 { 
-   arcadeDrive(Controller.Axis3.position() * speedFactor, Controller.Axis1.position() * speedFactor);
+   arcadeDrive(getFromInputs<double>("Controller/Axis-Vert-Left") * speedFactor, getFromInputs<double>("Controller/Axis-Hori-Right") * speedFactor);
 };
 //TO-DO: FIX
 void Drivebase::updateTelemetry()
