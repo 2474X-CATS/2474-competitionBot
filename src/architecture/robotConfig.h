@@ -3,7 +3,6 @@ using namespace vex;
 
 extern brain Brain; 
 
-extern competition Competition;
 extern controller Controller; 
 
 /* 
