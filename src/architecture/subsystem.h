@@ -52,15 +52,24 @@ protected:
    std::string label;
 
    template <typename T>
-   void set(std::string entryName, T val); 
+   void Subsystem::set(string entryName, T val)
+   {
+     Telemetry::inst.placeValueAt<T>(val, this->label, entryName);
+   };  
 
 
 public: 
-   template<typename T> 
-   T get(std::string entryName); 
-  
-   template<typename T> 
-   T getFromInputs(std::string entryName);  
+   template <typename T>
+   T Subsystem::get(string entryName)
+   {
+     return Telemetry::inst.getValueAt<T>(this->label, entryName);
+   };  
+
+   template <typename T>
+   T Subsystem::getFromInputs(string entryName)
+   {
+     return Telemetry::inst.getValueAt<T>("system", entryName);
+   };  
 
    static std::vector<Subsystem*> systems;
 
