@@ -5,10 +5,10 @@
 #include "../architecture/command.h"
 
 typedef enum { 
-   TOP, 
-   MID, 
+   STORAGE, 
+   CIRCULATE, 
    NONE
-} TopGoal;
+} Feed;
 
 class Indexer : public Subsystem
 { 
@@ -26,7 +26,7 @@ protected:
    using Subsystem::set;
     
 private:   
-   TopGoal getScoringMode();
+   Feed getScoringMode();
 };
 
 #endif
