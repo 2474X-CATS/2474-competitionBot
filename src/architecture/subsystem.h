@@ -58,7 +58,10 @@ protected:
 public: 
    template<typename T> 
    T get(std::string entryName); 
-   
+  
+   template<typename T> 
+   T getFromInputs(std::string entryName);  
+
    static std::vector<Subsystem*> systems;
 
    static void initSystems();

@@ -13,7 +13,8 @@ typedef enum {
 class Indexer : public Subsystem
 { 
 public: 
-    using Subsystem::get; 
+    using Subsystem::get;  
+    using Subsystem::getFromInputs;
 
     Indexer() : Subsystem(
                     "indexer",

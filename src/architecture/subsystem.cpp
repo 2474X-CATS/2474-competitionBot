@@ -18,6 +18,12 @@ template <typename T>
 T Subsystem::get(string entryName)
 {
    return Telemetry::inst.getValueAt<T>(this->label, entryName);
+};  
+
+template <typename T>
+T Subsystem::getFromInputs(string entryName)
+{
+   return Telemetry::inst.getValueAt<T>("system", entryName);
 }; 
 
 
