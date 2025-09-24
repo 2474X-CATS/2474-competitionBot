@@ -70,7 +70,7 @@ class CommandInterface
 { // Interface made for autonomous commands that use various types of subsystems
 public:
   // CommandInterface(){};
-  virtual ~CommandInterface() {};
+  ~CommandInterface() {};
   virtual void run() = 0;
 protected:
   virtual void occupySubsystem() = 0;

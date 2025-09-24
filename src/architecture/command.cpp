@@ -2,6 +2,7 @@
 #include <functional>
 #include "taskUtils.hpp"
 
+
 std::atomic<int> CommandInterface::completedTasks = {0};
 
 void completeTask()
@@ -26,7 +27,7 @@ void CommandInterface::runCommandGroup(std::vector<std::vector<CommandInterface 
 
             auto barrierOwner = std::make_unique<Barrier>(numTasks);
             Barrier *barrier = barrierOwner.get();
-
+            
             for (CommandInterface *cmd : group)
             {
                 if (cmd->isSubsystemOccupied())

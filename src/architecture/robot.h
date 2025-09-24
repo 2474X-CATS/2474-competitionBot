@@ -32,7 +32,6 @@ public:
    void driverControl();
    void autonControl();
    void runTelemetryThread(bool showGraphics);
-
    void setAutonomousCommand(std::vector<std::vector<CommandInterface *>> comm);
 };
 

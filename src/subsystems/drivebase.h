@@ -55,7 +55,7 @@ private:
 
 public:
   DriveLinear(Drivebase &drive, double displacement);
-  ~DriveLinear();
+  ~DriveLinear() override;
 
   static CommandInterface *getCommand(Drivebase &drive, double displacement)
   {
@@ -67,6 +67,8 @@ public:
   bool isOver() override;
   void end() override;
 };
+
+
 
 class TurnTo : public Command<Drivebase>
 {
@@ -80,7 +82,7 @@ private:
 
 public:
   TurnTo(Drivebase &drive, double degrees);
-  ~TurnTo();
+  ~TurnTo() override;
 
   static CommandInterface *getCommand(Drivebase &drive, double degrees)
   {
