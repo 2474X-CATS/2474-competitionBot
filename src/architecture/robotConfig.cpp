@@ -10,11 +10,8 @@ vex::controller Controller = vex::controller(vex::controllerType::primary);
    o- Initialize all vex devices here (motors/sensors/pneumatics/etc)
    o- Initialize constants
 */
-
-//-------
-
 // Constants: PLACE HERE [regularly]
-
+double ABSOLUTE_INDEXER_SPEED = 1;
 double DRIVE_WHEEL_RADIUS_MM = 76.2;
 double TRACK_WIDTH_MM = 381;
 double WHEEL_BASE_MM = 203.2;
@@ -35,20 +32,8 @@ vex::motor driveBackRight = vex::motor(vex::PORT8, vex::ratio18_1);
 vex::motor_group leftDriveMotors = vex::motor_group(driveFrontLeft, driveBackLeft, driveMidLeft);
 vex::motor_group rightDriveMotors = vex::motor_group(driveFrontRight, driveBackRight, driveMidRight);
 
-// encoder driveRotationEncoder = encoder(Brain.ThreeWirePort.C);
-// encoder driveForwardEncoder = encoder(Brain.ThreeWirePort.A);
-/*
-vex::smartdrive driveMotors = vex::smartdrive(
-    leftDriveMotors,
-    rightDriveMotors,
-    driveGyro,
-    (DRIVE_WHEEL_RADIUS_MM * 2 * M_PI),
-    TRACK_WIDTH_MM,
-    WHEEL_BASE_MM,
-    vex::distanceUnits::mm,
-    EXTERNAL_GEAR_RATIO); 
-*/
-
+vex::motor indexerMotor = motor(PORT14); 
+vex::pneumatics hoodPiston = pneumatics(Brain.ThreeWirePort.G);
 //-------
 
 void vexcodeInit() {

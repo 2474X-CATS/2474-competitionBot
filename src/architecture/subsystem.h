@@ -49,27 +49,28 @@ class Drivebase : public Subsystem {
 class Subsystem
 {
 protected:
-  std::string label;
-  template <typename T>
-  void set(std::string entry, T val)
-  {
-    Telemetry::inst.placeValueAt<T>(val, this->label, entry);
-  };
+   string label;
 
-public:
-  template <typename T>
-  T get(std::string entry)
-  {
-    return Telemetry::inst.getValueAt<T>(this->label, entry);
-  }; 
+   template <typename T>
+   void set(string entryName, T val); 
+   {
+     Telemetry::inst.placeValueAt<T>(val, this->label, entryName);
+   };
 
-  template <typename T>
-  T getFromInputs(std::string entry)
-  {
-    return Telemetry::inst.getValueAt<T>("system", entry);
-  };
+public: 
+   template<typename T> 
+   T get(string entryName);  
+   {
+     return Telemetry::inst.getValueAt<T>(this->label, entryName);
+   };  
 
-  static std::vector<Subsystem *> systems;
+   template<typename T> 
+   T getFromInputs(string entryName) 
+   {
+     return Telemetry::inst.getValueAt<T>("system", entryName);
+   }; 
+   
+   static std::vector<Subsystem*> systems;
 
   static void initSystems();
 
@@ -77,7 +78,7 @@ public:
 
   static void refreshTelemetry();
 
-  Subsystem(std::string tableLabel, std::vector<EntrySet> entryNames);
+  Subsystem(string tableLabel, vector<EntrySet> entryNames);
 
   virtual void init() = 0;
   virtual void periodic() = 0;

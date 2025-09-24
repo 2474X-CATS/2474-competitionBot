@@ -29,12 +29,18 @@ extern vex::motor driveMidLeft;
 extern vex::motor driveMidRight;
 
 extern vex::motor_group leftDriveMotors; 
-extern vex::motor_group rightDriveMotors;
+extern vex::motor_group rightDriveMotors; 
+
+extern double ABSOLUTE_INDEXER_SPEED; 
+
+extern vex::motor indexerMotor;  
+extern vex::pneumatics hoodPiston; 
+
 // extern encoder driveRotationEncoder;
 // extern encoder drivePowerEncoder;
 
 //extern vex::smartdrive driveMotors; // Drivetrain
 
-//-------
+//------- 
 
 void vexcodeInit();
