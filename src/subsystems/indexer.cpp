@@ -29,11 +29,6 @@ void Indexer::periodic(){
 };
 
 Feed Indexer::getScoringMode(){  
-    /* 
-      This is just to test... 
-      In reality the Indexer relies on the telemetry to get when it should spin a certain way 
-      Like if the channel had a mode in its telemetry that had a string value on which goal it should outtake to  
-    */ 
     Feed goal; 
     if (getFromInputs<bool>("Controller/Button_A")){ 
         goal = Feed::CIRCULATE; 
