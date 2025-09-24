@@ -6,9 +6,18 @@
 using namespace vex;
 
 competition Competition;
+competition Competition;
 Robot robot;
 
 
+void start()
+{ 
+  robot.initialize(); 
+  Competition.drivercontrol([]()
+                            { robot.driverControl(); });
+  Competition.autonomous([]()
+                         { robot.autonControl(); }); 
+  robot.runTelemetryThread(false);
 void start()
 { 
   robot.initialize(); 
