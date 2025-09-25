@@ -1,9 +1,13 @@
 #include "vex.h"
 #include "architecture/robot.h"
-#include <iostream>
-#include "architecture/taskUtils.hpp"
+#include <iostream> 
+#include "architecture/taskUtils.hpp" 
+#include "subsystems/drivebase.h" 
+#include "subsystems/indexer.h" 
+
 using namespace vex;
 
+competition Competition;
 competition Competition;
 Robot robot;
 
@@ -22,7 +26,8 @@ int main()
 {
   vexcodeInit();   
   //Initialize subsystems 
-  
+  Drivebase drive; 
+  Indexer indexer;
   //Set the autonomous command 
 
   //--------

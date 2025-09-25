@@ -3,53 +3,54 @@
 #include "taskUtils.hpp"
 
 
-
 std::atomic<int> CommandInterface::completedTasks = {0};
 
-void incrementCompletedTasks()
+void completeTask()
 {
     CommandInterface::completedTasks++;
 }
 
-vex::event commandCompletion(incrementCompletedTasks);
-
-void CommandInterface::runCommandGroup(std::vector<std::vector<CommandInterface*>> systems)
+void CommandInterface::runCommandGroup(std::vector<std::vector<CommandInterface *>> systems)
 {
     for (std::vector<CommandInterface *> group : systems)
     {
         if (group.size() == 1)
         {
-            group[0]->run();   
+            group[0]->run();
             delete group[0];
         }
         else
         {
             int numTasks = group.size();
-            completedTasks = 0;
-            auto barrier = new Barrier(numTasks);
+
+            CommandInterface::completedTasks = 0;
+
+            auto barrierOwner = std::make_unique<Barrier>(numTasks);
+            Barrier *barrier = barrierOwner.get();
+            
             for (CommandInterface *cmd : group)
             {
                 if (cmd->isSubsystemOccupied())
                 {
-                    __throw_invalid_argument("Subsystem pointer must not already be use by a Command");
-                    std::exit(1); 
-                    
+                    while (true)
+                    {
+                        vex::this_thread::yield();
+                    }
+                    // throw std::runtime_error("Subsystem pointer must not already be use by a Command");
                 }
                 cmd->occupySubsystem();
                 make_task(([cmd, barrier]()
-                           {   
+                           {    
                     barrier->wait();
                     cmd->run();   
-                    commandCompletion.broadcast();
-                    return 0; })); 
-                delete cmd; // Don't need it after the task was made
+                    completeTask();
+                    delete cmd;
+                    return 0; }));
             }
-            while (numTasks != completedTasks.load())
+            while (numTasks != CommandInterface::completedTasks.load())
             {
                 vex::this_thread::yield();
             }
-            delete barrier;
         }
     }
-}; 
-
+};
