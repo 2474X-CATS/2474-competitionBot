@@ -3,7 +3,8 @@
 
 #include <vector>
 #include "vex.h"
-#include "mirror.h"
+#include "mirror.h" 
+using namespace vex;
 /*
   The robot brings it all together
 
