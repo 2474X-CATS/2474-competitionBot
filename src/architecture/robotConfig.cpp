@@ -2,9 +2,14 @@
 #include "math.h"
 
 vex::brain Brain;
+brain Brain;
 
 vex::controller Controller = vex::controller(vex::controllerType::primary);
+controller Controller = controller(controllerType::primary);
 
+/*
+ TO-DO:
+   o- Initialize all vex devices here (motors/sensors/pneumatics/etc)
 /*
  TO-DO:
    o- Initialize all vex devices here (motors/sensors/pneumatics/etc)
@@ -13,6 +18,10 @@ vex::controller Controller = vex::controller(vex::controllerType::primary);
    o- Initialize all vex devices here (motors/sensors/pneumatics/etc)
    o- Initialize constants
 */
+*/
+
+//-------
+
 // Constants: PLACE HERE [regularly]
 double ABSOLUTE_INDEXER_SPEED = 1;
 double DRIVE_WHEEL_RADIUS_MM = 76.2;
@@ -38,8 +47,6 @@ vex::motor_group rightDriveMotors = vex::motor_group(driveFrontRight, driveBackR
 vex::motor indexerMotor = motor(PORT14); 
 vex::pneumatics hoodPiston = pneumatics(Brain.ThreeWirePort.G);
 //-------
-
-void vexcodeInit() {
 
 void vexcodeInit() {
 
