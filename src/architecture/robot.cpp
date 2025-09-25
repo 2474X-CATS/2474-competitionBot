@@ -2,7 +2,11 @@
 #include "subsystem.h"
 #include "telemetry.h"
 #include "command.h"
-using namespace vex;
+
+void timelyWait(long lastTimestamp, long timeInterval)
+{
+  wait(timeInterval - (Brain.Timer.time() - lastTimestamp), msec);
+}
 
 void drawCircleButton(int x, int y, string buttonName)
 {
@@ -42,7 +46,7 @@ void drawJoystick(int x, int y, string location)
   Brain.Screen.drawCircle(x, y, 30, Color.black);
   int horizontalPower = Telemetry::inst.getValueAt<int>("system", "Controller/Axis-Hori-" + location);
   int verticalPower = Telemetry::inst.getValueAt<int>("system", "Controller/Axis-Vert-" + location);
-  Brain.Screen.drawCircle(x + ((30 / 2) * (horizontalPower / 100)), y - ((30 / 2) * (verticalPower / 100)), 30);
+  Brain.Screen.drawCircle(x + (int)((30.0 / 2) * (horizontalPower / 100.0)), y - (int)((30.0 / 2) * (verticalPower / 100.0)), 30);
 }
 
 void displayGraphicalData()
@@ -69,31 +73,14 @@ void displayGraphicalData()
   drawRectButton(350, 25, 50, 30, "R1");
 }
 
-void Robot::driverControl()
-{
-  Subsystem::initSystems();
-  while (true)
-  {
-    Subsystem::updateSystems();
-    vex::this_thread::sleep_for(20);
-  }
-};
+Robot::Robot() {
 
-void Robot::setAutonomousCommand(std::vector<std::vector<CommandInterface *>> comm)
-{
-  autonomousCommand = comm;
 };
 
 void Robot::initialize()
 {
-
   registerSystemSubtable();
   Subsystem::initSystems();
-};
-
-void Robot::autonControl()
-{
-  CommandInterface::runCommandGroup(Robot::autonomousCommand);
 };
 
 void Robot::registerSystemSubtable()
@@ -120,7 +107,111 @@ void Robot::registerSystemSubtable()
       });
 };
 
+void Robot::driverControl(bool mirrorControlled)
+{
+  if (!isActive())
+    mirrorControlled = false;
+  Subsystem::initSystems();
+  long timestamp;
+  if (mirrorControlled)
+  {
+    timestamp = Brain.Timer.time();
+    while (isActive())
+    {
+      Subsystem::updateSystems();
+      timelyWait(timestamp, 20);
+      timestamp = Brain.Timer.time();
+    }
+  }
+  else
+  {
+    timestamp = Brain.Timer.time();
+    while (true)
+    {
+      Subsystem::updateSystems();
+      timelyWait(timestamp, 20);
+      timestamp = Brain.Timer.time();
+    }
+  }
+};
+
+bool Robot::isActive()
+{
+  return inputTracker != nullptr || outputLogger != nullptr;
+}
+
 void Robot::updateSystemSubtable()
+{
+  if (inputTracker != nullptr)
+  {
+    rawLog();
+    saveFrame();
+    if (inputTracker->isFull())
+    {
+      delete inputTracker;
+      inputTracker = nullptr;
+    }
+  }
+  else if (outputLogger != nullptr)
+  {
+    artificialLog();
+    if (outputLogger->isDone())
+    {
+      delete outputLogger;
+      outputLogger = nullptr;
+    }
+  }
+  else
+  {
+    rawLog();
+  }
+};
+
+void Robot::saveFrame()
+{
+  inputTracker->captureFrame(
+      new int[4]{
+          Controller.Axis3.position(),
+          Controller.Axis4.position(),
+          Controller.Axis2.position(),
+          Controller.Axis1.position()},
+      new bool[12]{
+          Controller.ButtonA.pressing(),
+          Controller.ButtonB.pressing(),
+          Controller.ButtonX.pressing(),
+          Controller.ButtonY.pressing(),
+          Controller.ButtonDown.pressing(),
+          Controller.ButtonUp.pressing(),
+          Controller.ButtonLeft.pressing(),
+          Controller.ButtonRight.pressing(),
+          Controller.ButtonL1.pressing(),
+          Controller.ButtonL2.pressing(),
+          Controller.ButtonR1.pressing(),
+          Controller.ButtonR2.pressing()});
+}
+
+void Robot::artificialLog()
+{
+  FrameData data = outputLogger->getNextFrame();
+  Telemetry::inst.placeValueAt<int>(data.axises[0], "system", "Controller/Axis-Vert-Left");
+  Telemetry::inst.placeValueAt<int>(data.axises[1], "system", "Controller/Axis-Hori-Left");
+  Telemetry::inst.placeValueAt<int>(data.axises[2], "system", "Controller/Axis-Vert-Right");
+  Telemetry::inst.placeValueAt<int>(data.axises[3], "system", "Controller/Axis-Hori-Right");
+  Telemetry::inst.placeValueAt<bool>(data.buttons[0], "system", "Controller/Button_A");
+  Telemetry::inst.placeValueAt<bool>(data.buttons[1], "system", "Controller/Button_B");
+  Telemetry::inst.placeValueAt<bool>(data.buttons[2], "system", "Controller/Button_X");
+  Telemetry::inst.placeValueAt<bool>(data.buttons[3], "system", "Controller/Button_Y");
+  Telemetry::inst.placeValueAt<bool>(data.buttons[4], "system", "Controller/Button_DOWN");
+  Telemetry::inst.placeValueAt<bool>(data.buttons[5], "system", "Controller/Button_UP");
+  Telemetry::inst.placeValueAt<bool>(data.buttons[6], "system", "Controller/Button_LEFT");
+  Telemetry::inst.placeValueAt<bool>(data.buttons[7], "system", "Controller/Button_RIGHT");
+  Telemetry::inst.placeValueAt<bool>(data.buttons[8], "system", "Controller/Button_L1");
+  Telemetry::inst.placeValueAt<bool>(data.buttons[9], "system", "Controller/Button_L2");
+  Telemetry::inst.placeValueAt<bool>(data.buttons[10], "system", "Controller/Button_R1");
+  Telemetry::inst.placeValueAt<bool>(data.buttons[11], "system", "Controller/Button_R2");
+}
+
+void Robot::rawLog()
 {
   Telemetry::inst.placeValueAt<int>(Controller.Axis3.position(), "system", "Controller/Axis-Vert-Left");
   Telemetry::inst.placeValueAt<int>(Controller.Axis4.position(), "system", "Controller/Axis-Hori-Left");
@@ -138,7 +229,7 @@ void Robot::updateSystemSubtable()
   Telemetry::inst.placeValueAt<bool>(Controller.ButtonL2.pressing(), "system", "Controller/Button_L2");
   Telemetry::inst.placeValueAt<bool>(Controller.ButtonR1.pressing(), "system", "Controller/Button_R1");
   Telemetry::inst.placeValueAt<bool>(Controller.ButtonR2.pressing(), "system", "Controller/Button_R2");
-};
+}
 
 void Robot::runTelemetryThread(bool showGraphics)
 {
@@ -153,3 +244,26 @@ void Robot::runTelemetryThread(bool showGraphics)
     vex::this_thread::sleep_for(20);
   }
 };
+
+void Robot::initializeMirror(MirrorMode mode, string filename)
+{
+  Brain.Screen.print("HI");
+  if (mode == MirrorMode::REFLECT)
+    outputLogger = new ReflectiveMirror(filename);
+  if (mode == MirrorMode::ABSORB)
+    inputTracker = new AbsorbtiveMirror(filename);
+}
+
+////////////////////////////////////////////////////////////////////////////
+void Robot::setAutonomousCommand(std::vector<std::vector<CommandInterface *>> comm)
+{
+  autonomousCommand = comm;
+};
+////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////
+void Robot::autonControl()
+{
+  CommandInterface::runCommandGroup(Robot::autonomousCommand);
+};
+/////////////////////////////////////////////////////////////////////

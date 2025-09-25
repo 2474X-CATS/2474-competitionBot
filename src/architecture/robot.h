@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "vex.h"
+#include "mirror.h"
 /*
   The robot brings it all together
 
@@ -25,13 +26,31 @@ class Robot
 private:
    void registerSystemSubtable();
    void updateSystemSubtable();
+   //
    std::vector<std::vector<CommandInterface *>> autonomousCommand;
+   //
+   bool isActive();
+
+   void saveFrame();
+   void artificialLog();
+   void rawLog(); 
+
+   AbsorbtiveMirror *inputTracker = nullptr;
+   ReflectiveMirror *outputLogger = nullptr;
 
 public:
+   Robot();
+
    void initialize();
-   void driverControl();
+
+   void driverControl(bool mirrorControlled);
+
+   void initializeMirror(MirrorMode mode, string filename);
+
    void autonControl();
+
    void runTelemetryThread(bool showGraphics);
+
    void setAutonomousCommand(std::vector<std::vector<CommandInterface *>> comm);
 };
 

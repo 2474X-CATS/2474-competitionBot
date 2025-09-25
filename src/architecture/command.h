@@ -95,7 +95,7 @@ public:
   void run() override
   {
     this->start();
-    while (!isOver() && Competition.isAutonomous()){
+    while (!isOver()){
       this->periodic(); 
       vex::this_thread::sleep_for(20);
     } while (!isOver()); 

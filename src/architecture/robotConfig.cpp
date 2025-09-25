@@ -8,6 +8,9 @@ vex::controller Controller = vex::controller(vex::controllerType::primary);
 /*
  TO-DO:
    o- Initialize all vex devices here (motors/sensors/pneumatics/etc)
+/*
+ TO-DO:
+   o- Initialize all vex devices here (motors/sensors/pneumatics/etc)
    o- Initialize constants
 */
 // Constants: PLACE HERE [regularly]
@@ -35,6 +38,8 @@ vex::motor_group rightDriveMotors = vex::motor_group(driveFrontRight, driveBackR
 vex::motor indexerMotor = motor(PORT14); 
 vex::pneumatics hoodPiston = pneumatics(Brain.ThreeWirePort.G);
 //-------
+
+void vexcodeInit() {
 
 void vexcodeInit() {
 
