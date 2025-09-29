@@ -5,8 +5,9 @@
 #include "../architecture/command.h"
 
 typedef enum { 
-   STORAGE, 
-   CIRCULATE, 
+   HIGH, 
+   MID,  
+   STORAGE,
    NONE
 } Feed;
 

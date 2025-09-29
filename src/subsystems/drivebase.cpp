@@ -6,7 +6,8 @@
 //---Drivebase: SUBSYSTEM
 
 void Drivebase::init()
-{
+{ 
+   Brain.Screen.print("Added the drivebase to the list of systems");
    leftDriveMotors.setStopping(vex::brakeType::brake); 
    rightDriveMotors.setStopping(vex::brakeType::brake);
    driveGyro.calibrate();  
@@ -28,13 +29,15 @@ void Drivebase::init()
 };
 
 void Drivebase::periodic()
-{ 
-   arcadeDrive(getFromInputs<double>("Controller/Axis-Vert-Left") * speedFactor, getFromInputs<double>("Controller/Axis-Hori-Right") * speedFactor);
+{  
+   Brain.Screen.print("Updating"); 
+   Brain.Screen.newLine();
+   arcadeDrive(getFromInputs<int>("Controller/Axis-Vert-Left") * speedFactor, getFromInputs<int>("Controller/Axis-Hori-Right") * speedFactor);
 };
 //TO-DO: FIX
 void Drivebase::updateTelemetry()
 { 
-   
+   Brain.Screen.print("Updating telemetry");
    set<double>("Angle_Degrees", driveGyro.heading()); 
 
    double x = get<double>("Pos_X");

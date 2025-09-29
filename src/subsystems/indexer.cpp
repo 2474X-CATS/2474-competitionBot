@@ -13,27 +13,54 @@ void Indexer::updateTelemetry(){
 
 void Indexer::periodic(){ 
   switch (getScoringMode()){ 
-     case CIRCULATE: 
-       indexerMotor.setVelocity(-ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm); 
-       hoodPiston.close();
+     case HIGH: 
+       indexerMotor.setVelocity(-ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm); // Indexer spins outwards toward goal
+       
+       intake.setVelocity(-50 * 60, vex::velocityUnits::rpm);
+       
+       hoodPiston.open();  
+
+       hopperMotor.setVelocity(50, vex::velocityUnits::rpm);
        break; 
+     case MID: 
+       indexerMotor.setVelocity(ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm);  // Indexer spins inwards from goal
+       
+       intake.setVelocity(-50 * 60, vex::velocityUnits::rpm);
+       
+       hoodPiston.close();   
+
+       hopperMotor.setVelocity(50, vex::velocityUnits::rpm);
+       break;  
      case STORAGE: 
-       indexerMotor.setVelocity(ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm);  
-       hoodPiston.open(); 
-       break; 
-     default:   
-       indexerMotor.setVelocity(0, vex::percentUnits::pct);
+       indexerMotor.setVelocity(-ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm); // Indexer spins inward from the goal 
+       
+       intake.setVelocity(-50 * 60, vex::velocityUnits::rpm); 
+       
+       hoodPiston.close();  
+
+       hopperMotor.setVelocity(50, vex::velocityUnits::rpm);
+       break;
+     default:    
+       // Stop everything
+       indexerMotor.setVelocity(0, vex::percentUnits::pct); 
+
+       intake.setVelocity(0, vex::velocityUnits::pct);  
+
+       hopperMotor.setVelocity(0, vex::velocityUnits::pct);
        break;
   }; 
-  indexerMotor.spin(vex::directionType::fwd);
+  indexerMotor.spin(vex::directionType::fwd); 
+  intake.spin(vex::directionType::fwd);
 };
 
 Feed Indexer::getScoringMode(){  
     Feed goal; 
     if (getFromInputs<bool>("Controller/Button_A")){ 
-        goal = Feed::CIRCULATE; 
+        goal = Feed::HIGH; 
     } else if (getFromInputs<bool>("Controller/Button_B")){ 
-        goal = Feed::STORAGE; 
+        goal = Feed::MID; 
+    } else if (getFromInputs<bool>("Controller/Button_L2")) {  
+        goal = Feed::STORAGE;
     } else { 
         goal = Feed::NONE; 
     };

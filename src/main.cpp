@@ -1,7 +1,9 @@
 #include "vex.h"
 #include "architecture/robot.h"
 #include <iostream>
-#include "architecture/taskUtils.hpp" 
+#include "architecture/taskUtils.hpp"  
+#include "subsystems/drivebase.h" 
+#include "subsystems/indexer.h"
 
 using namespace vex;
 
@@ -20,9 +22,9 @@ void runTelemetry(){
 } 
 
 void freeDrive(){ 
-  robot.initialize();   
-  thread telem = thread(runTelemetry);
-  robot.driverControl(false); 
+ robot.initialize(); 
+ thread telemetryThread = thread(runTelemetry); 
+ robot.driverControl(false); 
 } 
 
 void mirrorMobilize(MirrorMode mode, string filename)
@@ -76,8 +78,18 @@ int main()
   } 
   Brain.Screen.print(framesPassed); 
   wait(5, sec); 
-  */  
- freeDrive();
+  */   
+ //Drivebase drive = Drivebase(0,0); 
+ //Indexer indexer;
+ //freeDrive();   
+ Drivebase drive = Drivebase(0,0); 
+ Indexer indexer; 
+ /*
+ robot.initialize(); 
+ thread telemetryThread = thread(runTelemetry); 
+ robot.driverControl(false); 
+ */ 
+freeDrive();
  
  // start();
 }

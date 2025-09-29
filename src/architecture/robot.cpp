@@ -78,13 +78,15 @@ Robot::Robot() {
 };
 
 void Robot::initialize()
-{
+{ 
+  Brain.Screen.print("Systems are ready!");
   registerSystemSubtable();
   Subsystem::initSystems();
 };
 
 void Robot::registerSystemSubtable()
-{
+{ 
+  Brain.Screen.print("The input values are ready to be set");
   Telemetry::inst.registerSubtable(
       "system",
       {
@@ -212,7 +214,8 @@ void Robot::artificialLog()
 }
 
 void Robot::rawLog()
-{
+{ 
+  Brain.Screen.print("I am logging data manually");
   Telemetry::inst.placeValueAt<int>(Controller.Axis3.position(), "system", "Controller/Axis-Vert-Left");
   Telemetry::inst.placeValueAt<int>(Controller.Axis4.position(), "system", "Controller/Axis-Hori-Left");
   Telemetry::inst.placeValueAt<int>(Controller.Axis2.position(), "system", "Controller/Axis-Vert-Right");
