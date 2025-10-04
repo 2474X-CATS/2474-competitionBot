@@ -1,6 +1,6 @@
-#include <string>
-#include "mirror.h"
 #include <sstream>
+#include "mirror.h"
+
 
 /*
 string getStringFromFrame(FrameData frame){
@@ -50,8 +50,10 @@ FrameData getFrameFromString(string str)
             strVal >> data.axises[tokensPassed];
          }
          else if (tokensPassed <= 16)
-         {
-            strVal >> data.buttons[tokensPassed - 4];
+         { 
+            int val; 
+            strVal >> val;
+            data.buttons[tokensPassed - 4] = (val == 1);
          }
          startingIndex = endingIndex + 1;
          tokensPassed += 1;
@@ -61,46 +63,40 @@ FrameData getFrameFromString(string str)
    return data;
 };
 
-FrameData getFrameFromData(int axises[4], bool buttons[12])
-{
-   FrameData frame;
-   for (int i = 0; i < 4; i++)
-   {
-      frame.axises[i] = axises[i];
-   }
-   for (int i = 0; i < 12; i++)
-   {
-      frame.buttons[i] = buttons[i];
-   }
-   return frame;
-};
 
 ReflectiveMirror::ReflectiveMirror(string filename)
-    : readStream(ifstream(filename)), currentFrame(0)
-{
-   string line;
-   while (getline(readStream, line))
-   {
-      frames.push_back(getFrameFromString(line));
-      numFrames += 1;
-   }
-   readStream.close();
+    : readStream(fopen(filename.c_str(), "r"))
+{  
+   
 };
 
+std::string getLine(FILE* file) {
+    std::string line;
+    int c;
+    while ((c = fgetc(file)) != EOF) {
+        if (c == '\n') break;
+        line.push_back(static_cast<char>(c));
+    }
+    return line;
+} 
+
 FrameData ReflectiveMirror::getNextFrame()
-{
-   FrameData result;
-   if (isDone())
-      result = defaultFrame;
-   else
-      result = frames[currentFrame];
-   currentFrame += 1;
+{  
+   FrameData result{}; 
+   if (!isDone()){ 
+      result = getFrameFromString(getLine(readStream));
+   }  
    return result;
 };
 
 bool ReflectiveMirror::isDone()
 {
-   return currentFrame >= numFrames;
+   return feof(readStream);
+} 
+
+ReflectiveMirror::~ReflectiveMirror(){  
+   if (readStream)
+      fclose(readStream);
 }
 
 //-----------------------------------------------
@@ -109,9 +105,9 @@ int AbsorbtiveMirror::AUTONFRAMES = 15 * 50;
 int AbsorbtiveMirror::SKILLFRAMES = 60 * 50;
 
 AbsorbtiveMirror::AbsorbtiveMirror(string filename)
-    : writeStream(ofstream(filename))
-{
-   string fileSuffix = filename.substr(filename.length() - 3);
+    : writeStream(fopen(filename.c_str(), "w"))
+{ 
+   string fileSuffix = filename.substr(filename.length() - 4);
    if (fileSuffix == "auto")
       maximumFrames = AbsorbtiveMirror::AUTONFRAMES;
    if (fileSuffix == "skil")
@@ -122,10 +118,14 @@ void AbsorbtiveMirror::captureFrame(int axises[4], bool buttons[12])
 {
    if (!isFull())
    {
-      writeStream << getStringFromData(axises, buttons) << endl;
+      fprintf(writeStream, "%s\n", getStringFromData(axises, buttons).c_str());
       writtenFrames += 1;
    }
 };
+
+int AbsorbtiveMirror::getWrittenFrames(){ 
+   return writtenFrames;
+} 
 
 bool AbsorbtiveMirror::isFull()
 {
@@ -134,9 +134,8 @@ bool AbsorbtiveMirror::isFull()
 
 AbsorbtiveMirror::~AbsorbtiveMirror()
 {
-   writeStream.close();
+   fclose(writeStream);
 }
 
-FrameData defaultFrame = getFrameFromData(
-    new int[4]{0, 0, 0, 0},
-    new bool[12]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+
+

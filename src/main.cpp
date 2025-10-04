@@ -1,9 +1,11 @@
 #include "vex.h"
 #include "architecture/robot.h"
 #include <iostream>
-#include "architecture/taskUtils.hpp"  
+#include "architecture/taskUtils.hpp"   
+/*
 #include "subsystems/drivebase.h" 
-#include "subsystems/indexer.h"
+#include "subsystems/indexer.h" 
+*/
 
 using namespace vex;
 
@@ -68,28 +70,6 @@ int main()
 {
 
   vexcodeInit();
-  // Initialize subsystems
-  //mirrorMobilize(MirrorMode::ABSORB, "inputFiles/autons/test1.auto");   
-  /*
-  int framesPassed = 0;
-  while (Brain.Timer.time(vex::timeUnits::sec) <= 60){ 
-     framesPassed += 1; 
-     wait(20, msec);
-  } 
-  Brain.Screen.print(framesPassed); 
-  wait(5, sec); 
-  */   
- //Drivebase drive = Drivebase(0,0); 
- //Indexer indexer;
- //freeDrive();   
- Drivebase drive = Drivebase(0,0); 
- Indexer indexer; 
- /*
- robot.initialize(); 
- thread telemetryThread = thread(runTelemetry); 
- robot.driverControl(false); 
- */ 
-freeDrive();
- 
- // start();
+  // Initialize subsystems  
+  mirrorMobilize(MirrorMode::REFLECT, "test1.auto"); 
 }

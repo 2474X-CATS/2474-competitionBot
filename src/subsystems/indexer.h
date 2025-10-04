@@ -9,7 +9,7 @@ typedef enum {
    MID,  
    STORAGE,
    NONE
-} Feed;
+} Feed; 
 
 class Indexer : public Subsystem
 { 
@@ -19,7 +19,8 @@ public:
 
     Indexer() : Subsystem(
                     "indexer",
-                    {(EntrySet){"isOn", EntryType::BOOL}}) {}  
+                    {(EntrySet){"isOn", EntryType::BOOL}
+                    }) {}  
     void init() override; 
     void periodic() override; 
     void updateTelemetry() override;  

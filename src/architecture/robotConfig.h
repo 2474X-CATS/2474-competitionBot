@@ -13,7 +13,7 @@ extern vex::controller Controller;
 //-------
 
 // Constants: PLACE HERE [using extern] 
-extern double ABSOLUTE_INTAKE_SPEED;
+
 extern double ABSOLUTE_INDEXER_SPEED;
 extern double DRIVE_WHEEL_RADIUS_MM;
 extern double TRACK_WIDTH_MM;      // Dist between the center point of the right and left wheel groups
@@ -29,17 +29,16 @@ extern vex::motor driveBackRight;
 extern vex::motor driveMidLeft;
 extern vex::motor driveMidRight; 
 
-extern vex::motor intake;
-
 extern vex::motor_group leftDriveMotors; 
 extern vex::motor_group rightDriveMotors; 
 
-extern double ABSOLUTE_INDEXER_SPEED; 
-
 extern vex::motor indexerMotor;  
-extern vex::pneumatics hoodPiston;  
+extern vex::pneumatics hoodPiston;   
 
-extern vex::motor hopperMotor;
+extern vex::motor temp_hopperMotor; 
+extern vex::motor temp_intakeMotor;
+
+
 
 // extern encoder driveRotationEncoder;
 // extern encoder drivePowerEncoder;

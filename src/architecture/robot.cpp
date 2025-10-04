@@ -79,14 +79,12 @@ Robot::Robot() {
 
 void Robot::initialize()
 { 
-  Brain.Screen.print("Systems are ready!");
   registerSystemSubtable();
   Subsystem::initSystems();
 };
 
 void Robot::registerSystemSubtable()
 { 
-  Brain.Screen.print("The input values are ready to be set");
   Telemetry::inst.registerSubtable(
       "system",
       {
@@ -111,56 +109,53 @@ void Robot::registerSystemSubtable()
 
 void Robot::driverControl(bool mirrorControlled)
 {
-  if (!isActive())
-    mirrorControlled = false;
+  if (!isActive() && mirrorControlled){
+    mirrorControlled = false;  
+  }  
+
   Subsystem::initSystems();
-  long timestamp;
   if (mirrorControlled)
   {
-    timestamp = Brain.Timer.time();
     while (isActive())
     {
       Subsystem::updateSystems();
-      timelyWait(timestamp, 20);
-      timestamp = Brain.Timer.time();
+      wait(20, msec);
     }
   }
   else
   {
-    timestamp = Brain.Timer.time();
     while (true)
     {
       Subsystem::updateSystems();
-      timelyWait(timestamp, 20);
-      timestamp = Brain.Timer.time();
+      wait(20, msec);
     }
   }
 };
 
 bool Robot::isActive()
 {
-  return inputTracker != nullptr || outputLogger != nullptr;
+  return !(inputTracker == nullptr && outputLogger == nullptr);
 }
 
 void Robot::updateSystemSubtable()
 {
   if (inputTracker != nullptr)
-  {
+  { 
     rawLog();
     saveFrame();
     if (inputTracker->isFull())
     {
       delete inputTracker;
-      inputTracker = nullptr;
+      inputTracker = nullptr; 
     }
   }
   else if (outputLogger != nullptr)
   {
-    artificialLog();
+    artificialLog(); 
     if (outputLogger->isDone())
     {
       delete outputLogger;
-      outputLogger = nullptr;
+      outputLogger = nullptr; 
     }
   }
   else
@@ -170,7 +165,7 @@ void Robot::updateSystemSubtable()
 };
 
 void Robot::saveFrame()
-{
+{ 
   inputTracker->captureFrame(
       new int[4]{
           Controller.Axis3.position(),
@@ -189,11 +184,11 @@ void Robot::saveFrame()
           Controller.ButtonL1.pressing(),
           Controller.ButtonL2.pressing(),
           Controller.ButtonR1.pressing(),
-          Controller.ButtonR2.pressing()});
+          Controller.ButtonR2.pressing()}); 
 }
 
 void Robot::artificialLog()
-{
+{ 
   FrameData data = outputLogger->getNextFrame();
   Telemetry::inst.placeValueAt<int>(data.axises[0], "system", "Controller/Axis-Vert-Left");
   Telemetry::inst.placeValueAt<int>(data.axises[1], "system", "Controller/Axis-Hori-Left");
@@ -215,7 +210,6 @@ void Robot::artificialLog()
 
 void Robot::rawLog()
 { 
-  Brain.Screen.print("I am logging data manually");
   Telemetry::inst.placeValueAt<int>(Controller.Axis3.position(), "system", "Controller/Axis-Vert-Left");
   Telemetry::inst.placeValueAt<int>(Controller.Axis4.position(), "system", "Controller/Axis-Hori-Left");
   Telemetry::inst.placeValueAt<int>(Controller.Axis2.position(), "system", "Controller/Axis-Vert-Right");
@@ -237,7 +231,7 @@ void Robot::rawLog()
 void Robot::runTelemetryThread(bool showGraphics)
 {
   while (true)
-  {
+  { 
     updateSystemSubtable();
     Subsystem::refreshTelemetry();
     if (showGraphics)
@@ -249,12 +243,18 @@ void Robot::runTelemetryThread(bool showGraphics)
 };
 
 void Robot::initializeMirror(MirrorMode mode, string filename)
-{
-  Brain.Screen.print("HI");
-  if (mode == MirrorMode::REFLECT)
-    outputLogger = new ReflectiveMirror(filename);
-  if (mode == MirrorMode::ABSORB)
-    inputTracker = new AbsorbtiveMirror(filename);
+{  
+
+  if (!Brain.SDcard.isInserted()){
+    Brain.Screen.print("----ERROR: NEED SDCARD TO MANIPULATE FILES----\n");
+    return;  
+  }
+  if (mode == MirrorMode::REFLECT){
+    outputLogger = new ReflectiveMirror(filename);  
+  }  
+  if (mode == MirrorMode::ABSORB) {
+    inputTracker = new AbsorbtiveMirror(filename); 
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////
