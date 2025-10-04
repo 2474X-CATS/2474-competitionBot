@@ -2,11 +2,8 @@
 #include "architecture/robot.h"
 #include <iostream>
 #include "architecture/taskUtils.hpp"   
-/*
 #include "subsystems/drivebase.h" 
 #include "subsystems/indexer.h" 
-*/
-
 using namespace vex;
 
 competition Competition; 
