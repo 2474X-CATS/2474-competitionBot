@@ -4,8 +4,12 @@
 #include "command.h"
 
 void timelyWait(long lastTimestamp, long timeInterval)
-{
-  wait(timeInterval - (Brain.Timer.time() - lastTimestamp), msec);
+{  
+  long nextTimestamp = lastTimestamp + timeInterval;
+  long waitTime = nextTimestamp - Brain.Timer.time();
+  if (waitTime < 0) 
+     waitTime = 0;
+  wait(waitTime, msec);
 }
 
 void drawCircleButton(int x, int y, string buttonName)
@@ -112,54 +116,62 @@ void Robot::driverControl(bool mirrorControlled)
   if (!isActive() && mirrorControlled){
     mirrorControlled = false;  
   }  
-
-  Subsystem::initSystems();
+  Subsystem::initSystems(); 
+  double timestamp; 
   if (mirrorControlled)
-  {
+  { 
+    timestamp = Brain.Timer.time();
     while (isActive())
-    {
+    { 
       Subsystem::updateSystems();
-      wait(20, msec);
+      timelyWait(timestamp, 20); 
+      timestamp = Brain.Timer.time();
     }
   }
   else
-  {
+  { 
+    timestamp = Brain.Timer.time();
     while (true)
     {
       Subsystem::updateSystems();
-      wait(20, msec);
+      timelyWait(timestamp, 20); 
+      timestamp  = Brain.Timer.time();
     }
   }
 };
 
 bool Robot::isActive()
 {
-  return !(inputTracker == nullptr && outputLogger == nullptr);
+  return (inputTracker != nullptr || outputLogger != nullptr);
 }
 
 void Robot::updateSystemSubtable()
 {
   if (inputTracker != nullptr)
   { 
-    rawLog();
-    saveFrame();
     if (inputTracker->isFull())
     {
       delete inputTracker;
-      inputTracker = nullptr; 
-    }
+      inputTracker = nullptr;  
+      Controller.rumble("---");  
+      return;
+    } 
+    rawLog();
+    saveFrame();
   }
   else if (outputLogger != nullptr)
-  {
-    artificialLog(); 
+  { 
     if (outputLogger->isDone())
     {
       delete outputLogger;
-      outputLogger = nullptr; 
+      outputLogger = nullptr;  
+      Controller.rumble("...");  
+      return;
     }
+    artificialLog(); 
   }
   else
-  {
+  { 
     rawLog();
   }
 };

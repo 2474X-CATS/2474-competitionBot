@@ -48,18 +48,19 @@ void startMatch(MatchType type, string auton, string auton_skills){
       case CODING_SKILLS:   
         robot.initializeMirror(MirrorMode::REFLECT, auton_skills); 
         break;
-      case COMPETITIVE: 
-        robot.initializeMirror(MirrorMode::REFLECT, auton); 
-        break;
-      default: 
+      default:  
+        robot.initializeMirror(MirrorMode::REFLECT, auton);
         break;
     } 
     robot.initialize();
     Competition.drivercontrol([]()
                             { robot.driverControl(false);});
     Competition.autonomous([]()
-                         { robot.driverControl(true);});
-    robot.runTelemetryThread(false);
+                         { robot.driverControl(true);}); 
+    while (!Competition.isEnabled()){ 
+      this_thread::yield();
+    }
+    robot.runTelemetryThread(true);
 }
 
 
@@ -68,5 +69,17 @@ int main()
 
   vexcodeInit();
   // Initialize subsystems  
-  mirrorMobilize(MirrorMode::REFLECT, "test1.auto"); 
-}
+  /* 
+    1: Configure auton 
+    2: Test auton 
+    3: Configure coding skills run
+    4: Test coding skills run 
+    5: Run match | Competitive 
+    6: Run match | Driver skills 
+    7: Run match | Coding skills 
+    8: Free drive
+  */ 
+  freeDrive();
+  
+
+} 

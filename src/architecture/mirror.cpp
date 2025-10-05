@@ -33,7 +33,7 @@ string getStringFromData(int axises[4], bool buttons[12])
    }
    return result;
 }
-
+/*
 FrameData getFrameFromString(string str)
 {
    FrameData data;
@@ -61,7 +61,28 @@ FrameData getFrameFromString(string str)
       endingIndex += 1;
    }
    return data;
-};
+}; 
+*/
+FrameData getFrameFromString(string str) {
+    FrameData data{};
+    std::stringstream ss(str);
+    std::string token;
+    int i = 0;
+
+    while (std::getline(ss, token, ',') && i < 16) {
+        if (token.empty()) continue; // skip trailing empty field from last comma
+        int val = 0;
+        std::stringstream(token) >> val;
+        if (i < 4) {
+            data.axises[i] = val;
+        } else {
+            data.buttons[i - 4] = (val == 1);
+        }
+        i++;
+    }
+
+    return data;
+}
 
 
 ReflectiveMirror::ReflectiveMirror(string filename)
