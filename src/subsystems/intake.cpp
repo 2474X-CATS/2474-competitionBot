@@ -4,7 +4,6 @@
 
 void Intake::init(){
     currentValue = STOP;
-    intakeMotor.stop();
     set<bool>("isOn", true);
 };
 
@@ -21,7 +20,6 @@ void Intake::periodic() {
             intakeMotor.setVelocity(100, vex::percentUnits::pct);
             intakeMotor.spin(vex::directionType::fwd);
             break;
-
         case OUTTAKE: 
             intakeMotor.setVeloicty(-100, vex::percentUnits::pct);
             intakeMotor.spin(vex::directionType::fwd);

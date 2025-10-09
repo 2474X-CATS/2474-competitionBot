@@ -19,12 +19,12 @@ void Hood::periodic() {
 
     switch(currentAngle) {
         case IN:
-            hoodMotor.setVelocity(30, vex::percentUnits::pct);
-            hoodPiston.set(true); //piston in
+            //hoodMotor.setVelocity(30, vex::percentUnits::pct);
+            hoodPiston.close(); //piston in
             break;
         case OUT:
-            hoodMotor.setVelocity(30, vex::percentUnits::pct);
-            hoodPiston.set(false); //piston out
+            //hoodMotor.setVelocity(30, vex::percentUnits::pct);
+            hoodPiston.open(); //piston out
             break;
     }
 

@@ -19,7 +19,10 @@ void Hopper::periodic(){
     hopperMotor.setVelocity(100,vex::percentUnits::pct);
     hopperMotor.spin(vex::directionType::rev);
     break;
-// unload need o have some functionality
+// unload need o have some functionality 
+    case UNLOAD: 
+    hopperMotor.setVelocity(100, vex::percentUnits::pct); 
+    hopperMotor.spin(vex::directionType::fwd);
     default:
     //stop the hopper motor when no buttons are pressed
     hopperMotor.stop();

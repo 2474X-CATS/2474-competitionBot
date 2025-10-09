@@ -24,7 +24,7 @@ public:
     void updateTelemetry() override;
 
 private:
-    IntakeValue currentValue = STOP; //defult position
+    IntakeValue currentValue; //defult position
 
     //include port number and gear ratio
     vex::motor intakeMotor = vex::motor(vex::PORT18, false);
