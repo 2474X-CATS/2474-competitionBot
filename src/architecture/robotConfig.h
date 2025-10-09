@@ -35,6 +35,12 @@ extern vex::motor_group rightDriveMotors;
 extern vex::motor indexerMotor;  
 extern vex::pneumatics hoodPiston;   
 
+//Hopper System
+extern vex::motor hopperMotor; // Motor that moves discs inside robot
+
+//MatchLoader System
+extern vex::pneumatics matchloaderPiston; // Piston that loads discs
+
 
 
 
