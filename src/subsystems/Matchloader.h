@@ -19,7 +19,7 @@ public:
     using Subsystem:: getFromInputs;
 
     Matchloader() : Subsystem(
-        "matchloader".
+        "matchloader",
         {(EntrySet){"isOn", EntryType::BOOL}}
     ) {}
 
@@ -29,7 +29,7 @@ public:
 
 private:
     using Subsystem::set;
-    MatchloaderMode getMode(); //cehcks what button the driver pressed
+    MatchloaderMode getMode(); //checks what button the driver pressed
 };
 
 #endif

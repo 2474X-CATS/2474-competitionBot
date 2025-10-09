@@ -36,11 +36,12 @@ vex::motor_group rightDriveMotors = vex::motor_group(driveFrontRight, driveBackR
 vex::motor indexerMotor = vex::motor(vex::PORT19); 
 vex::pneumatics hoodPiston = vex::pneumatics(Brain.ThreeWirePort.G);  
 
-//Hopper system
-vex::motor hopperMotor = vex::motor(vex::PORT19);
+/// Hopper motor (moves discs up)
+vex::motor hopperMotor = vex::motor(vex::PORT17, vex::gearSetting::ratio18_1, false);
 
-//Matchloader
-vex::pneumatics matchloaderPiston = vex::pneumatics()
+// Matchloader piston (pushes discs into hopper)
+vex::pneumatics matchloaderPiston = vex::pneumatics(Brain.ThreeWirePort.H);
+
 
 //vex::motor intake = vex::motor(vex::PORT16);
 //-------

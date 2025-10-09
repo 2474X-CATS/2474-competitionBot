@@ -14,7 +14,7 @@ void Matchloader::updateTelemetry(){
 
 void Matchloader::periodic(){
     switch (getMode()) {
-        case LOAD_DISC
+        case LOAD_DISC:
         // push the disc into the robot using the piston
         matchloaderPiston.open();
         break;
@@ -36,7 +36,7 @@ MatchloaderMode Matchloader::getMode() {
 
     // X buttin = push disc (extend piston)
     if (getFromInputs<bool>("Controller/Button_X")){
-        mode = LOAD_DISC
+        mode = LOAD_DISC;
     }
 
     // Y button = pull piston back (retract)

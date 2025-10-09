@@ -29,7 +29,6 @@ public:
     void updateTelemetry() override; //used if you want to send info to a dashboard
 
 private:
-    using Subsystem::set;
 // this figures out what the driver wants the hopper to do
     HopperMode getMode();
 };
