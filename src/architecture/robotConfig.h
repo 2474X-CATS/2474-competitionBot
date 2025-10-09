@@ -44,9 +44,12 @@ extern vex::motor intakeMotor;
 =======
 extern vex::motor indexerMotor;
 extern vex::pneumatics hoodPiston;
+extern vex::motor indexerMotor;
+extern vex::pneumatics hoodPiston;
 
 extern vex::motor hopperMotor;
 >>>>>>> Stashed changes
+extern vex::motor hopperMotor;
 
 extern vex::motor intakeMotor;
 
