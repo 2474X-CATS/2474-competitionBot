@@ -41,7 +41,7 @@ extern vex::motor hopperMotor; // Motor that moves discs inside robot
 //MatchLoader System
 extern vex::pneumatics matchloaderPiston; // Piston that loads discs
 
-
+extern vex::motor intakeMotor;
 
 
 
