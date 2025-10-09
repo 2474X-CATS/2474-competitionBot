@@ -2,7 +2,7 @@
 #define __MIRROR_H__
 
 #include <vector>
-#include <cstdio> 
+#include <cstdio>
 #include <string>
 
 using namespace std;
@@ -25,8 +25,6 @@ extern FrameData defaultFrame;
 string getStringFromFrame(FrameData data);
 FrameData getFrameFromString(string str);
 
-
-
 class AbsorbtiveMirror
 {
 
@@ -35,12 +33,12 @@ private:
     static int SKILLFRAMES;
     int maximumFrames;
     int writtenFrames = 0;
-    FILE* writeStream;
+    FILE *writeStream;
 
 public:
     void captureFrame(int axises[4], bool buttons[12]);
-    
-    int getWrittenFrames(); 
+
+    int getWrittenFrames();
 
     bool isFull();
 
@@ -51,15 +49,13 @@ public:
 class ReflectiveMirror
 {
 
-private: 
-
-    FILE* readStream;
-
+private:
+    FILE *readStream;
 
 public:
     FrameData getNextFrame();
     bool isDone();
-    ReflectiveMirror(string filename);   
+    ReflectiveMirror(string filename);
     ~ReflectiveMirror();
 };
 

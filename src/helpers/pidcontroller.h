@@ -19,7 +19,7 @@ private:
   double kP;
   double kI;
   double kD;
-  
+
   double lastTimestamp = 0;
 
   double error = 0;
@@ -38,7 +38,7 @@ public:
 
   double calculate(double position, double timestamp);
 
-  bool atSetpoint(); 
+  bool atSetpoint();
 
   void setLastTimestamp(double timestamp);
 };

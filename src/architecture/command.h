@@ -6,8 +6,8 @@
 #include <stdexcept>
 #include <vex.h>
 #include <cstdlib>
-#include <atomic> 
-#include <functional> 
+#include <atomic>
+#include <functional>
 #include "robotConfig.h"
 
 /*
@@ -73,6 +73,7 @@ public:
   // CommandInterface(){};
   ~CommandInterface() {};
   virtual void run() = 0;
+
 protected:
   virtual void occupySubsystem() = 0;
   virtual bool isSubsystemOccupied() = 0;
@@ -95,10 +96,13 @@ public:
   void run() override
   {
     this->start();
-    while (!isOver()){
-      this->periodic(); 
+    while (!isOver())
+    {
+      this->periodic();
       vex::this_thread::sleep_for(20);
-    } while (!isOver()); 
+    }
+    while (!isOver())
+      ;
     end();
     for (Subsystem &sub : subsystems_)
     {

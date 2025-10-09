@@ -4,11 +4,11 @@
 #include "command.h"
 
 void timelyWait(long lastTimestamp, long timeInterval)
-{  
+{
   long nextTimestamp = lastTimestamp + timeInterval;
   long waitTime = nextTimestamp - Brain.Timer.time();
-  if (waitTime < 0) 
-     waitTime = 0;
+  if (waitTime < 0)
+    waitTime = 0;
   wait(waitTime, msec);
 }
 
@@ -82,13 +82,13 @@ Robot::Robot() {
 };
 
 void Robot::initialize()
-{ 
+{
   registerSystemSubtable();
   Subsystem::initSystems();
 };
 
 void Robot::registerSystemSubtable()
-{ 
+{
   Telemetry::inst.registerSubtable(
       "system",
       {
@@ -113,29 +113,31 @@ void Robot::registerSystemSubtable()
 
 void Robot::driverControl(bool mirrorControlled)
 {
-  if (!isActive() && mirrorControlled){
-    mirrorControlled = false;  
-  }  
-  Subsystem::initSystems(); 
-  double timestamp; 
+  if (!isActive() && mirrorControlled)
+  {
+    mirrorControlled = false;
+  }
+  Subsystem::initSystems();
+  double timestamp;
+  Controller.rumble("---"); 
   if (mirrorControlled)
-  { 
+  {
     timestamp = Brain.Timer.time();
     while (isActive())
-    { 
+    {
       Subsystem::updateSystems();
-      timelyWait(timestamp, 20); 
+      timelyWait(timestamp, 20);
       timestamp = Brain.Timer.time();
     }
   }
   else
-  { 
+  {
     timestamp = Brain.Timer.time();
     while (true)
     {
       Subsystem::updateSystems();
-      timelyWait(timestamp, 20); 
-      timestamp  = Brain.Timer.time();
+      timelyWait(timestamp, 20);
+      timestamp = Brain.Timer.time();
     }
   }
 };
@@ -148,36 +150,36 @@ bool Robot::isActive()
 void Robot::updateSystemSubtable()
 {
   if (inputTracker != nullptr)
-  { 
+  {
     if (inputTracker->isFull())
     {
       delete inputTracker;
-      inputTracker = nullptr;  
-      Controller.rumble("---");  
+      inputTracker = nullptr;
+      Controller.rumble("..."); 
       return;
-    } 
+    }
     rawLog();
     saveFrame();
   }
   else if (outputLogger != nullptr)
-  { 
+  {
     if (outputLogger->isDone())
     {
       delete outputLogger;
-      outputLogger = nullptr;  
-      Controller.rumble("...");  
+      outputLogger = nullptr;
+      Controller.rumble("..."); 
       return;
     }
-    artificialLog(); 
+    artificialLog();
   }
   else
-  { 
+  {
     rawLog();
   }
 };
 
 void Robot::saveFrame()
-{ 
+{
   inputTracker->captureFrame(
       new int[4]{
           Controller.Axis3.position(),
@@ -196,11 +198,11 @@ void Robot::saveFrame()
           Controller.ButtonL1.pressing(),
           Controller.ButtonL2.pressing(),
           Controller.ButtonR1.pressing(),
-          Controller.ButtonR2.pressing()}); 
+          Controller.ButtonR2.pressing()});
 }
 
 void Robot::artificialLog()
-{ 
+{
   FrameData data = outputLogger->getNextFrame();
   Telemetry::inst.placeValueAt<int>(data.axises[0], "system", "Controller/Axis-Vert-Left");
   Telemetry::inst.placeValueAt<int>(data.axises[1], "system", "Controller/Axis-Hori-Left");
@@ -221,7 +223,7 @@ void Robot::artificialLog()
 }
 
 void Robot::rawLog()
-{ 
+{
   Telemetry::inst.placeValueAt<int>(Controller.Axis3.position(), "system", "Controller/Axis-Vert-Left");
   Telemetry::inst.placeValueAt<int>(Controller.Axis4.position(), "system", "Controller/Axis-Hori-Left");
   Telemetry::inst.placeValueAt<int>(Controller.Axis2.position(), "system", "Controller/Axis-Vert-Right");
@@ -243,7 +245,7 @@ void Robot::rawLog()
 void Robot::runTelemetryThread(bool showGraphics)
 {
   while (true)
-  { 
+  {
     updateSystemSubtable();
     Subsystem::refreshTelemetry();
     if (showGraphics)
@@ -255,17 +257,20 @@ void Robot::runTelemetryThread(bool showGraphics)
 };
 
 void Robot::initializeMirror(MirrorMode mode, string filename)
-{  
+{
 
-  if (!Brain.SDcard.isInserted()){
+  if (!Brain.SDcard.isInserted())
+  {
     Brain.Screen.print("----ERROR: NEED SDCARD TO MANIPULATE FILES----\n");
-    return;  
+    return;
   }
-  if (mode == MirrorMode::REFLECT){
-    outputLogger = new ReflectiveMirror(filename);  
-  }  
-  if (mode == MirrorMode::ABSORB) {
-    inputTracker = new AbsorbtiveMirror(filename); 
+  if (mode == MirrorMode::REFLECT)
+  {
+    outputLogger = new ReflectiveMirror(filename);
+  }
+  if (mode == MirrorMode::ABSORB)
+  {
+    inputTracker = new AbsorbtiveMirror(filename);
   }
 }
 

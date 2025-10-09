@@ -49,28 +49,28 @@ class Drivebase : public Subsystem {
 class Subsystem
 {
 protected:
-   string label;
+  string label;
 
-   template <typename T>
-   void set(string entryName, T val)
-   {
-     Telemetry::inst.placeValueAt<T>(val, this->label, entryName);
-   };
+  template <typename T>
+  void set(string entryName, T val)
+  {
+    Telemetry::inst.placeValueAt<T>(val, this->label, entryName);
+  };
 
-public: 
-   template <typename T>
-   T get(string entryName)
-   {
-     return Telemetry::inst.getValueAt<T>(this->label, entryName);
-   };  
+public:
+  template <typename T>
+  T get(string entryName)
+  {
+    return Telemetry::inst.getValueAt<T>(this->label, entryName);
+  };
 
-   template <typename T>
-   T getFromInputs(string entryName)
-   {
-     return Telemetry::inst.getValueAt<T>("system", entryName);
-   }; 
-   
-   static std::vector<Subsystem*> systems;
+  template <typename T>
+  T getFromInputs(string entryName)
+  {
+    return Telemetry::inst.getValueAt<T>("system", entryName);
+  };
+
+  static std::vector<Subsystem *> systems;
 
   static void initSystems();
 

@@ -1,7 +1,6 @@
 #include <sstream>
 #include "mirror.h"
 
-
 /*
 string getStringFromFrame(FrameData frame){
   string result;
@@ -20,14 +19,14 @@ string getStringFromData(int axises[4], bool buttons[12])
 {
    string result;
    for (int i = 0; i < 4; i++)
-   { 
-      ostringstream additive; 
+   {
+      ostringstream additive;
       additive << axises[i] << ",";
       result += additive.str();
    }
    for (int i = 0; i < 12; i++)
    {
-      ostringstream additive; 
+      ostringstream additive;
       additive << buttons[i] << ",";
       result += additive.str();
    }
@@ -50,8 +49,8 @@ FrameData getFrameFromString(string str)
             strVal >> data.axises[tokensPassed];
          }
          else if (tokensPassed <= 16)
-         { 
-            int val; 
+         {
+            int val;
             strVal >> val;
             data.buttons[tokensPassed - 4] = (val == 1);
          }
@@ -61,61 +60,70 @@ FrameData getFrameFromString(string str)
       endingIndex += 1;
    }
    return data;
-}; 
+};
 */
-FrameData getFrameFromString(string str) {
-    FrameData data{};
-    std::stringstream ss(str);
-    std::string token;
-    int i = 0;
+FrameData getFrameFromString(string str)
+{
+   FrameData data{};
+   std::stringstream ss(str);
+   std::string token;
+   int i = 0;
 
-    while (std::getline(ss, token, ',') && i < 16) {
-        if (token.empty()) continue; // skip trailing empty field from last comma
-        int val = 0;
-        std::stringstream(token) >> val;
-        if (i < 4) {
-            data.axises[i] = val;
-        } else {
-            data.buttons[i - 4] = (val == 1);
-        }
-        i++;
-    }
+   while (std::getline(ss, token, ',') && i < 16)
+   {
+      if (token.empty())
+         continue; // skip trailing empty field from last comma
+      int val = 0;
+      std::stringstream(token) >> val;
+      if (i < 4)
+      {
+         data.axises[i] = val;
+      }
+      else
+      {
+         data.buttons[i - 4] = (val == 1);
+      }
+      i++;
+   }
 
-    return data;
+   return data;
 }
 
-
 ReflectiveMirror::ReflectiveMirror(string filename)
-    : readStream(fopen(filename.c_str(), "r"))
-{  
-   
-};
+    : readStream(fopen(filename.c_str(), "r")) {
 
-std::string getLine(FILE* file) {
-    std::string line;
-    int c;
-    while ((c = fgetc(file)) != EOF) {
-        if (c == '\n') break;
-        line.push_back(static_cast<char>(c));
-    }
-    return line;
-} 
+      };
+
+std::string getLine(FILE *file)
+{
+   std::string line;
+   int c;
+   while ((c = fgetc(file)) != EOF)
+   {
+      if (c == '\n')
+         break;
+      line.push_back(static_cast<char>(c));
+   }
+   return line;
+}
 
 FrameData ReflectiveMirror::getNextFrame()
-{  
-   FrameData result{}; 
-   if (!isDone()){ 
+{
+   FrameData result{};
+   if (!isDone())
+   {
       result = getFrameFromString(getLine(readStream));
-   }  
+   }
    return result;
 };
 
 bool ReflectiveMirror::isDone()
 {
    return feof(readStream);
-} 
+}
 
-ReflectiveMirror::~ReflectiveMirror(){  
+ReflectiveMirror::~ReflectiveMirror()
+{
    if (readStream)
       fclose(readStream);
 }
@@ -127,7 +135,7 @@ int AbsorbtiveMirror::SKILLFRAMES = 60 * 50;
 
 AbsorbtiveMirror::AbsorbtiveMirror(string filename)
     : writeStream(fopen(filename.c_str(), "w"))
-{ 
+{
    string fileSuffix = filename.substr(filename.length() - 4);
    if (fileSuffix == "auto")
       maximumFrames = AbsorbtiveMirror::AUTONFRAMES;
@@ -144,9 +152,10 @@ void AbsorbtiveMirror::captureFrame(int axises[4], bool buttons[12])
    }
 };
 
-int AbsorbtiveMirror::getWrittenFrames(){ 
+int AbsorbtiveMirror::getWrittenFrames()
+{
    return writtenFrames;
-} 
+}
 
 bool AbsorbtiveMirror::isFull()
 {
@@ -157,6 +166,3 @@ AbsorbtiveMirror::~AbsorbtiveMirror()
 {
    fclose(writeStream);
 }
-
-
-

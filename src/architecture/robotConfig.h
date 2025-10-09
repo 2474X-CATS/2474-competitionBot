@@ -12,9 +12,10 @@ extern vex::controller Controller;
 
 //-------
 
-// Constants: PLACE HERE [using extern] 
+// Constants: PLACE HERE [using extern]
 
 extern double ABSOLUTE_INDEXER_SPEED;
+
 extern double DRIVE_WHEEL_RADIUS_MM;
 extern double TRACK_WIDTH_MM;      // Dist between the center point of the right and left wheel groups
 extern double WHEEL_BASE_MM;       // Dist between the center point of the front and rear wheels
@@ -27,14 +28,12 @@ extern vex::motor driveFrontRight;
 extern vex::motor driveBackLeft;
 extern vex::motor driveBackRight;
 extern vex::motor driveMidLeft;
-extern vex::motor driveMidRight; 
+extern vex::motor driveMidRight;
 
-extern vex::motor_group leftDriveMotors; 
-extern vex::motor_group rightDriveMotors; 
+extern vex::motor_group leftDriveMotors;
+extern vex::motor_group rightDriveMotors;
 
-extern vex::motor indexerMotor;  
-extern vex::pneumatics hoodPiston;   
-
+<<<<<<< Updated upstream
 //Hopper System
 extern vex::motor hopperMotor; // Motor that moves discs inside robot
 
@@ -42,14 +41,22 @@ extern vex::motor hopperMotor; // Motor that moves discs inside robot
 extern vex::pneumatics matchloaderPiston; // Piston that loads discs
 
 extern vex::motor intakeMotor;
+=======
+extern vex::motor indexerMotor;
+extern vex::pneumatics hoodPiston;
 
+extern vex::motor hopperMotor;
+>>>>>>> Stashed changes
 
+extern vex::motor intakeMotor;
+
+extern vex::pneumatics matchloaderPiston;
 
 // extern encoder driveRotationEncoder;
 // extern encoder drivePowerEncoder;
 
-//extern vex::smartdrive driveMotors; // Drivetrain
+// extern vex::smartdrive driveMotors; // Drivetrain
 
-//------- 
+//-------
 
 void vexcodeInit();

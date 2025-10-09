@@ -7,11 +7,12 @@
 
 class Drivebase : public Subsystem
 {
-private: 
-
+private:
+  
   PIDConstants powerPID;
   PIDConstants turnPID;
-  double startX, startY; 
+  
+  double startX, startY;
   double speedFactor = (1 - 0.30);
 
 protected:
@@ -19,14 +20,13 @@ protected:
 
 public:
   using Subsystem::get;
-  using Subsystem::getFromInputs; 
+  using Subsystem::getFromInputs;
   Drivebase(double startX, double startY) : Subsystem::Subsystem(
                                                 "drivebase",
                                                 {(EntrySet){"Pos_X", EntryType::DOUBLE},
                                                  (EntrySet){"Pos_Y", EntryType::DOUBLE},
                                                  (EntrySet){"Angle_Degrees", EntryType::DOUBLE}}),
                                             startX(startX), startY(startY) {};
-
 
   void init() override;
   void periodic() override;
