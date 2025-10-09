@@ -35,7 +35,7 @@ extern vex::motor_group rightDriveMotors;
 extern vex::motor indexerMotor;  
 extern vex::pneumatics hoodPiston;   
 
-
+extern vex::motor intakeMotor;
 
 
 
