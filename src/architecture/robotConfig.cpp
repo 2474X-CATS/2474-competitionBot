@@ -36,6 +36,8 @@ vex::motor_group rightDriveMotors = vex::motor_group(driveFrontRight, driveBackR
 vex::motor indexerMotor = vex::motor(vex::PORT19); 
 vex::pneumatics hoodPiston = vex::pneumatics(Brain.ThreeWirePort.G);  
 
+vex::motor intakeMotor = vex::motor(vex::Port#, vex ::gearSetting::ratio, false); //motor
+
 
 //vex::motor hopperMotor = vex::motor(vex::PORT19);
 

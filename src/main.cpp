@@ -67,6 +67,6 @@ int main()
 {
 
   vexcodeInit();
-  // Initialize subsystems  
+  
   mirrorMobilize(MirrorMode::REFLECT, "test1.auto"); 
 }
