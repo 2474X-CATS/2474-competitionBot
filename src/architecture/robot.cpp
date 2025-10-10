@@ -1,7 +1,7 @@
 #include "robot.h"
 #include "subsystem.h"
 #include "telemetry.h"
-#include "command.h"
+#include "command.cpp"
 
 void timelyWait(long lastTimestamp, long timeInterval)
 {

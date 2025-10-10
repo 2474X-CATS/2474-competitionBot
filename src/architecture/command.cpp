@@ -3,8 +3,10 @@
 
 #include "subsystem.h"
 #include <vector>
-#include <vex.h>
-#include "robotConfig.h"
+#include <vex.h> 
+//#include <cstdlib>
+#include "robotConfig.h" 
+#include <functional>
 
 /*
 Makes a task that can be stacked on other tasks to run in the autonomous period
@@ -77,14 +79,13 @@ protected:
 };
 
 template <typename... Subsystems>
-class Command : protected CommandInterface
+class Command : public CommandInterface
 {
 
   static_assert((std::is_base_of<Subsystem, Subsystems>::value && ...), "Command must wrap around a Subsystem type");
 
 public:
   Command(Subsystems &...systems) : subsystems_{std::ref(static_cast<Subsystem &>(systems))...} {};
-
   void run() override
   {
     this->start();

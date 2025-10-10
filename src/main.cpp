@@ -112,6 +112,6 @@ int main()
   Hood hood;
   Indexer indexer;
 
-  mirrorMobilize(MirrorMode::ABSORB, "test1.skil"); 
+  mirrorMobilize(MirrorMode::ABSORB, "test1.auto"); 
   
 }
