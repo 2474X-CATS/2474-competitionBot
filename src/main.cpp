@@ -2,7 +2,11 @@
 #include "architecture/robot.h"
 #include <iostream>
 #include "subsystems/drivebase.h"
-#include "subsystems/indexer.h"
+#include "subsystems/indexer.h" 
+#include "subsystems/hood.h" 
+#include "subsystems/Hopper.h" 
+#include "subsystems/intake.h"  
+#include "subsystems/Matchloader.h"
 
 using namespace vex;
 

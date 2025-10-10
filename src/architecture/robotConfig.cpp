@@ -43,19 +43,17 @@ vex::motor_group rightDriveMotors = vex::motor_group(driveFrontRight, driveBackR
 
 vex::motor indexerMotor = vex::motor(vex::PORT19);
 
-<<<<<<< Updated upstream
-vex::motor intakeMotor = vex::motor(vex::Port#, vex ::gearSetting::ratio, false); //motor
+vex::motor intakeMotor = vex::motor(vex::PORT8, false); //motor
 
 /// Hopper motor (moves discs up)
-vex::motor hopperMotor = vex::motor(vex::PORT17, vex::gearSetting::ratio18_1, false);
+vex::motor hopperMotor = vex::motor(vex::PORT17, false);
 
 // Matchloader piston (pushes discs into hopper)
 vex::pneumatics matchloaderPiston = vex::pneumatics(Brain.ThreeWirePort.H);
 
 
 //vex::motor intake = vex::motor(vex::PORT16);
-=======
->>>>>>> Stashed changes
+
 //-------
 
 

@@ -33,27 +33,17 @@ extern vex::motor driveMidRight;
 extern vex::motor_group leftDriveMotors;
 extern vex::motor_group rightDriveMotors;
 
-<<<<<<< Updated upstream
 //Hopper System
 extern vex::motor hopperMotor; // Motor that moves discs inside robot
 
 //MatchLoader System
 extern vex::pneumatics matchloaderPiston; // Piston that loads discs
 
-extern vex::motor intakeMotor;
-=======
+extern vex::motor intakeMotor; 
+
 extern vex::motor indexerMotor;
 extern vex::pneumatics hoodPiston;
-extern vex::motor indexerMotor;
-extern vex::pneumatics hoodPiston;
 
-extern vex::motor hopperMotor;
->>>>>>> Stashed changes
-extern vex::motor hopperMotor;
-
-extern vex::motor intakeMotor;
-
-extern vex::pneumatics matchloaderPiston;
 
 // extern encoder driveRotationEncoder;
 // extern encoder drivePowerEncoder;
