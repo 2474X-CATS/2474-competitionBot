@@ -4,9 +4,9 @@
 #include "subsystems/drivebase.h"
 #include "subsystems/indexer.h" 
 #include "subsystems/hood.h" 
-#include "subsystems/Hopper.h" 
+#include "subsystems/hopper.h" 
 #include "subsystems/intake.h"  
-#include "subsystems/Matchloader.h"
+#include "subsystems/matchloader.h"
 
 using namespace vex;
 
@@ -48,7 +48,8 @@ void mirrorMobilize(MirrorMode mode, string filename)
   }
   robot.initialize();
   thread telem = thread(runTelemetry);
-  robot.driverControl(true);
+  robot.driverControl(true); 
+  robot.driverControl(false);
 }
 
 void startMatch(MatchType type, string auton, string auton_skills)
@@ -99,14 +100,18 @@ int main()
     2: Test auton
     3: Configure coding skills run
     4: Test coding skills run
-    5: Run match | Competitive
-    6: Run match | Driver skills
-    7: Run match | Coding skills
+    5: Run match | Competitive 
+    6: Start competition match with commands as auton
+    7: Drive competition auton routine (recommended for test)
     8: Free drive
-  */
-  Drivebase drive = Drivebase(0, 0);
+  */ 
+
+  Drivebase drive = Drivebase(0, 0); 
+  Intake intake; 
+  Matchloader matchloader;  
+  Hood hood;
   Indexer indexer;
 
-  DriveLinear::getCommand(drive, 1000)->run(); 
+  mirrorMobilize(MirrorMode::REFLECT, "test1.auto"); 
   
 }

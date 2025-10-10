@@ -1,3 +1,4 @@
+#ifndef _INTAKE_H_
 #define _INTAKE_H_
 #include "../architecture/subsystem.h"
 #include "../architecture/command.h"
@@ -7,7 +8,7 @@
 typedef enum { 
    INTAKE, 
    OUTTAKE,  
-   STOP,
+   HALT
 } IntakeValue;
 
 class Intake : public Subsystem {

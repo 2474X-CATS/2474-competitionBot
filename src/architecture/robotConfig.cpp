@@ -14,9 +14,6 @@ vex::controller Controller = vex::controller(vex::controllerType::primary);
 //-------
 // Constants: PLACE HERE [regularly]
 double ABSOLUTE_INDEXER_SPEED = 200;
-
-double ABSOLUTE_INDEXER_SPEED = 200;
-
 double DRIVE_WHEEL_RADIUS_MM = 76.2;
 double TRACK_WIDTH_MM = 381;
 double WHEEL_BASE_MM = 203.2;
@@ -25,11 +22,8 @@ double EXTERNAL_GEAR_RATIO = 0.6;
 // Devices: PLACE HERE [regularly]
 
 vex::inertial driveGyro = vex::inertial(vex::PORT20);
-vex::inertial driveGyro = vex::inertial(vex::PORT20);
 
-vex::motor driveFrontLeft = vex::motor(vex::PORT1, vex::ratio18_1, true);
-vex::motor driveMidLeft = vex::motor(vex::PORT2, vex::ratio18_1, true);
-vex::motor driveBackLeft = vex::motor(vex::PORT3, vex::ratio18_1);
+
 vex::motor driveFrontLeft = vex::motor(vex::PORT1, vex::ratio18_1, true);
 vex::motor driveMidLeft = vex::motor(vex::PORT2, vex::ratio18_1, true);
 vex::motor driveBackLeft = vex::motor(vex::PORT3, vex::ratio18_1);
@@ -51,7 +45,7 @@ vex::motor hopperMotor = vex::motor(vex::PORT17, false);
 // Matchloader piston (pushes discs into hopper)
 vex::pneumatics matchloaderPiston = vex::pneumatics(Brain.ThreeWirePort.H);
 
-
+vex::pneumatics hoodPiston = vex::pneumatics(Brain.ThreeWirePort.G);
 //vex::motor intake = vex::motor(vex::PORT16);
 
 //-------

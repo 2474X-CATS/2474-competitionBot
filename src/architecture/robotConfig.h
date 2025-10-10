@@ -22,12 +22,14 @@ extern double WHEEL_BASE_MM;       // Dist between the center point of the front
 extern double EXTERNAL_GEAR_RATIO; // Final result of doing the gear ratio calculation on the drive gear train
 
 // Devices: PLACE HERE [using extern]
-extern vex::inertial driveGyro;
+extern vex::inertial driveGyro; 
+
 extern vex::motor driveFrontLeft;
-extern vex::motor driveFrontRight;
-extern vex::motor driveBackLeft;
-extern vex::motor driveBackRight;
 extern vex::motor driveMidLeft;
+extern vex::motor driveBackLeft; 
+
+extern vex::motor driveBackRight;
+extern vex::motor driveFrontRight;
 extern vex::motor driveMidRight;
 
 extern vex::motor_group leftDriveMotors;

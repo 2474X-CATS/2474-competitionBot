@@ -3,7 +3,7 @@
 
 
 void Intake::init(){
-    currentValue = STOP;
+    currentValue = HALT;
     set<bool>("isOn", true);
 };
 
@@ -13,7 +13,7 @@ void Intake::periodic() {
     } else if (getFromInputs<bool>("Controller/Button_R2")) {
         currentValue = OUTTAKE;
     } else {
-        currentValue = STOP;
+        currentValue = HALT;
     }
     switch(currentValue) {
         case INTAKE: 
@@ -24,7 +24,7 @@ void Intake::periodic() {
             intakeMotor.setVelocity(-100, vex::percentUnits::pct);
             intakeMotor.spin(vex::directionType::fwd);
             break;
-        case STOP: 
+        case HALT: 
             intakeMotor.stop();
             break;
         }
