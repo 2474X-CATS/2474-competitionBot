@@ -2,7 +2,7 @@
 #define __HOPPER_H__
 
 #include "../architecture/subsystem.h"
-#include "../architecture/command.h"
+//#include "../architecture/command.cpp"
 
 // These are different things the hopper can do
 

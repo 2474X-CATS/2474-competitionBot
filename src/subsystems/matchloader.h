@@ -3,7 +3,7 @@
 
 
 #include "../architecture/subsystem.h"
-#include "../architecture/command.h"
+//#include "../architecture/command.cpp"
 
 //These are the different modes the match loader can be in
 typedef enum {

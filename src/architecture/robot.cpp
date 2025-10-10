@@ -119,7 +119,6 @@ void Robot::driverControl(bool mirrorControlled)
   }
   Subsystem::initSystems();
   double timestamp;
-  Controller.rumble("---"); 
   if (mirrorControlled)
   {
     timestamp = Brain.Timer.time();
@@ -131,7 +130,9 @@ void Robot::driverControl(bool mirrorControlled)
     }
   }
   else
-  {
+  { 
+    Controller.rumble("---");  
+    ControllerPal.rumble("---");
     timestamp = Brain.Timer.time();
     while (true)
     {
@@ -155,7 +156,8 @@ void Robot::updateSystemSubtable()
     {
       delete inputTracker;
       inputTracker = nullptr;
-      Controller.rumble("..."); 
+      Controller.rumble("...");  
+      ControllerPal.rumble("...");
       return;
     }
     rawLog();
@@ -167,7 +169,8 @@ void Robot::updateSystemSubtable()
     {
       delete outputLogger;
       outputLogger = nullptr;
-      Controller.rumble("..."); 
+      Controller.rumble("...");  
+      ControllerPal.rumble("...");
       return;
     }
     artificialLog();
@@ -187,18 +190,18 @@ void Robot::saveFrame()
           Controller.Axis2.position(),
           Controller.Axis1.position()},
       new bool[12]{
-          Controller.ButtonA.pressing(),
-          Controller.ButtonB.pressing(),
-          Controller.ButtonX.pressing(),
-          Controller.ButtonY.pressing(),
-          Controller.ButtonDown.pressing(),
-          Controller.ButtonUp.pressing(),
-          Controller.ButtonLeft.pressing(),
-          Controller.ButtonRight.pressing(),
-          Controller.ButtonL1.pressing(),
-          Controller.ButtonL2.pressing(),
-          Controller.ButtonR1.pressing(),
-          Controller.ButtonR2.pressing()});
+          ControllerPal.ButtonA.pressing(),
+          ControllerPal.ButtonB.pressing(),
+          ControllerPal.ButtonX.pressing(),
+          ControllerPal.ButtonY.pressing(),
+          ControllerPal.ButtonDown.pressing(),
+          ControllerPal.ButtonUp.pressing(),
+          ControllerPal.ButtonLeft.pressing(),
+          ControllerPal.ButtonRight.pressing(),
+          ControllerPal.ButtonL1.pressing(),
+          ControllerPal.ButtonL2.pressing(),
+          ControllerPal.ButtonR1.pressing(),
+          ControllerPal.ButtonR2.pressing()});
 }
 
 void Robot::artificialLog()
@@ -228,18 +231,18 @@ void Robot::rawLog()
   Telemetry::inst.placeValueAt<int>(Controller.Axis4.position(), "system", "Controller/Axis-Hori-Left");
   Telemetry::inst.placeValueAt<int>(Controller.Axis2.position(), "system", "Controller/Axis-Vert-Right");
   Telemetry::inst.placeValueAt<int>(Controller.Axis1.position(), "system", "Controller/Axis-Hori-Right");
-  Telemetry::inst.placeValueAt<bool>(Controller.ButtonA.pressing(), "system", "Controller/Button_A");
-  Telemetry::inst.placeValueAt<bool>(Controller.ButtonB.pressing(), "system", "Controller/Button_B");
-  Telemetry::inst.placeValueAt<bool>(Controller.ButtonX.pressing(), "system", "Controller/Button_X");
-  Telemetry::inst.placeValueAt<bool>(Controller.ButtonY.pressing(), "system", "Controller/Button_Y");
-  Telemetry::inst.placeValueAt<bool>(Controller.ButtonDown.pressing(), "system", "Controller/Button_DOWN");
-  Telemetry::inst.placeValueAt<bool>(Controller.ButtonUp.pressing(), "system", "Controller/Button_UP");
-  Telemetry::inst.placeValueAt<bool>(Controller.ButtonLeft.pressing(), "system", "Controller/Button_LEFT");
-  Telemetry::inst.placeValueAt<bool>(Controller.ButtonRight.pressing(), "system", "Controller/Button_RIGHT");
-  Telemetry::inst.placeValueAt<bool>(Controller.ButtonL1.pressing(), "system", "Controller/Button_L1");
-  Telemetry::inst.placeValueAt<bool>(Controller.ButtonL2.pressing(), "system", "Controller/Button_L2");
-  Telemetry::inst.placeValueAt<bool>(Controller.ButtonR1.pressing(), "system", "Controller/Button_R1");
-  Telemetry::inst.placeValueAt<bool>(Controller.ButtonR2.pressing(), "system", "Controller/Button_R2");
+  Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonA.pressing(), "system", "Controller/Button_A");
+  Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonB.pressing(), "system", "Controller/Button_B");
+  Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonX.pressing(), "system", "Controller/Button_X");
+  Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonY.pressing(), "system", "Controller/Button_Y");
+  Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonDown.pressing(), "system", "Controller/Button_DOWN");
+  Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonUp.pressing(), "system", "Controller/Button_UP");
+  Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonLeft.pressing(), "system", "Controller/Button_LEFT");
+  Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonRight.pressing(), "system", "Controller/Button_RIGHT");
+  Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonL1.pressing(), "system", "Controller/Button_L1");
+  Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonL2.pressing(), "system", "Controller/Button_L2");
+  Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonR1.pressing(), "system", "Controller/Button_R1");
+  Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonR2.pressing(), "system", "Controller/Button_R2");
 }
 
 void Robot::runTelemetryThread(bool showGraphics)
@@ -275,7 +278,7 @@ void Robot::initializeMirror(MirrorMode mode, string filename)
 }
 
 ////////////////////////////////////////////////////////////////////////////
-void Robot::setAutonomousCommand(std::vector<std::vector<CommandInterface *>> comm)
+void Robot::setAutonomousCommand(std::vector<CommandInterface *> comm)
 {
   autonomousCommand = comm;
 };
@@ -284,6 +287,8 @@ void Robot::setAutonomousCommand(std::vector<std::vector<CommandInterface *>> co
 ////////////////////////////////////////////////////////////////////
 void Robot::autonControl()
 {
-  CommandInterface::runCommandGroup(Robot::autonomousCommand);
+  for (CommandInterface* command : Robot::autonomousCommand){ 
+    command->run();
+  }
 };
 /////////////////////////////////////////////////////////////////////

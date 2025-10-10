@@ -2,7 +2,7 @@
 #define __DRIVEBASE_H_
 
 #include "../architecture/subsystem.h"
-#include "../architecture/command.h"
+#include "../architecture/command.cpp"
 #include "../helpers/pidcontroller.h"
 
 class Drivebase : public Subsystem

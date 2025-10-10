@@ -1,7 +1,7 @@
 #ifndef _INTAKE_H_
 #define _INTAKE_H_
 #include "../architecture/subsystem.h"
-#include "../architecture/command.h"
+//#include "../architecture/command.cpp"
 #include "vex.h"
 
 //options for intake movements

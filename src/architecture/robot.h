@@ -28,7 +28,7 @@ private:
    void registerSystemSubtable();
    void updateSystemSubtable();
    //
-   std::vector<std::vector<CommandInterface *>> autonomousCommand;
+   std::vector<CommandInterface *> autonomousCommand;
    //
    bool isActive();
 
@@ -52,7 +52,7 @@ public:
 
    void runTelemetryThread(bool showGraphics);
 
-   void setAutonomousCommand(std::vector<std::vector<CommandInterface *>> comm);
+   void setAutonomousCommand(std::vector<CommandInterface *> comm);
 };
 
 #endif

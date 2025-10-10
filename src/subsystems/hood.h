@@ -2,7 +2,7 @@
 #define _HOOD_H_
 
 #include "../architecture/subsystem.h"
-#include "../architecture/command.h"
+#//include "../architecture/command.cpp"
 #include "vex.h"
 
 // hood positions

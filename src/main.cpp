@@ -75,14 +75,14 @@ void startMatch(MatchType type, string auton, string auton_skills)
   robot.runTelemetryThread(true);
 }
 
-void startCommandMatch(std::vector<std::vector<CommandInterface*>> commandGroup){ 
+void startCommandMatch(std::vector<CommandInterface*> commandGroup){ 
   robot.setAutonomousCommand(commandGroup);
   Competition.autonomous([](){robot.autonControl();}); 
   Competition.drivercontrol([](){robot.driverControl(false);}); 
   robot.runTelemetryThread(true);
 }  
 
-void driveCommandMatch(std::vector<std::vector<CommandInterface*>> commandGroup){ 
+void driveCommandMatch(std::vector<CommandInterface*> commandGroup){ 
   robot.setAutonomousCommand(commandGroup);  
   thread telemThread = thread(runTelemetry);
   robot.autonControl(); 
@@ -112,6 +112,6 @@ int main()
   Hood hood;
   Indexer indexer;
 
-  mirrorMobilize(MirrorMode::REFLECT, "test1.auto"); 
+  mirrorMobilize(MirrorMode::ABSORB, "test1.skil"); 
   
 }
