@@ -53,5 +53,8 @@ vex::pneumatics hoodPiston = vex::pneumatics(Brain.ThreeWirePort.G);
 
 
 void vexcodeInit() {
-
+   driveGyro.calibrate(); 
+   while (driveGyro.isCalibrating()){ 
+    vex::this_thread::yield();
+   }
 };

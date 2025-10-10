@@ -37,7 +37,9 @@ private:
    void rawLog();
 
    AbsorbtiveMirror *inputTracker = nullptr;
-   ReflectiveMirror *outputLogger = nullptr;
+   ReflectiveMirror *outputLogger = nullptr; 
+
+   bool isRunning = false;
 
 public:
    Robot();
@@ -52,7 +54,9 @@ public:
 
    void runTelemetryThread(bool showGraphics);
 
-   void setAutonomousCommand(std::vector<CommandInterface *> comm);
+   void setAutonomousCommand(std::vector<CommandInterface *> comm); 
+
+   void toggleRunning();
 };
 
 #endif

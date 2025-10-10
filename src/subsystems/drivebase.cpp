@@ -10,10 +10,6 @@ void Drivebase::init()
    leftDriveMotors.setStopping(vex::brakeType::brake);
    rightDriveMotors.setStopping(vex::brakeType::brake);
    driveGyro.calibrate();
-   while (driveGyro.isCalibrating())
-   {
-      vex::this_thread::yield();
-   }
    
    powerPID.P = 0.4;
    powerPID.I = 0.001;

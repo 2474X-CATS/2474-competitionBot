@@ -79,7 +79,12 @@ void displayGraphicalData()
 
 Robot::Robot() {
 
-};
+}; 
+
+void Robot::toggleRunning(){ 
+  if (!isRunning) 
+     isRunning = true;
+}
 
 void Robot::initialize()
 {
@@ -112,12 +117,14 @@ void Robot::registerSystemSubtable()
 };
 
 void Robot::driverControl(bool mirrorControlled)
-{
+{ 
+ 
   if (!isActive() && mirrorControlled)
   {
     mirrorControlled = false;
   }
-  Subsystem::initSystems();
+  Subsystem::initSystems(); 
+  toggleRunning();
   double timestamp;
   if (mirrorControlled)
   {
@@ -246,7 +253,10 @@ void Robot::rawLog()
 }
 
 void Robot::runTelemetryThread(bool showGraphics)
-{
+{ 
+  while (!isRunning){ 
+    vex::this_thread::yield();
+  }
   while (true)
   {
     updateSystemSubtable();
@@ -286,7 +296,8 @@ void Robot::setAutonomousCommand(std::vector<CommandInterface *> comm)
 
 ////////////////////////////////////////////////////////////////////
 void Robot::autonControl()
-{
+{ 
+  toggleRunning();
   for (CommandInterface* command : Robot::autonomousCommand){ 
     command->run();
   }

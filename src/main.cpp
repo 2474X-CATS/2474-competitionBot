@@ -1,6 +1,7 @@
 #include "vex.h"
 #include "architecture/robot.h"
-#include <iostream>
+#include <iostream> 
+
 #include "subsystems/drivebase.h"
 #include "subsystems/indexer.h" 
 #include "subsystems/hood.h" 
@@ -11,8 +12,7 @@
 using namespace vex;
 
 competition Competition;
-
-Robot robot; // Writing inputs to trial1.auto
+Robot robot; 
 
 typedef enum
 {
@@ -68,17 +68,13 @@ void startMatch(MatchType type, string auton, string auton_skills)
                             { robot.driverControl(false); });
   Competition.autonomous([]()
                          { robot.driverControl(true); });
-  while (!Competition.isEnabled())
-  {
-    this_thread::yield();
-  }
   robot.runTelemetryThread(true);
 }
 
 void startCommandMatch(std::vector<CommandInterface*> commandGroup){ 
   robot.setAutonomousCommand(commandGroup);
   Competition.autonomous([](){robot.autonControl();}); 
-  Competition.drivercontrol([](){robot.driverControl(false);}); 
+  Competition.drivercontrol([](){robot.driverControl(false);});  
   robot.runTelemetryThread(true);
 }  
 
@@ -101,8 +97,8 @@ int main()
     3: Configure coding skills run
     4: Test coding skills run
     5: Run match [ Competitive | Driver-skills | Auton-skills ]
-    6: Start competition match with commands as auton
-    7: Drive competition auton routine (recommended for test)
+    6: Drive competition auton routine (recommended for test) 
+    7: Start competition match with commands as auton
     8: Free drive
   */ 
 
@@ -111,6 +107,7 @@ int main()
   Matchloader matchloader;  
   Hood hood;
   Indexer indexer;
+
 
   freeDrive();
 
