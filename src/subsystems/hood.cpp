@@ -28,6 +28,9 @@ void Hood::periodic()
     case OUT:
         // hoodMotor.setVelocity(30, vex::percentUnits::pct);
         hoodPiston.open(); // piston out
+        break; 
+    case NORMAL: 
+    default: 
         break;
     }
 }

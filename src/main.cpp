@@ -100,7 +100,7 @@ int main()
     2: Test auton
     3: Configure coding skills run
     4: Test coding skills run
-    5: Run match | Competitive 
+    5: Run match [ Competitive | Driver-skills | Auton-skills ]
     6: Start competition match with commands as auton
     7: Drive competition auton routine (recommended for test)
     8: Free drive
@@ -112,6 +112,7 @@ int main()
   Hood hood;
   Indexer indexer;
 
-  mirrorMobilize(MirrorMode::ABSORB, "test1.auto"); 
+  freeDrive();
+
   
 }
