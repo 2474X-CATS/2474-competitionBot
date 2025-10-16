@@ -21,16 +21,17 @@ void Hopper::periodic()
     case LOAD:
         // Spin the hopper forward to suck discs in
         hopperMotor.setVelocity(100, vex::percentUnits::pct);
-        hopperMotor.spin(vex::directionType::rev);
         break;
     case UNLOAD:
-        hopperMotor.setVelocity(100, vex::percentUnits::pct);
-        hopperMotor.spin(vex::directionType::fwd);
-    default:
-        // stop the hopper motor when no buttons are pressed
-        hopperMotor.stop();
+        hopperMotor.setVelocity(-100, vex::percentUnits::pct); 
         break;
-    }
+    case STOP:
+    default:
+        // stop the hopper motor when no buttons are pressed 
+        hopperMotor.setVelocity(0, vex::percentUnits::pct);
+        break;
+    } 
+    hopperMotor.spin(vex::directionType::fwd);
 }
 
 // this looks at the controller buttons and chooses the mode
@@ -40,18 +41,13 @@ HopperMode Hopper::getMode()
     HopperMode mode;
 
     // R1 button = LOAD mode
-
-    if (getFromInputs<bool>("Controller/Button_R1"))
-    {
-        mode = LOAD;
-    }
     // R2 button = UNLOAD mode
-    else if (getFromInputs<bool>("Controller/Button_R2"))
+    if (getFromInputs<bool>("Controller/Button_X") || getFromInputs<bool>("Controller/Button_A") || getFromInputs<bool>("Controller/Button_B"))
     {
         mode = UNLOAD;
-    }
-    // If no button is pressed, STOP mode
-    else
+    } else if (getFromInputs<bool>("Controller/Button_L2")){ 
+        mode = LOAD;
+    } else // If no button is pressed, STOP mode
     {
         mode = STOP;
     }

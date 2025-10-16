@@ -23,7 +23,7 @@ typedef enum
 
 void runTelemetry()
 {
-  robot.runTelemetryThread(false);
+  robot.runTelemetryThread(true);
 }
 
 void freeDrive()
@@ -67,7 +67,9 @@ void startMatch(MatchType type, string auton, string auton_skills)
   Competition.drivercontrol([]()
                             { robot.driverControl(false); });
   Competition.autonomous([]()
-                         { robot.driverControl(true); });
+                         { robot.driverControl(true); }); 
+  while (!Competition.isEnabled()) 
+     this_thread::yield();
   robot.runTelemetryThread(true);
 }
 
@@ -75,6 +77,8 @@ void startCommandMatch(std::vector<CommandInterface*> commandGroup){
   robot.setAutonomousCommand(commandGroup);
   Competition.autonomous([](){robot.autonControl();}); 
   Competition.drivercontrol([](){robot.driverControl(false);});  
+  while (!Competition.isEnabled()) 
+     this_thread::yield();
   robot.runTelemetryThread(true);
 }  
 
@@ -100,14 +104,18 @@ int main()
     6: Drive competition auton routine (recommended for test) 
     7: Start competition match with commands as auton
     8: Free drive
-  */ 
+  */  
 
-  Drivebase drive = Drivebase(0, 0); 
-  Intake intake; 
-  Matchloader matchloader;  
-  Hood hood;
-  Indexer indexer;
+  
+  Drivebase drive = Drivebase(0, 0);  
+  Intake intake;  
+  Matchloader matchloader;   
+  Indexer indexer;  
 
+  Hood hood; 
+  Hopper hopper;
+ 
+  
 
   freeDrive();
 

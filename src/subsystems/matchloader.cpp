@@ -35,17 +35,10 @@ MatchloaderMode Matchloader::getMode() {
     MatchloaderMode mode;
 
     // X buttin = push disc (extend piston)
-    if (getFromInputs<bool>("Controller/Button_X")){
+    if (getFromInputs<bool>("Controller/Button_R2")){
         mode = LOAD_DISC;
-    }
-
-    // Y button = pull piston back (retract)
-    else if (getFromInputs<bool>("Controller/Button_Y")) {
+    } else { // Y button = pull piston back (retract)
         mode = RELEASE_DISC;
-    }
-
-    else {
-        mode = IDLE;
     }
 
     return mode;

@@ -3,7 +3,8 @@
 vex::brain Brain;
 
 vex::controller Controller = vex::controller(vex::controllerType::primary);
-vex::controller ControllerPal = vex::controller(vex::controllerType::partner);
+vex::controller ControllerPal = vex::controller(vex::controllerType::partner); 
+
 /*
  TO-DO:
    o- Initialize all vex devices here (motors/sensors/pneumatics/etc)
@@ -53,8 +54,5 @@ vex::pneumatics hoodPiston = vex::pneumatics(Brain.ThreeWirePort.G);
 
 
 void vexcodeInit() {
-   driveGyro.calibrate(); 
-   while (driveGyro.isCalibrating()){ 
-    vex::this_thread::yield();
-   }
+   
 };

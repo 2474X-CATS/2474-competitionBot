@@ -54,9 +54,7 @@ public:
 
    void runTelemetryThread(bool showGraphics);
 
-   void setAutonomousCommand(std::vector<CommandInterface *> comm); 
-
-   void toggleRunning();
+   void setAutonomousCommand(std::vector<CommandInterface *> comm);  
 };
 
 #endif

@@ -13,7 +13,7 @@ private:
   PIDConstants turnPID;
   
   double startX, startY;
-  double speedFactor = (1 - 0.30);
+  double speedFactor = (1 - 0.15);
 
 protected:
   using Subsystem::set;

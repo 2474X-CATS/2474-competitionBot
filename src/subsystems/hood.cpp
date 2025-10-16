@@ -10,11 +10,11 @@ void Hood::init()
 // if up which direction hood goes to the angle then angle chnages to that button pressed.
 void Hood::periodic()
 {
-    if (getFromInputs<bool>("Controller/Button_Up"))
+    if (getFromInputs<bool>("Controller/Button_X"))
     {
         currentAngle = OUT;
     }
-    else if (getFromInputs<bool>("Controller/Button_Right"))
+    else if (getFromInputs<bool>("Controller/Button_L1"))
     {                      //
         currentAngle = IN; // storage aka in
     }
@@ -23,11 +23,11 @@ void Hood::periodic()
     {
     case IN:
         // hoodMotor.setVelocity(30, vex::percentUnits::pct);
-        hoodPiston.close(); // piston in
+        hoodPiston.open(); // piston in
         break;
     case OUT:
         // hoodMotor.setVelocity(30, vex::percentUnits::pct);
-        hoodPiston.open(); // piston out
+        hoodPiston.close(); // piston out
         break; 
     case NORMAL: 
     default: 

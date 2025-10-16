@@ -81,11 +81,6 @@ Robot::Robot() {
 
 }; 
 
-void Robot::toggleRunning(){ 
-  if (!isRunning) 
-     isRunning = true;
-}
-
 void Robot::initialize()
 {
   registerSystemSubtable();
@@ -124,10 +119,11 @@ void Robot::driverControl(bool mirrorControlled)
     mirrorControlled = false;
   }
   Subsystem::initSystems(); 
-  toggleRunning();
   double timestamp;
   if (mirrorControlled)
-  {
+  { 
+    Controller.rumble("---");  
+    ControllerPal.rumble("---");
     timestamp = Brain.Timer.time();
     while (isActive())
     {
@@ -208,7 +204,7 @@ void Robot::saveFrame()
           ControllerPal.ButtonL1.pressing(),
           ControllerPal.ButtonL2.pressing(),
           ControllerPal.ButtonR1.pressing(),
-          ControllerPal.ButtonR2.pressing()});
+          Controller.ButtonR2.pressing()});
 }
 
 void Robot::artificialLog()
@@ -249,14 +245,11 @@ void Robot::rawLog()
   Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonL1.pressing(), "system", "Controller/Button_L1");
   Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonL2.pressing(), "system", "Controller/Button_L2");
   Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonR1.pressing(), "system", "Controller/Button_R1");
-  Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonR2.pressing(), "system", "Controller/Button_R2");
+  Telemetry::inst.placeValueAt<bool>(Controller.ButtonR2.pressing(), "system", "Controller/Button_R2");
 }
 
 void Robot::runTelemetryThread(bool showGraphics)
 { 
-  while (!isRunning){ 
-    vex::this_thread::yield();
-  }
   while (true)
   {
     updateSystemSubtable();
@@ -297,7 +290,6 @@ void Robot::setAutonomousCommand(std::vector<CommandInterface *> comm)
 ////////////////////////////////////////////////////////////////////
 void Robot::autonControl()
 { 
-  toggleRunning();
   for (CommandInterface* command : Robot::autonomousCommand){ 
     command->run();
   }

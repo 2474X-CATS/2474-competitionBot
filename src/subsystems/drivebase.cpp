@@ -8,8 +8,12 @@
 void Drivebase::init()
 {
    leftDriveMotors.setStopping(vex::brakeType::brake);
-   rightDriveMotors.setStopping(vex::brakeType::brake);
-   driveGyro.calibrate();
+   rightDriveMotors.setStopping(vex::brakeType::brake);  
+
+   driveGyro.calibrate(); 
+   while (driveGyro.isCalibrating()){ 
+    vex::this_thread::yield();
+   } 
    
    powerPID.P = 0.4;
    powerPID.I = 0.001;
@@ -47,10 +51,7 @@ void Drivebase::updateTelemetry()
    y += hypotenuse * sin(angleRadians);
 
    set<double>("Pos_X", x);
-   set<double>("Pos_Y", y); 
-
-   Brain.Screen.print(get<double>("Pos_Y"));  
-   Brain.Screen.newLine();  
+   set<double>("Pos_Y", y);  
 };
 
 void Drivebase::arcadeDrive(double speed, double rotation)

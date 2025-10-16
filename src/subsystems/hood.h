@@ -2,7 +2,7 @@
 #define _HOOD_H_
 
 #include "../architecture/subsystem.h"
-#//include "../architecture/command.cpp"
+#include "../architecture/command.cpp"
 #include "vex.h"
 
 // hood positions
@@ -18,16 +18,18 @@ class Hood : public Subsystem
 public:
     using Subsystem::get;
     using Subsystem::getFromInputs;
-    using Subsystem::set;
+    
 
     Hood() : Subsystem(
                  "hood",
-                 {(EntrySet){"isOn", EntryType::BOOL}}) {}
+                 {(EntrySet){"isOn", EntryType::BOOL}}) {} 
+
     void init() override;
     void periodic() override;
     void updateTelemetry() override;
-
-private:
+protected: 
+    using Subsystem::set;
+private: 
     HoodAngle currentAngle = IN; //default position
 };
 
