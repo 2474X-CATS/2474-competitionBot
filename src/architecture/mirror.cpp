@@ -14,6 +14,7 @@ string getStringFromFrame(FrameData frame){
   return result;
 };
 */
+bool STARTING_FROM_ORIGIN = true; // Will control whether the x values for the axises are flipped (starting on the right side)
 
 string getStringFromData(int axises[4], bool buttons[12])
 {
@@ -76,8 +77,8 @@ FrameData getFrameFromString(string str)
       int val = 0;
       std::stringstream(token) >> val;
       if (i < 4)
-      {
-         data.axises[i] = val;
+      { 
+           data.axises[i] = (i == 0 || i == 3) && (!STARTING_FROM_ORIGIN) ? -val : val; //val <- replace with this if you get wonky values
       }
       else
       {

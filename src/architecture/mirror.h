@@ -7,6 +7,8 @@
 
 using namespace std;
 
+extern bool STARTING_FROM_ORIGIN; 
+
 typedef enum
 {
     REFLECT,
