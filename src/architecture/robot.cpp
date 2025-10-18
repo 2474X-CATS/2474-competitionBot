@@ -326,7 +326,7 @@ void Robot::initializeMirror(MirrorMode mode, string filename)
 } 
 
 void Robot::detachInput(){ 
-
+  isAttached = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////
