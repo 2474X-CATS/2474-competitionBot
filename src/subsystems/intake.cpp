@@ -8,9 +8,9 @@ void Intake::init(){
 };
 
 void Intake::periodic() {
-    if (getFromInputs<bool>("Controller/Button_L1") || getFromInputs<bool>("Controller/Button_X") || getFromInputs<bool>("Controller/Button_A")) {
+    if (getFromInputs<bool>("Controller/Button_B") || getFromInputs<bool>("Controller/Button_R1") || getFromInputs<bool>("Controller/Button_R2")) {
         currentValue = INTAKE;
-    } else if (getFromInputs<bool>("Controller/Button_B")) {
+    } else if (getFromInputs<bool>("Controller/Button_DOWN")) {
         currentValue = OUTTAKE;
     } else {
         currentValue = HALT;

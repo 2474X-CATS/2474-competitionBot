@@ -9,15 +9,17 @@ void Hood::init()
 
 // if up which direction hood goes to the angle then angle chnages to that button pressed.
 void Hood::periodic()
-{
-    if (getFromInputs<bool>("Controller/Button_X"))
-    {
-        currentAngle = OUT;
+{ 
+    if (getFromInputs<bool>("Controller/Button_R1")){ 
+       currentAngle = OUT;
+    } else if (getFromInputs<bool>("Controller/Button_L1"))
+    { 
+        if (currentAngle == IN)
+          currentAngle = OUT; 
+        else  
+          currentAngle = IN;
     }
-    else if (getFromInputs<bool>("Controller/Button_L1"))
-    {                      //
-        currentAngle = IN; // storage aka in
-    }
+    
 
     switch (currentAngle)
     {

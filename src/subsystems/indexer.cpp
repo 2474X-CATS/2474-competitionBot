@@ -32,11 +32,11 @@ void Indexer::periodic()
 Feed Indexer::getScoringMode()
 {
   Feed goal;
-  if (getFromInputs<bool>("Controller/Button_X") || getFromInputs<bool>("Controller/Button_L1"))
+  if (getFromInputs<bool>("Controller/Button_R1"))
   {
     goal = Feed::HIGH;
   }
-  else if (getFromInputs<bool>("Controller/Button_A"))
+  else if (getFromInputs<bool>("Controller/Button_R2"))
   {
     goal = Feed::MID_OR_STORAGE;
   }

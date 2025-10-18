@@ -42,10 +42,10 @@ HopperMode Hopper::getMode()
 
     // R1 button = LOAD mode
     // R2 button = UNLOAD mode
-    if (getFromInputs<bool>("Controller/Button_X") || getFromInputs<bool>("Controller/Button_A") || getFromInputs<bool>("Controller/Button_B"))
+    if (getFromInputs<bool>("Controller/Button_R1") || getFromInputs<bool>("Controler/Button_R2") || getFromInputs<bool>("Controller/Button_DOWN"))
     {
         mode = UNLOAD;
-    } else if (getFromInputs<bool>("Controller/Button_L2")){ 
+    } else if (getFromInputs<bool>("Controller/Button_RIGHT")){ 
         mode = LOAD;
     } else // If no button is pressed, STOP mode
     {
