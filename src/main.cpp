@@ -13,14 +13,14 @@ using namespace vex;
 
 competition Competition;
 Robot robot; 
-
+/*
 typedef enum
 {
   CODING_SKILLS,
   DRIVER_SKILLS,
   COMPETITIVE
 } MatchType;
-
+*/
 void runTelemetry()
 {
   robot.runTelemetryThread(true);
@@ -31,8 +31,9 @@ void freeDrive()
   robot.initialize();
   thread telemetryThread = thread(runTelemetry);
   robot.driverControl(false);
-}
+} 
 
+/*
 void mirrorMobilize(MirrorMode mode, string filename)
 {
   switch (mode)
@@ -88,7 +89,7 @@ void driveCommandMatch(std::vector<CommandInterface*> commandGroup){
   robot.autonControl(); 
   robot.detachInput();
 }
-
+*/
 
 int main()
 {
@@ -111,11 +112,8 @@ int main()
   Intake intake;  
   Matchloader matchloader;   
   Indexer indexer;  
-
   Hood hood; 
   Hopper hopper;
- 
-  
 
   freeDrive();
 
