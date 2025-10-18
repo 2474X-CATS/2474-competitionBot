@@ -55,4 +55,5 @@ vex::pneumatics hoodPiston = vex::pneumatics(Brain.ThreeWirePort.G);
 
 void vexcodeInit() {
    
-};
+}; 
+

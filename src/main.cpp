@@ -49,7 +49,7 @@ void mirrorMobilize(MirrorMode mode, string filename)
   robot.initialize();
   thread telem = thread(runTelemetry);
   robot.driverControl(true); 
-  robot.driverControl(false);
+  robot.detachInput();
 }
 
 void startMatch(MatchType type, string auton, string auton_skills)
@@ -86,7 +86,7 @@ void driveCommandMatch(std::vector<CommandInterface*> commandGroup){
   robot.setAutonomousCommand(commandGroup);  
   thread telemThread = thread(runTelemetry);
   robot.autonControl(); 
-  robot.driverControl(false);
+  robot.detachInput();
 }
 
 

@@ -52,39 +52,37 @@ protected:
   string label;
 
   template <typename T>
-  void set(string entryName, T val)
+  void set(string entryName, T val) //Sets a subsystem table value like: DriveBase["Pos_X"], or Intake["Spin_Direction"]
   {
     Telemetry::inst.placeValueAt<T>(val, this->label, entryName);
   };
 
 public:
   template <typename T>
-  T get(string entryName)
+  T get(string entryName) // Gets a subsystem table value 
   {
     return Telemetry::inst.getValueAt<T>(this->label, entryName);
   };
 
   template <typename T>
-  T getFromInputs(string entryName)
+  T getFromInputs(string entryName) // Gets a telemtry input value (controllers / files / neither)
   {
     return Telemetry::inst.getValueAt<T>("system", entryName);
   };
 
-  static std::vector<Subsystem *> systems;
+  static std::vector<Subsystem *> systems; // A list of all subsystems that is filled on instantiation
 
-  static void initSystems();
+  static void initSystems(); // Initializes everything in the subsystem list 
 
-  static void updateSystems();
+  static void updateSystems(); // Runs logic in everything in the subsystem list
 
-  static void refreshTelemetry();
+  static void refreshTelemetry(); // Logs telemetry data for every subsystem in the subsystem list
 
   Subsystem(string tableLabel, vector<EntrySet> entryNames);
 
-  virtual void init() = 0;
-  virtual void periodic() = 0;
-  virtual void updateTelemetry() = 0;
-
-  bool inCommand = false;
+  virtual void init() = 0; //Prep for match: Motor setting / calibration / initial telemetry values
+  virtual void periodic() = 0; //How the robot responds to input 
+  virtual void updateTelemetry() = 0; //The data the robot has to offer 
 };
 
 #endif

@@ -49,18 +49,18 @@ struct EntrySet
 class Telemetry
 {
 private:
-  map<string, map<string, struct EntrySet>> table;
+  map<string, map<string, struct EntrySet>> table; //A table of every subtable possible
 
 public:
-  static Telemetry inst;
+  static Telemetry inst; //Only need one telemetry class
 
-  void registerSubtable(string tableKeys, vector<struct EntrySet> subKeys);
+  void registerSubtable(string tableKeys, vector<struct EntrySet> subKeys); //Create a new subtable with a key, entry names, and types for those entry names using EntryType
+                                                                            //Would make like (EntrySet){entry_key, EntryType::type}
+  template <typename T>
+  void placeValueAt(T val, string directory, string entryKey); // Place a appropriately typed value at a certain subtable:key entry
 
   template <typename T>
-  void placeValueAt(T val, string directory, string entryKey);
-
-  template <typename T>
-  T getValueAt(string directory, string entryKey);
+  T getValueAt(string directory, string entryKey); // Retrieve a appropriately typed value from a certain subtable:key entry
 };
 
 #endif

@@ -155,9 +155,10 @@ void Robot::updateSystemSubtable()
 {
   if (inputTracker != nullptr)
   {
-    if (inputTracker->isFull())
+    if (inputTracker->isFull()) //Inverse tracking is also completed
     {
-      delete inputTracker;
+      delete inputTracker; 
+      delete inverseInputTracker; // Which is why this line is called
       inputTracker = nullptr;
       Controller.rumble("...");  
       ControllerPal.rumble("...");
@@ -179,8 +180,12 @@ void Robot::updateSystemSubtable()
     artificialLog();
   }
   else
-  {
-    rawLog();
+  { 
+    if (isAttached) {
+     rawLog(); 
+    } else { 
+     hollowLog(); 
+    }
   }
 };
 
@@ -204,7 +209,27 @@ void Robot::saveFrame()
           ControllerPal.ButtonL1.pressing(),
           ControllerPal.ButtonL2.pressing(),
           ControllerPal.ButtonR1.pressing(),
+          Controller.ButtonR2.pressing()});  
+  inverseInputTracker->captureFrame(
+      new int[4]{
+          Controller.Axis3.position(),
+          Controller.Axis4.position(),
+          Controller.Axis2.position(),
+          Controller.Axis1.position()},
+      new bool[12]{
+          ControllerPal.ButtonA.pressing(),
+          ControllerPal.ButtonB.pressing(),
+          ControllerPal.ButtonX.pressing(),
+          ControllerPal.ButtonY.pressing(),
+          ControllerPal.ButtonDown.pressing(),
+          ControllerPal.ButtonUp.pressing(),
+          ControllerPal.ButtonLeft.pressing(),
+          ControllerPal.ButtonRight.pressing(),
+          ControllerPal.ButtonL1.pressing(),
+          ControllerPal.ButtonL2.pressing(),
+          ControllerPal.ButtonR1.pressing(),
           Controller.ButtonR2.pressing()});
+      
 }
 
 void Robot::artificialLog()
@@ -246,6 +271,25 @@ void Robot::rawLog()
   Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonL2.pressing(), "system", "Controller/Button_L2");
   Telemetry::inst.placeValueAt<bool>(ControllerPal.ButtonR1.pressing(), "system", "Controller/Button_R1");
   Telemetry::inst.placeValueAt<bool>(Controller.ButtonR2.pressing(), "system", "Controller/Button_R2");
+} 
+
+void Robot::hollowLog(){ 
+  Telemetry::inst.placeValueAt<int>(0, "system", "Controller/Axis-Vert-Left");
+  Telemetry::inst.placeValueAt<int>(0, "system", "Controller/Axis-Hori-Left");
+  Telemetry::inst.placeValueAt<int>(0, "system", "Controller/Axis-Vert-Right");
+  Telemetry::inst.placeValueAt<int>(0, "system", "Controller/Axis-Hori-Right");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_A");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_B");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_X");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_Y");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_DOWN");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_UP");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_LEFT");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_RIGHT");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_L1");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_L2");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_R1");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_R2");
 }
 
 void Robot::runTelemetryThread(bool showGraphics)
@@ -276,8 +320,13 @@ void Robot::initializeMirror(MirrorMode mode, string filename)
   }
   if (mode == MirrorMode::ABSORB)
   {
-    inputTracker = new AbsorbtiveMirror(filename);
+    inputTracker = new AbsorbtiveMirror(filename, false); //Difference in file names: Doesn't end in "_FLIPPED"
+    inverseInputTracker = new AbsorbtiveMirror(filename, true); // Ends in "_FLIPPED"
   }
+} 
+
+void Robot::detachInput(){ 
+
 }
 
 ////////////////////////////////////////////////////////////////////////////

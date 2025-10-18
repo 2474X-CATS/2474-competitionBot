@@ -4,7 +4,6 @@
 #include "subsystem.h"
 #include <vector>
 #include <vex.h> 
-//#include <cstdlib>
 #include "robotConfig.h" 
 #include <functional>
 
@@ -68,14 +67,8 @@ and Intake which spins the intake inwards for a certain amount of time you could
 class CommandInterface
 { // Interface made for autonomous commands that use various types of subsystems
 public:
-  // CommandInterface(){};
   ~CommandInterface() {};
-  virtual void run() = 0;
-
-protected:
-  virtual void occupySubsystem() = 0;
-  virtual bool isSubsystemOccupied() = 0;
-
+  virtual void run() = 0; // Establishes that at the very least a command has the ability to run
 };
 
 template <typename... Subsystems>
@@ -85,7 +78,7 @@ class Command : public CommandInterface
   static_assert((std::is_base_of<Subsystem, Subsystems>::value && ...), "Command must wrap around a Subsystem type");
 
 public:
-  Command(Subsystems &...systems) : subsystems_{std::ref(static_cast<Subsystem &>(systems))...} {};
+  Command(Subsystems &...systems) : subsystems_{std::ref(static_cast<Subsystem &>(systems))...} {}; 
   void run() override
   {
     this->start();
@@ -95,30 +88,6 @@ public:
       vex::this_thread::sleep_for(20);
     }
     this->end();
-    for (Subsystem &sub : this->subsystems_)
-    {
-      sub.inCommand = false;
-    }
-  };
-
-  void occupySubsystem() override
-  {
-    for (Subsystem &sub : subsystems_)
-    {
-      sub.inCommand = true;
-    }
-  };
-
-  bool isSubsystemOccupied() override
-  {
-    for (Subsystem &sub : subsystems_)
-    {
-      if (sub.inCommand)
-      {
-        return false;
-      }
-    }
-    return true;
   };
 
 protected:

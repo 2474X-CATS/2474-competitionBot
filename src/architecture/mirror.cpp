@@ -1,20 +1,6 @@
 #include <sstream>
 #include "mirror.h"
 
-/*
-string getStringFromFrame(FrameData frame){
-  string result;
-  string currentToken;
-  for (int i = 0; i < 4; i ++){
-     result += frame.axises[i] + ",";
-  }
-  for (int i = 0; i < 12; i ++){
-     result += frame.buttons[i] + ",";
-  }
-  return result;
-};
-*/
-bool STARTING_FROM_ORIGIN = true; // Will control whether the x values for the axises are flipped (starting on the right side)
 
 string getStringFromData(int axises[4], bool buttons[12])
 {
@@ -33,36 +19,7 @@ string getStringFromData(int axises[4], bool buttons[12])
    }
    return result;
 }
-/*
-FrameData getFrameFromString(string str)
-{
-   FrameData data;
-   int tokensPassed = 0;
-   int endingIndex = 0;
-   int startingIndex = 0;
-   while (tokensPassed < 16)
-   {
-      if (str[endingIndex] == ',')
-      {
-         stringstream strVal(str.substr(startingIndex, endingIndex - startingIndex));
-         if (tokensPassed <= 4)
-         {
-            strVal >> data.axises[tokensPassed];
-         }
-         else if (tokensPassed <= 16)
-         {
-            int val;
-            strVal >> val;
-            data.buttons[tokensPassed - 4] = (val == 1);
-         }
-         startingIndex = endingIndex + 1;
-         tokensPassed += 1;
-      }
-      endingIndex += 1;
-   }
-   return data;
-};
-*/
+
 FrameData getFrameFromString(string str)
 {
    FrameData data{};
@@ -73,12 +30,12 @@ FrameData getFrameFromString(string str)
    while (std::getline(ss, token, ',') && i < 16)
    {
       if (token.empty())
-         continue; // skip trailing empty field from last comma
+         continue; 
       int val = 0;
       std::stringstream(token) >> val;
       if (i < 4)
       { 
-           data.axises[i] = (i == 0 || i == 3) && (!STARTING_FROM_ORIGIN) ? -val : val; //val <- replace with this if you get wonky values
+           data.axises[i] = val;
       }
       else
       {
@@ -134,20 +91,46 @@ ReflectiveMirror::~ReflectiveMirror()
 int AbsorbtiveMirror::AUTONFRAMES = 15 * 50;
 int AbsorbtiveMirror::SKILLFRAMES = 60 * 50;
 
-AbsorbtiveMirror::AbsorbtiveMirror(string filename)
-    : writeStream(fopen(filename.c_str(), "w"))
-{
-   string fileSuffix = filename.substr(filename.length() - 4);
-   if (fileSuffix == "auto")
-      maximumFrames = AbsorbtiveMirror::AUTONFRAMES;
-   if (fileSuffix == "skil")
-      maximumFrames = AbsorbtiveMirror::SKILLFRAMES;
-};
+AbsorbtiveMirror::AbsorbtiveMirror(string filename, bool isFlipped) : isFlipped(isFlipped)
+{ 
+   /* 
+   input: awp_23.auto, true 
+   output: opening a write stream to autos/awp_23_FLIPPED.auto 
+
+   input awp_23.skills, false 
+   output: opening a write stream to skills/awp_23.skil
+   */
+   
+   string fileSuffix = filename.substr(filename.length() - 4); 
+   string fileBody = filename.substr(0, filename.length() - 4); 
+   string directory;  
+
+   string fullFileName;
+
+   if (fileSuffix == "auto"){
+      maximumFrames = AbsorbtiveMirror::AUTONFRAMES; 
+      directory = "autos";  
+   }
+   if (fileSuffix == "skil"){
+      maximumFrames = AbsorbtiveMirror::SKILLFRAMES;   
+      directory = "skills";
+   } 
+
+   fullFileName = directory + "/" + fileBody + (isFlipped ? "_FLIPPED" : "") + "." + fileSuffix; 
+   writeStream = fopen(fullFileName.c_str(), "w"); 
+}; 
+
 
 void AbsorbtiveMirror::captureFrame(int axises[4], bool buttons[12])
 {
    if (!isFull())
-   {
+   { 
+      if (isFlipped){
+         axises[3] *= -1; //Only flip horizontal component for driving  
+         bool temp = buttons[0];  // On one side there is a mid goal
+         buttons[0] = buttons[1]; // on the other a low goal and they are symmetrical relative to the center of the field
+         buttons[1] = temp;       // by switching the buttons for the mid and low scoring functions the robot can adapt to different goals 
+      }
       fprintf(writeStream, "%s\n", getStringFromData(axises, buttons).c_str());
       writtenFrames += 1;
    }

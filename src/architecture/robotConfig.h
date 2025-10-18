@@ -55,4 +55,6 @@ extern vex::pneumatics hoodPiston;
 
 //-------
 
-void vexcodeInit();
+void vexcodeInit(); 
+
+void stopEverything();

@@ -7,25 +7,21 @@
 
 using namespace std;
 
-extern bool STARTING_FROM_ORIGIN; 
-
 typedef enum
 {
-    REFLECT,
-    ABSORB,
-    OPAQUE
+    REFLECT, //Projecting a file to the telemetry table
+    ABSORB,  //Making a file from the telemetry table
+    OPAQUE   //Nothing
 } MirrorMode;
 
 typedef struct
 {
     int axises[4];
     bool buttons[12];
-} FrameData;
+} FrameData; //Stores a single frame of input [axises: int[4], buttons: bool[12]]
 
-extern FrameData defaultFrame;
-
-string getStringFromFrame(FrameData data);
 FrameData getFrameFromString(string str);
+
 
 class AbsorbtiveMirror
 {
@@ -35,7 +31,8 @@ private:
     static int SKILLFRAMES;
     int maximumFrames;
     int writtenFrames = 0;
-    FILE *writeStream;
+    FILE *writeStream; 
+    bool isFlipped;
 
 public:
     void captureFrame(int axises[4], bool buttons[12]);
@@ -44,7 +41,7 @@ public:
 
     bool isFull();
 
-    AbsorbtiveMirror(string filename);
+    AbsorbtiveMirror(string filename, bool isFlipped);
     ~AbsorbtiveMirror();
 };
 
