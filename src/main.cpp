@@ -43,14 +43,24 @@ int main()
     8: Free drive
   */  
 
-  Drivebase drive = Drivebase(0, 0);  
+  Drivebase drive = Drivebase(0, 0);   
   Intake intake;  
   Matchloader matchloader;   
   Indexer indexer;  
   Hood hood; 
-  Hopper hopper;
+  Hopper hopper; 
+  freeDrive();  
+ /*
+  //runTelemetry(); 
+  long timestamp = Brain.Timer.time();
+  while (true){  
+      if (Controller.ButtonA.pressing()) 
+        break; 
+      drive.manualTurnClockwise(30); 
+  } 
+  drive.stop();
 
-  freeDrive();
-
+  Brain.Screen.printAt(15, 130, "%ld", (Brain.Timer.time() - timestamp)); 
+  */
   
 }

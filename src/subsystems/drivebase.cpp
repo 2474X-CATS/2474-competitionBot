@@ -27,7 +27,7 @@ void Drivebase::init()
    
 
    set<double>("Pos_X", startX);
-   set<double>("Pos_Y", startY);
+   set<double>("Pos_Y", startY); 
 };
 
 void Drivebase::periodic()
@@ -51,7 +51,10 @@ void Drivebase::updateTelemetry()
    y += hypotenuse * sin(angleRadians);
 
    set<double>("Pos_X", x);
-   set<double>("Pos_Y", y);  
+   set<double>("Pos_Y", y);   
+   set<double>("Max_Velocity_MM_S", hypotenuse > get<double>("Max_Velocity_MM_S") ? hypotenuse : get<double>("Max_Velocity_MM_S"));  
+   Brain.Screen.printAt(15, 50, "%f", get<double>("Pos_X"));  
+   Brain.Screen.printAt(15, 90, "%f", get<double>("Pos_Y")); 
 };
 
 void Drivebase::arcadeDrive(double speed, double rotation)

@@ -37,7 +37,7 @@ vex::motor_group rightDriveMotors = vex::motor_group(driveFrontRight, driveBackR
 
 vex::motor indexerMotor = vex::motor(vex::PORT19);
 
-vex::motor intakeMotor = vex::motor(vex::PORT8, false); //motor
+vex::motor intakeMotor = vex::motor(vex::PORT18, false); //motor
 
 /// Hopper motor (moves discs up)
 vex::motor hopperMotor = vex::motor(vex::PORT17, false);

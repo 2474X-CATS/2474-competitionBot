@@ -13,11 +13,11 @@ void Indexer::updateTelemetry()
 
 void Indexer::periodic()
 {
-  if (getFromInputs<bool>("Controller/Button_R1")) // Checks if the indexer spins outwards toward goal
+  if (getFromInputs<bool>("Controller/Button_R2") || getFromInputs<bool>("Controller/Button_B")) // Checks if the indexer spins outwards toward goal
   {
     indexerMotor.setVelocity(-ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm);  
   }
-  else if (getFromInputs<bool>("Controller/Button_R2")) // Checks if the indexer spins inwards from goal
+  else if (getFromInputs<bool>("Controller/Button_R1")) // Checks if the indexer spins inwards from goal
   {
     indexerMotor.setVelocity(ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm); 
   }
