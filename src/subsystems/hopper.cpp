@@ -16,41 +16,17 @@ void Hopper::updateTelemetry()
 
 void Hopper::periodic()
 {
-    switch (getMode())
-    { // checks what the driver wants to do
-    case LOAD:
-        // Spin the hopper forward to suck discs in
-        hopperMotor.setVelocity(100, vex::percentUnits::pct);
-        break;
-    case UNLOAD:
+    if (getFromInputs<bool>("Controller/Button_R1") ||  
+        getFromInputs<bool>("Controller/Button_R2") ||  
+        getFromInputs<bool>("Controller/Button_DOWN")) //Checks if you should outtake cubes from the hopper
+    {
         hopperMotor.setVelocity(-100, vex::percentUnits::pct); 
-        break;
-    case STOP:
-    default:
-        // stop the hopper motor when no buttons are pressed 
-        hopperMotor.setVelocity(0, vex::percentUnits::pct);
-        break;
+    } else if (getFromInputs<bool>("Controller/Button_RIGHT")){ //Checks if you should run hopper motor away from outtake
+        hopperMotor.setVelocity(100, vex::percentUnits::pct);
+    } else 
+    {
+        hopperMotor.setVelocity(0, vex::percentUnits::pct); //Checks if you should stop the hopper motor
     } 
     hopperMotor.spin(vex::directionType::fwd);
 }
 
-// this looks at the controller buttons and chooses the mode
-
-HopperMode Hopper::getMode()
-{
-    HopperMode mode;
-
-    // R1 button = LOAD mode
-    // R2 button = UNLOAD mode
-    if (getFromInputs<bool>("Controller/Button_R1") || getFromInputs<bool>("Controler/Button_R2") || getFromInputs<bool>("Controller/Button_DOWN"))
-    {
-        mode = UNLOAD;
-    } else if (getFromInputs<bool>("Controller/Button_RIGHT")){ 
-        mode = LOAD;
-    } else // If no button is pressed, STOP mode
-    {
-        mode = STOP;
-    }
-
-    return mode;
-}

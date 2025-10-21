@@ -4,13 +4,6 @@
 #include "../architecture/subsystem.h"
 // #include "../architecture/command.h"
 
-typedef enum
-{
-   HIGH,
-   MID_OR_STORAGE,
-   NIL_IND
-} Feed;
-
 class Indexer : public Subsystem
 {
 public:
@@ -26,9 +19,6 @@ public:
 
 protected:
    using Subsystem::set;
-
-private:
-   Feed getScoringMode();
 };
 
 #endif

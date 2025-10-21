@@ -5,12 +5,14 @@
 #include "../architecture/subsystem.h"
 //#include "../architecture/command.cpp"
 
-//These are the different modes the match loader can be in
+//These are the different modes the match loader can be in 
+/*
 typedef enum {
     LOAD_DISC, // pushed a disc into robot
     RELEASE_DISC, //Pulls the prison back in
     IDLE //Does nothing
-} MatchloaderMode;
+} MatchloaderMode; 
+*/
 
 // The matchloader class controls the piston that loads discs
 class Matchloader : public Subsystem {
@@ -29,7 +31,7 @@ public:
 
 private:
     using Subsystem::set;
-    MatchloaderMode getMode(); //checks what button the driver pressed
+    //MatchloaderMode getMode(); //checks what button the driver pressed
 };
 
 #endif

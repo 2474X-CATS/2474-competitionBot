@@ -13,14 +13,7 @@ using namespace vex;
 
 competition Competition;
 Robot robot; 
-/*
-typedef enum
-{
-  CODING_SKILLS,
-  DRIVER_SKILLS,
-  COMPETITIVE
-} MatchType;
-*/
+
 void runTelemetry()
 {
   robot.runTelemetryThread(true);
@@ -33,68 +26,11 @@ void freeDrive()
   robot.driverControl(false);
 } 
 
-/*
-void mirrorMobilize(MirrorMode mode, string filename)
-{
-  switch (mode)
-  {
-  case REFLECT:
-    robot.initializeMirror(MirrorMode::REFLECT, filename);
-    break;
-  case ABSORB:
-    robot.initializeMirror(MirrorMode::ABSORB, filename);
-    break;
-  default:
-    return;
-  }
-  robot.initialize();
-  thread telem = thread(runTelemetry);
-  robot.driverControl(true); 
-  robot.detachInput();
-}
-
-void startMatch(MatchType type, string auton, string auton_skills)
-{
-  switch (type)
-  {
-  case CODING_SKILLS:
-    robot.initializeMirror(MirrorMode::REFLECT, auton_skills);
-    break;
-  default:
-    robot.initializeMirror(MirrorMode::REFLECT, auton);
-    break;
-  }
-  robot.initialize();
-  Competition.drivercontrol([]()
-                            { robot.driverControl(false); });
-  Competition.autonomous([]()
-                         { robot.driverControl(true); }); 
-  while (!Competition.isEnabled()) 
-     this_thread::yield();
-  robot.runTelemetryThread(true);
-}
-
-void startCommandMatch(std::vector<CommandInterface*> commandGroup){ 
-  robot.setAutonomousCommand(commandGroup);
-  Competition.autonomous([](){robot.autonControl();}); 
-  Competition.drivercontrol([](){robot.driverControl(false);});  
-  while (!Competition.isEnabled()) 
-     this_thread::yield();
-  robot.runTelemetryThread(true);
-}  
-
-void driveCommandMatch(std::vector<CommandInterface*> commandGroup){ 
-  robot.setAutonomousCommand(commandGroup);  
-  thread telemThread = thread(runTelemetry);
-  robot.autonControl(); 
-  robot.detachInput();
-}
-*/
 
 int main()
 {
 
-  vexcodeInit();
+  vexcodeInit(); 
   // Initialize subsystems
   /*
     1: Configure auton
@@ -107,7 +43,6 @@ int main()
     8: Free drive
   */  
 
-  
   Drivebase drive = Drivebase(0, 0);  
   Intake intake;  
   Matchloader matchloader;   

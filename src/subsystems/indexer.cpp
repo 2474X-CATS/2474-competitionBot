@@ -13,36 +13,18 @@ void Indexer::updateTelemetry()
 
 void Indexer::periodic()
 {
-  switch (getScoringMode())
+  if (getFromInputs<bool>("Controller/Button_R1")) // Checks if the indexer spins outwards toward goal
   {
-  case HIGH:
-    indexerMotor.setVelocity(-ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm); // Indexer spins outwards toward goal
-    break;
-  case MID_OR_STORAGE:
-    indexerMotor.setVelocity(ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm); // Indexer spins inwards from goal
-    break;
-  case NIL_IND:
-  default:
+    indexerMotor.setVelocity(-ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm);  
+  }
+  else if (getFromInputs<bool>("Controller/Button_R2")) // Checks if the indexer spins inwards from goal
+  {
+    indexerMotor.setVelocity(ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm); 
+  }
+  else // Indexer stops
+  {
     indexerMotor.setVelocity(0, vex::percentUnits::pct);
-    break;
-  };
+  }
   indexerMotor.spin(vex::directionType::fwd);
 };
 
-Feed Indexer::getScoringMode()
-{
-  Feed goal;
-  if (getFromInputs<bool>("Controller/Button_R1"))
-  {
-    goal = Feed::HIGH;
-  }
-  else if (getFromInputs<bool>("Controller/Button_R2"))
-  {
-    goal = Feed::MID_OR_STORAGE;
-  }
-  else
-  {
-    goal = Feed::NIL_IND;
-  };
-  return goal;
-};

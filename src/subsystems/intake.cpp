@@ -3,31 +3,20 @@
 
 
 void Intake::init(){
-    currentValue = HALT;
     set<bool>("isOn", true);
 };
 
 void Intake::periodic() {
-    if (getFromInputs<bool>("Controller/Button_B") || getFromInputs<bool>("Controller/Button_R1") || getFromInputs<bool>("Controller/Button_R2")) {
-        currentValue = INTAKE;
-    } else if (getFromInputs<bool>("Controller/Button_DOWN")) {
-        currentValue = OUTTAKE;
+    if (getFromInputs<bool>("Controller/Button_B") ||  
+        getFromInputs<bool>("Controller/Button_R1") ||  
+        getFromInputs<bool>("Controller/Button_R2")) { //Checks if you should intake inwards
+        intakeMotor.setVelocity(-100, vex::percentUnits::pct); 
+    } else if (getFromInputs<bool>("Controller/Button_DOWN")) { //Checks if you should outtake outwards
+        intakeMotor.setVelocity(100, vex::percentUnits::pct);
     } else {
-        currentValue = HALT;
-    }
-    switch(currentValue) {
-        case INTAKE: 
-            intakeMotor.setVelocity(-100, vex::percentUnits::pct);
-            intakeMotor.spin(vex::directionType::fwd);
-            break;
-        case OUTTAKE: 
-            intakeMotor.setVelocity(100, vex::percentUnits::pct);
-            intakeMotor.spin(vex::directionType::fwd);
-            break;
-        case HALT: 
-            intakeMotor.stop();
-            break;
-        }
+        intakeMotor.setVelocity(0, vex::percentUnits::pct);
+    } 
+    intakeMotor.spin(vex::directionType::fwd); 
 };
 
 void Intake::updateTelemetry() {

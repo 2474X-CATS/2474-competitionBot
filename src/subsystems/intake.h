@@ -4,12 +4,14 @@
 //#include "../architecture/command.cpp"
 #include "vex.h"
 
-//options for intake movements
+//options for intake movements 
+/*
 typedef enum { 
    INTAKE, 
    OUTTAKE,  
    HALT
-} IntakeValue;
+} IntakeValue; 
+*/
 
 class Intake : public Subsystem {
 public: 
@@ -25,10 +27,7 @@ public:
     void updateTelemetry() override;
 
 private:
-    IntakeValue currentValue; //defult position
-
-    //include port number and gear ratio
-    vex::motor intakeMotor = vex::motor(vex::PORT18, false);
+    //IntakeValue currentValue; //defult position
 };
 
 #endif

@@ -22,11 +22,15 @@ private:
    void saveFrame(); //Logs a frame of input data to a file
    void artificialLog(); // Projects data from an input file to the telemetry table
    void rawLog(); //Projects data from the controllers to the telemetry table
-   void hollowLog(); //Projects "nothing" data 0s and falses. (The robot stops)
+   void hollowLog(); //Projects "nothing" data 0s and falses. (The robot stops) 
+
+   void absorb(); // Logic behind 
+   void reflect(); 
+   void logRegular();
 
    AbsorbtiveMirror *inputTracker = nullptr; //Both are used ----------|  Absorbing data
    AbsorbtiveMirror *inverseInputTracker = nullptr; //At the same time--  to a file using a write stream
-
+   
    ReflectiveMirror *outputLogger = nullptr;  // Reflect data from an input file onto the robot using a readStream
    
    bool isAttached = true; //Checks whether the robot is still listening to controller input | NOT UNDER MIRROR CONTROL

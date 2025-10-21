@@ -3,37 +3,27 @@
 
 void Hood::init()
 {    
-     // cureent hood angle to normal
-    set<bool>("isOn", true); // changes entry in telmetry system (updates telemetry)
+    set<bool>("isOn", true);
 }
 
-// if up which direction hood goes to the angle then angle chnages to that button pressed.
 void Hood::periodic()
 { 
-    if (getFromInputs<bool>("Controller/Button_R1")){ 
-       currentAngle = OUT;
-    } else if (getFromInputs<bool>("Controller/Button_L1"))
-    { 
-        if (currentAngle == IN)
-          currentAngle = OUT; 
-        else  
-          currentAngle = IN;
-    }
-    
-
-    switch (currentAngle)
-    {
-    case IN:
-        // hoodMotor.setVelocity(30, vex::percentUnits::pct);
-        hoodPiston.open(); // piston in
-        break;
-    case OUT:
-        // hoodMotor.setVelocity(30, vex::percentUnits::pct);
-        hoodPiston.close(); // piston out
-        break; 
-    case NORMAL: 
-    default: 
-        break;
+    if (getFromInputs<bool>("Controller/Button_R1")){ //Checks if the hood should open to the scoring side
+       hoodPiston.open(); 
+       return;
+    }  
+    if (getFromInputs<bool>("Controller/Button_L1")) //Checks if the hood should close towards the hopper side 
+    {  
+        holding = true;
+    } else { 
+       if (holding){ 
+          if (hoodPiston.value() == 0)  //Uses toggle logic and button *pressing* instead of *holding* 
+            hoodPiston.open(); 
+          else {
+            hoodPiston.close();
+          }  
+          holding = false;
+       } 
     }
 }
 

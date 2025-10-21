@@ -3,7 +3,6 @@
 vex::brain Brain;
 
 vex::controller Controller = vex::controller(vex::controllerType::primary);
-vex::controller ControllerPal = vex::controller(vex::controllerType::partner); 
 
 /*
  TO-DO:

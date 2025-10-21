@@ -5,14 +5,15 @@
 #include "../architecture/command.cpp"
 #include "vex.h"
 
-// hood positions
+// hood positions 
+/*
 typedef enum
 {
     NORMAL,
     OUT,
     IN
 } HoodAngle;
-
+*/
 class Hood : public Subsystem
 {
 public:
@@ -29,8 +30,9 @@ public:
     void updateTelemetry() override;
 protected: 
     using Subsystem::set;
-private: 
-    HoodAngle currentAngle = IN; //default position
+private:  
+    bool holding = false;
+    //HoodAngle currentAngle = IN; //default position
 };
 
 #endif
