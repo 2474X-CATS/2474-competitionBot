@@ -31,7 +31,15 @@ public:
 protected: 
     using Subsystem::set;
 private:  
-    bool holding = false;
+    bool holding = false;  
+
+    bool shouldOpen(); 
+    bool shouldClose(); 
+    
+    bool shouldToggleOpen(); 
+    bool shouldToggleClose(); 
+    
+    bool isHolding(); 
     //HoodAngle currentAngle = IN; //default position
 };
 

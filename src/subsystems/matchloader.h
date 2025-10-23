@@ -29,8 +29,10 @@ public:
     void periodic() override; //Runs repeatedly while robot is on
     void updateTelemetry() override;//Sends info to dashboard
 
-private:
-    using Subsystem::set;
+protected:
+    using Subsystem::set; 
+private: 
+    bool shouldDeploy();
     //MatchloaderMode getMode(); //checks what button the driver pressed
 };
 

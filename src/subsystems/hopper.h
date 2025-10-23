@@ -32,7 +32,9 @@ public:
     void periodic() override;        // runs over and over during driver control or autonomous
     void updateTelemetry() override; // used if you want to send info to a dashboard
 
-private:
+private:  
+    bool shouldDispenseCubes();  
+    bool shouldMixHopper(); 
     // this figures out what the driver wants the hopper to do
    
 };

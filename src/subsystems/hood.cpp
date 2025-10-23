@@ -8,25 +8,49 @@ void Hood::init()
 
 void Hood::periodic()
 {   
-    if (getFromInputs<bool>("Controller/Button_L1")){  
+    if (isHolding()){  
       holding = true;
-    } else { 
+    } else {   
       if (holding){ 
-        if (hoodPiston.value() == 1) 
+        if (shouldToggleClose())
          hoodPiston.close();   
-        else { 
-         hoodPiston.open();
-        } 
-        holding = false; 
+        if (shouldToggleOpen())
+         hoodPiston.open(); 
         return;
-       } 
-    } 
-    if (getFromInputs<bool>("Controller/Button_B")){ 
+      }
+    }
+    if (shouldClose()){ 
       hoodPiston.close();
-    } else if (getFromInputs<bool>("Controller/Button_R1") || getFromInputs<bool>("Controller/Button_R2")) //Checks if the hood should close towards the hopper side 
+    } else if (shouldOpen()) //Checks if the hood should close towards the hopper side 
     { 
       hoodPiston.open(); 
     }
+}
+
+bool Hood::isHolding(){ 
+  return getFromInputs<bool>("Controller/Button_L1");
+} 
+
+bool Hood::shouldOpen(){ 
+  return getFromInputs<bool>("Controller/Button_R1") || getFromInputs<bool>("Controller/Button_R2");
+} 
+
+bool Hood::shouldClose(){ 
+  return getFromInputs<bool>("Controller/Button_B");
+} 
+
+bool Hood::shouldToggleOpen(){ 
+  if (hoodPiston.value() == 0)  
+    holding = false;
+    return true; 
+  return false;
+} 
+
+bool Hood::shouldToggleClose(){ 
+  if (hoodPiston.value() == 1) 
+    holding = false; 
+    return true;  
+  return false;
 }
 
 void Hood::updateTelemetry()

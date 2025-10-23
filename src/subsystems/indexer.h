@@ -18,7 +18,10 @@ public:
    void updateTelemetry() override;
 
 protected:
-   using Subsystem::set;
+   using Subsystem::set; 
+private: 
+   bool shouldSpinOver(); 
+   bool shouldSpinUnder();
 };
 
 #endif

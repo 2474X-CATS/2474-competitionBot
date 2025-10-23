@@ -26,7 +26,9 @@ public:
     void periodic() override; 
     void updateTelemetry() override;
 
-private:
+private: 
+    bool shouldIntake(); 
+    bool shouldOuttake(); 
     //IntakeValue currentValue; //defult position
 };
 

@@ -25,9 +25,7 @@ public:
                                                 "drivebase",
                                                 {(EntrySet){"Pos_X", EntryType::DOUBLE},
                                                  (EntrySet){"Pos_Y", EntryType::DOUBLE},
-                                                 (EntrySet){"Angle_Degrees", EntryType::DOUBLE}, 
-                                                 (EntrySet){"Max_Velocity_MM_S", EntryType::DOUBLE},  
-                                                 (EntrySet){"Angular_Velocity_D_S", EntryType::DOUBLE}
+                                                 (EntrySet){"Angle_Degrees", EntryType::DOUBLE}
                                                  }
                                                 ),
                                             startX(startX), startY(startY) {};
