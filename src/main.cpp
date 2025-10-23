@@ -48,8 +48,14 @@ int main()
   Matchloader matchloader;   
   Indexer indexer;  
   Hood hood; 
-  Hopper hopper; 
-  freeDrive();  
+  Hopper hopper;  
+   
+  thread telemetry = thread(runTelemetry);  
+  robot.initialize(); 
+  robot.initializeMirror(MirrorMode::REFLECT, "skills/test.skil");  
+  robot.driverControl(true);   
+  robot.detachInput(); 
+
  /*
   //runTelemetry(); 
   long timestamp = Brain.Timer.time();

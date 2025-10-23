@@ -102,7 +102,7 @@ AbsorbtiveMirror::AbsorbtiveMirror(string filename, bool isFlipped) : isFlipped(
    */
    
    string fileSuffix = filename.substr(filename.length() - 4); 
-   string fileBody = filename.substr(0, filename.length() - 4); 
+   string fileBody = filename.substr(0, filename.length() - 5); 
    string directory;  
 
    string fullFileName;

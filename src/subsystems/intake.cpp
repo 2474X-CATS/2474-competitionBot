@@ -11,7 +11,7 @@ void Intake::periodic() {
         getFromInputs<bool>("Controller/Button_R1") ||  
         getFromInputs<bool>("Controller/Button_R2")) { //Checks if you should intake inwards
         intakeMotor.setVelocity(-100, vex::percentUnits::pct); 
-    } else if (getFromInputs<bool>("Controller/Button_DOWN")) { //Checks if you should outtake outwards
+    } else if (getFromInputs<bool>("Controller/Button_Y") || getFromInputs<bool>("Controller/Button_DOWN")) { //Checks if you should outtake outwards
         intakeMotor.setVelocity(100, vex::percentUnits::pct);
     } else {
         intakeMotor.setVelocity(0, vex::percentUnits::pct);
