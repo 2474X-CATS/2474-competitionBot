@@ -28,19 +28,22 @@ void Hopper::periodic()
     {
         stop(); // Checks if you should stop the hopper motor
     }
-    hopperMotor.spin(vex::directionType::fwd);
+   
 }
 
 void Hopper::dispenseCubes(){ 
-    hopperMotor.setVelocity(-100, vex::percentUnits::pct);
+    hopperMotor.setVelocity(-100, vex::percentUnits::pct); 
+    hopperMotor.spin(vex::directionType::fwd);
 } 
 
 void Hopper::mixHopper(){ 
-    hopperMotor.setVelocity(100, vex::percentUnits::pct);
+    hopperMotor.setVelocity(100, vex::percentUnits::pct); 
+    hopperMotor.spin(vex::directionType::fwd);
 }  
 
 void Hopper::stop(){ 
-    hopperMotor.setVelocity(0, vex::percentUnits::pct);
+    hopperMotor.setVelocity(0, vex::percentUnits::pct); 
+    hopperMotor.spin(vex::directionType::fwd);
 }
 
 

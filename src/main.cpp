@@ -7,7 +7,9 @@
 #include "subsystems/hood.h" 
 #include "subsystems/hopper.h" 
 #include "subsystems/intake.h"  
-#include "subsystems/matchloader.h"
+#include "subsystems/matchloader.h" 
+
+#include "commands.h" 
 
 using namespace vex;
 
@@ -143,8 +145,12 @@ int main()
   Matchloader matchloader;   
   Indexer indexer;  
   Hood hood; 
-  Hopper hopper;    
-  freeDrive();
+  Hopper hopper;     
+
+  robot.initialize(); 
+  thread telemThread = thread(runTelemetry);
+  DriveLinear::getCommand(drive, 500)->run(); 
+
  //driveForward(drive, 500);
   
 }

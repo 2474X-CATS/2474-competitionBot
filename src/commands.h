@@ -13,7 +13,7 @@
 class DriveLinear : public Command<Drivebase> { 
      private:
        Drivebase &driveRef;
-       pidcontroller *control = nullptr; 
+       pidcontroller control; 
 
        double startingPoint[2];
        double getDistTraveled(); 
@@ -23,9 +23,9 @@ class DriveLinear : public Command<Drivebase> {
        DriveLinear(Drivebase &drive, double displacement) :    
        Command<Drivebase>(drive),
        driveRef(drive),
-       control(new pidcontroller(drive.getPowerPID(), displacement)) {}; 
+       control(pidcontroller(drive.getPowerPID(), displacement)) {}; 
 
-       ~DriveLinear() override;
+       ~DriveLinear();
 
        static CommandInterface *getCommand(Drivebase &drive, double displacement)
        {
@@ -60,7 +60,7 @@ class TurnToHeading : public Command<Drivebase> {
      control(new pidcontroller(drive.getTurningPID(), 0)), 
      setpoint(degrees){}; 
 
-     ~TurnToHeading() override;
+     ~TurnToHeading();
 
      static CommandInterface *getCommand(Drivebase &drive, double degrees)
      {

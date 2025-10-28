@@ -2,22 +2,27 @@
 
 //////////////////////////////////////////////////////////// 
 
-void DriveLinear::start(){ 
+void DriveLinear::start(){  
    startingPoint[0] = driveRef.get<double>("Pos_X");
    startingPoint[1] = driveRef.get<double>("Pos_Y");
-   control->setLastTimestamp(Brain.Timer.time(vex::timeUnits::msec));
+   control.setLastTimestamp(Brain.Timer.time(vex::timeUnits::msec)); 
+   Brain.Screen.print("Made it to start"); 
+   Brain.Screen.newLine(); 
 }; 
 
 void DriveLinear::periodic(){ 
-   driveRef.manualDriveForward(control->calculate(getDistTraveled(), Brain.Timer.time(vex::timeUnits::msec)));
+   driveRef.arcadeDrive(30,0);//control.calculate(getDistTraveled(), Brain.Timer.time(vex::timeUnits::msec)), 0); 
+   Brain.Screen.print("Working"); 
+   Brain.Screen.newLine();
 }; 
 
 bool DriveLinear::isOver(){ 
-   return control->atSetpoint(); 
+   return control.atSetpoint(); 
 };
 
 void DriveLinear::end(){ 
-   driveRef.stop();
+   driveRef.stop(); 
+   driveRef.setSpeedFactor(0.85);
 }; 
 
 double DriveLinear::getDistTraveled(){ 
@@ -26,13 +31,14 @@ double DriveLinear::getDistTraveled(){
 };
 
 DriveLinear::~DriveLinear(){ 
-    delete control;
+    return;
 }
 
 //////////////////////////////////////////////////////////// 
 
 void TurnToHeading::start(){ 
-   isClockwise = true;
+   isClockwise = true; 
+   driveRef.setSpeedFactor(1); 
    angularDifference = fabs(setpoint - driveRef.get<double>("Angle_Degrees"));
    if (angularDifference > 180)
    {
@@ -46,7 +52,7 @@ void TurnToHeading::start(){
 void TurnToHeading::periodic(){ 
    double output = control->calculate(getDistToSpin(), Brain.Timer.time(vex::timeUnits::msec));
    output = !isClockwise ? output * -1 : output; 
-   driveRef.manualTurnClockwise(output);   
+   driveRef.arcadeDrive(0, output);   
 }; 
 
 bool TurnToHeading::isOver(){ 
@@ -54,7 +60,8 @@ bool TurnToHeading::isOver(){
 };  
 
 void TurnToHeading::end(){ 
-    driveRef.stop();
+    driveRef.stop(); 
+    driveRef.setSpeedFactor(0.85);
 };  
 
 double TurnToHeading::getDistToSpin(){ 
@@ -62,7 +69,7 @@ double TurnToHeading::getDistToSpin(){
 };
 
 TurnToHeading::~TurnToHeading(){ 
-    delete control;
+    return;
 }
 
 ////////////////////////////////////////////////////////////  
@@ -97,12 +104,13 @@ void ScoreOnGoal::start(){
    //Top: 1 
    //Mid: 2 
    //Low: 3 
-   if (goal == 1) 
-     hoodRef.open();
-       
+   if (goal == 1)  
+     hoodRef.open();  
+   hopperRef.dispenseCubes();
+   startingTime = Brain.Timer.time(); 
 } 
 
-void ScoreOnGoal::periodic(){  
+void ScoreOnGoal::periodic(){   
     hopperRef.dispenseCubes(); 
     if (goal != 3){ 
         intakeRef.intake(); 
@@ -113,7 +121,7 @@ void ScoreOnGoal::periodic(){
         }
     } else { 
         intakeRef.outtake();
-    }
+    } 
 } 
 
 bool ScoreOnGoal::isOver(){ 
@@ -123,7 +131,9 @@ bool ScoreOnGoal::isOver(){
 void ScoreOnGoal::end(){ 
     intakeRef.stop(); 
     indexerRef.stop(); 
-    hopperMotor.stop(); 
+    hopperMotor.stop();  
+    Brain.Screen.print("Ending"); 
+    Brain.Screen.newLine();
 } 
 
 ScoreOnGoal::~ScoreOnGoal(){ 
@@ -148,7 +158,7 @@ bool DeployMatchloader::isOver(){
     return true; 
 }
 
-void end(){ 
+void DeployMatchloader::end(){ 
     return;
 }  
 

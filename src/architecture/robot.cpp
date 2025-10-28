@@ -331,7 +331,7 @@ void Robot::detachInput(){
   isAttached = false;
 }
 
-/*
+
 ////////////////////////////////////////////////////////////////////////////
 void Robot::setAutonomousCommand(std::vector<CommandInterface *> comm)
 {
@@ -347,4 +347,3 @@ void Robot::autonControl()
   }
 };
 ///////////////////////////////////////////////////////////////////// 
-*/

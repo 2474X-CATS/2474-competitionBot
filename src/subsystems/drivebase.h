@@ -40,7 +40,7 @@ private:
   PIDConstants turnPID;
   
   double startX, startY;
-  double speedFactor = (1 - 0.15); 
+  double speedFactor = 0.85; 
 
   Location* currentLocation = nullptr;
 
@@ -69,7 +69,9 @@ public:
 
   void arcadeDrive(double speed, double rotation);
   void manualDriveForward(double speedMM);
-  void manualTurnClockwise(double turnDeg);  
+  void manualTurnClockwise(double turnDeg); 
+  
+  void setSpeedFactor(double speedFactor); 
 
   void updateTileCoordinates();
    

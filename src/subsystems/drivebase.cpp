@@ -18,7 +18,7 @@ void Drivebase::init()
 
    driveGyro.setHeading(0, vex::rotationUnits::deg);
 
-   powerPID.P = 0.4;
+   powerPID.P = 0.5;
    powerPID.I = 0.001;
    powerPID.D = 0;
    powerPID.errorTolerance = 10;
@@ -34,8 +34,8 @@ void Drivebase::init()
 };
 
 void Drivebase::periodic()
-{
-   arcadeDrive(getFromInputs<int>("Controller/Axis-Vert-Left") * speedFactor, getFromInputs<int>("Controller/Axis-Hori-Right") * speedFactor);
+{ 
+   arcadeDrive((double)getFromInputs<int>("Controller/Axis-Vert-Left"), (double)getFromInputs<int>("Controller/Axis-Hori-Right"));
 };
 
 void Drivebase::updateTelemetry()
@@ -82,10 +82,12 @@ void Drivebase::updateLocations()
 }
 
 void Drivebase::arcadeDrive(double speed, double rotation)
-{
-   leftDriveMotors.setVelocity((speed + rotation), vex::percentUnits::pct);
+{ 
+   //speed = speed > 100 ? 100 : (speed < -100 ? -100 : speed); 
+   //rotation = rotation > 100 ? 100 : (rotation < -100 ? -100 : rotation);  
+   leftDriveMotors.setVelocity((speed + rotation) * speedFactor, vex::percentUnits::pct);
    leftDriveMotors.spin(vex::directionType::fwd);
-   rightDriveMotors.setVelocity((speed - rotation), vex::percentUnits::pct);
+   rightDriveMotors.setVelocity((speed - rotation) * speedFactor, vex::percentUnits::pct);
    rightDriveMotors.spin(vex::directionType::rev);
 };
 
@@ -129,3 +131,6 @@ PIDConstants Drivebase::getTurningPID()
    return this->turnPID;
 };
 
+void Drivebase::setSpeedFactor(double speedFactor){ 
+   this->speedFactor = speedFactor;
+}

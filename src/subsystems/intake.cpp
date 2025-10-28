@@ -20,7 +20,7 @@ void Intake::periodic()
     {
         stop();
     }
-    intakeMotor.spin(vex::directionType::fwd);
+    
 };
 
 void Intake::updateTelemetry()
@@ -42,15 +42,18 @@ bool Intake::shouldOuttake()
 } 
 
 void Intake::intake(){ 
-    intakeMotor.setVelocity(-100, vex::percentUnits::pct);
+    intakeMotor.setVelocity(-100, vex::percentUnits::pct); 
+    intakeMotor.spin(vex::directionType::fwd);
 }  
 
 void Intake::outtake(){ 
-    intakeMotor.setVelocity(100, vex::percentUnits::pct);
+    intakeMotor.setVelocity(100, vex::percentUnits::pct); 
+    intakeMotor.spin(vex::directionType::fwd);
 }  
 
 void Intake::stop(){ 
-    intakeMotor.setVelocity(0, vex::percentUnits::pct);
+    intakeMotor.setVelocity(0, vex::percentUnits::pct); 
+    intakeMotor.spin(vex::directionType::fwd);
 } 
 
 
