@@ -2,7 +2,7 @@
 #include "architecture/robot.h"
 #include <iostream> 
 
-#include "subsystems/drivebase.h"
+#include "subsystems/drivebase.h" 
 #include "subsystems/indexer.h" 
 #include "subsystems/hood.h" 
 #include "subsystems/hopper.h" 
@@ -27,9 +27,9 @@ void runTelemetry()
 }
 
 void freeDrive()
-{
+{ 
   robot.initialize();
-  thread telemetryThread = thread(runTelemetry);
+  thread telemetryThread = thread(runTelemetry); 
   robot.driverControl(false);
 }
 
@@ -87,13 +87,44 @@ void driveCommandMatch(std::vector<CommandInterface*> commandGroup){
   thread telemThread = thread(runTelemetry);
   robot.autonControl(); 
   robot.detachInput();
+} 
+
+void declareLocations(){ 
+  Location nativeBallCluster = Location(
+    "ballClusterNative",
+    0,
+    300,
+    200,
+    180,
+    179);  
+} 
+
+
+
+/*
+void driveForward(Drivebase driveRef, double forwardDisplacement){ 
+  pidcontroller controller = pidcontroller(driveRef.getPowerPID(), forwardDisplacement);   
+  double startingPoint[2]; 
+  startingPoint[0] = driveRef.get<double>("Pos_X");
+  startingPoint[1] = driveRef.get<double>("Pos_Y");
+  controller.setLastTimestamp(Brain.Timer.time(vex::timeUnits::msec)); 
+  while (!controller.atSetpoint() && !Controller.ButtonA.pressing()){   
+     double currentPoint[2] = {driveRef.get<double>("Pos_X"), driveRef.get<double>("Pos_Y")}; 
+     double distTraveled = hypot(currentPoint[0] - startingPoint[0], currentPoint[1] - startingPoint[1]);
+     driveRef.manualDriveForward(30);//controller.calculate(distTraveled, Brain.Timer.time(vex::timeUnits::msec))); 
+  }   
+  driveRef.stop();
 }
+*/
+
+
 
 
 int main()
 {
 
-  vexcodeInit();
+  vexcodeInit(); 
+  //declareLocations(); 
   // Initialize subsystems
   /*
     1: Configure auton
@@ -107,15 +138,13 @@ int main()
   */  
 
   
-  Drivebase drive = Drivebase(0, 0);  
+  Drivebase drive = Drivebase(1, 1); //Tile location right 1 up 1    
   Intake intake;  
   Matchloader matchloader;   
   Indexer indexer;  
   Hood hood; 
-  Hopper hopper;
- 
-  
+  Hopper hopper;    
   freeDrive();
-
+ //driveForward(drive, 500);
   
 }

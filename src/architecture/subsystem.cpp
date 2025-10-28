@@ -1,8 +1,8 @@
 #include "subsystem.h"
 
-std::vector<Subsystem *> Subsystem::systems;
+vector<Subsystem *> Subsystem::systems;
 
-Subsystem::Subsystem(std::string tableLabel, vector<EntrySet> entryNames) : label(tableLabel)
+Subsystem::Subsystem(string tableLabel, vector<EntrySet> entryNames) : label(tableLabel)
 {
    Subsystem::systems.push_back(this);
    Telemetry::inst.registerSubtable(this->label, entryNames);
@@ -29,5 +29,12 @@ void Subsystem::refreshTelemetry()
    for (Subsystem *system : systems)
    {
       system->updateTelemetry();
+   }
+}; 
+
+void Subsystem::stopAll(){ 
+  for (Subsystem *system : systems)
+   {
+      system->stop();
    }
 };

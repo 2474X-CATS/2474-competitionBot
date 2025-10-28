@@ -22,7 +22,9 @@ double pidcontroller::calculate(double position, double timestamp)
    if (dt <= 0)
       dt = 1e-6;
    lastTimestamp = timestamp;
-   error = setpoint - position;
+   error = setpoint - position; 
+   if (atSetpoint()) 
+      return 0;
    integral += error * dt;
    if (iLimit > 0)
    {
@@ -39,4 +41,8 @@ double pidcontroller::calculate(double position, double timestamp)
 void pidcontroller::setLastTimestamp(double timestamp)
 {
    lastTimestamp = timestamp;
-};
+}; 
+
+double pidcontroller::getSetpoint(){ 
+   return setpoint;
+}

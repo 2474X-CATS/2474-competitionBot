@@ -26,11 +26,19 @@
          V
     |stdout: 30|
 
-*/
-#include <map>
-#include <vector>
+*/ 
 
-using namespace std;
+#include <map> 
+using std::map;  
+
+#include <vector>  
+using std::vector;  
+
+#include <string> 
+using std::string;
+
+using namespace std; 
+
 
 typedef enum
 {

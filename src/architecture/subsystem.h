@@ -1,9 +1,7 @@
 #ifndef __SUBSYSTEM_H__
 #define __SUBSYSTEM_H__
 
-#include <vector>
-#include <string>
-#include "telemetry.h"
+#include "telemetry.h"  
 
 /*
 //Generalizes the creation of subsystem logic
@@ -77,12 +75,15 @@ public:
   static void updateSystems(); // Runs logic in everything in the subsystem list
 
   static void refreshTelemetry(); // Logs telemetry data for every subsystem in the subsystem list
-
+  
+  static void stopAll(); 
+  
   Subsystem(string tableLabel, vector<EntrySet> entryNames);
 
   virtual void init() = 0; //Prep for match: Motor setting / calibration / initial telemetry values
   virtual void periodic() = 0; //How the robot responds to input 
-  virtual void updateTelemetry() = 0; //The data the robot has to offer 
+  virtual void updateTelemetry() = 0; //The data the robot has to offer  
+  virtual void stop() = 0;
 };
 
 #endif

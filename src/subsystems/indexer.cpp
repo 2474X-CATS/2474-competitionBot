@@ -13,25 +13,37 @@ void Indexer::updateTelemetry()
 
 void Indexer::periodic()
 {
-  if (shouldSpinOver()) // Checks if the indexer spins outwards toward goal
+  if (shouldSpinOver())
   {
-    indexerMotor.setVelocity(-ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm);  
+    spinOver();
   }
-  else if (shouldSpinUnder()) // Checks if the indexer spins inwards from goal
+  else if (shouldSpinUnder()) 
   {
-    indexerMotor.setVelocity(ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm); 
+    spinUnder(); 
   }
-  else // Indexer stops
+  else 
   {
-    indexerMotor.setVelocity(0, vex::percentUnits::pct);
+    stop();
   }
   indexerMotor.spin(vex::directionType::fwd);
 }; 
 
 bool Indexer::shouldSpinOver(){ 
-  return getFromInputs<bool>("Controller/Button_R2") || getFromInputs<bool>("Controller/Button_B");
+  return getFromInputs<bool>("Controller/Button_R2") || getFromInputs<bool>("Controller/Button_Y");
 }
 
 bool Indexer::shouldSpinUnder(){ 
   return getFromInputs<bool>("Controller/Button_R1");
+} 
+
+void Indexer::spinOver(){ 
+  indexerMotor.setVelocity(-ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm);
+} 
+
+void Indexer::spinUnder(){ 
+  indexerMotor.setVelocity(ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm);
+} 
+
+void Indexer::stop(){ 
+  indexerMotor.setVelocity(0, vex::percentUnits::pct);
 }

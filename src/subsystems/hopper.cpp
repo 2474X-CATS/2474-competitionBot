@@ -18,27 +18,41 @@ void Hopper::periodic()
 {
     if (shouldDispenseCubes()) // Checks if you should outtake cubes from the hopper
     {
-        hopperMotor.setVelocity(-100, vex::percentUnits::pct);
+        dispenseCubes();
     }
     else if (shouldMixHopper())
     { // Checks if you should run hopper motor away from outtake
-        hopperMotor.setVelocity(100, vex::percentUnits::pct);
+        mixHopper();
     }
     else
     {
-        hopperMotor.setVelocity(0, vex::percentUnits::pct); // Checks if you should stop the hopper motor
+        stop(); // Checks if you should stop the hopper motor
     }
     hopperMotor.spin(vex::directionType::fwd);
 }
+
+void Hopper::dispenseCubes(){ 
+    hopperMotor.setVelocity(-100, vex::percentUnits::pct);
+} 
+
+void Hopper::mixHopper(){ 
+    hopperMotor.setVelocity(100, vex::percentUnits::pct);
+}  
+
+void Hopper::stop(){ 
+    hopperMotor.setVelocity(0, vex::percentUnits::pct);
+}
+
 
 bool Hopper::shouldDispenseCubes()
 {
     return getFromInputs<bool>("Controller/Button_R1") ||
            getFromInputs<bool>("Controller/Button_R2") ||
-           getFromInputs<bool>("Controller/Button_DOWN");
+           getFromInputs<bool>("Controller/Button_RIGHT");
+           //getFromInputs<bool>("Controller/Button_B");
 }
 
 bool Hopper::shouldMixHopper()
 {
-    return getFromInputs<bool>("Controller/Button_RIGHT");
+    return getFromInputs<bool>("Controller/Button_DOWN");
 }

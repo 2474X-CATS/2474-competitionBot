@@ -1,7 +1,13 @@
 #include "telemetry.h"
-#include <sstream>
-#include <string>
-#include <stdexcept>
+
+#include <sstream> 
+using std::ostringstream;  
+
+#include <stdexcept>   
+using std::__throw_logic_error; 
+
+
+
 
 Telemetry Telemetry::inst;
 

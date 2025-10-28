@@ -1,5 +1,7 @@
-#include <sstream>
-#include "mirror.h"
+#include "mirror.h" 
+
+#include <sstream> 
+using std::ostringstream; 
 
 
 string getStringFromData(int axises[4], bool buttons[12])

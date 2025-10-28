@@ -1,9 +1,36 @@
 #ifndef __DRIVEBASE_H_
 #define __DRIVEBASE_H_
 
-#include "../architecture/subsystem.h"
-#include "../architecture/command.cpp"
+#include "../architecture/subsystem.h" 
 #include "../helpers/pidcontroller.h"
+#include <set>  
+#include "vex.h"
+#include "../helpers/location.h"
+/*
+class Location { 
+   public: 
+     Location(string name, double centerX, double centerY, double zoneRadius, double perfectEntranceAngle, double angleTolerance);
+     
+     string getName(); 
+     
+     static vector<Location*>& getLocations();  
+     bool isRobotVisiting(); //Is the robot facing the locations and is its heading within the angle threshold and if the two are touching
+  
+   
+   private: 
+     double centerX; 
+     double centerY; 
+     double zoneRadius; 
+     double perfectEntranceAngle; 
+     double angleTolerance;    
+
+     string locationName;
+     
+     static vector<Location*>& locations; 
+
+     
+};  
+*/
 
 class Drivebase : public Subsystem
 {
@@ -13,7 +40,11 @@ private:
   PIDConstants turnPID;
   
   double startX, startY;
-  double speedFactor = (1 - 0.15);
+  double speedFactor = (1 - 0.15); 
+
+  Location* currentLocation = nullptr;
+
+  
 
 protected:
   using Subsystem::set;
@@ -21,80 +52,32 @@ protected:
 public:
   using Subsystem::get;
   using Subsystem::getFromInputs;
-  Drivebase(double startX, double startY) : Subsystem::Subsystem(
+  Drivebase(int tileX, int tileY) : Subsystem::Subsystem(
                                                 "drivebase",
                                                 {(EntrySet){"Pos_X", EntryType::DOUBLE},
                                                  (EntrySet){"Pos_Y", EntryType::DOUBLE},
-                                                 (EntrySet){"Angle_Degrees", EntryType::DOUBLE}
+                                                 (EntrySet){"Angle_Degrees", EntryType::DOUBLE}, 
+                                                 (EntrySet){"Current_Location", EntryType::STRING}
                                                  }
                                                 ),
-                                            startX(startX), startY(startY) {};
+                                            startX((tileX - 1) * TILE_SIZE_MM), startY((tileY - 1) * TILE_SIZE_MM) {};
 
   void init() override;
   void periodic() override;
   void updateTelemetry() override;
+  void stop() override;  
 
   void arcadeDrive(double speed, double rotation);
   void manualDriveForward(double speedMM);
-  void manualTurnClockwise(double turnDeg);
+  void manualTurnClockwise(double turnDeg);  
 
-  void stop();
-
+  void updateTileCoordinates();
+   
+  void updateLocations();
+  
   PIDConstants getTurningPID();
 
   PIDConstants getPowerPID();
-};
-
-class DriveLinear : public Command<Drivebase>
-{
-
-private:
-  Drivebase &driveRef;
-  pidcontroller *control = nullptr;
-
-  double startingPoint[2];
-  double getDistTraveled();
-
-public:
-  DriveLinear(Drivebase &drive, double displacement);
-  ~DriveLinear() override;
-
-  static CommandInterface *getCommand(Drivebase &drive, double displacement)
-  {
-    return new DriveLinear(drive, displacement);
-  }
-
-  void start() override;
-  void periodic() override;
-  bool isOver() override;
-  void end() override;
-};
-
-
-
-class TurnTo : public Command<Drivebase>
-{
-
-private:
-  Drivebase &driveRef;
-  pidcontroller *control = nullptr;
-
-  double setpoint;
-  double getError();
-
-public:
-  TurnTo(Drivebase &drive, double degrees);
-  ~TurnTo() override;
-
-  static CommandInterface *getCommand(Drivebase &drive, double degrees)
-  {
-    return new TurnTo(drive, degrees);
-  }
-
-  void start() override;
-  void periodic() override;
-  bool isOver() override;
-  void end() override;
 };
 
 #endif

@@ -1,11 +1,16 @@
 #ifndef __MIRROR_H__
 #define __MIRROR_H__
 
-#include <vector>
-#include <cstdio>
-#include <string>
+#include <vector> 
+using std::vector; 
 
-using namespace std;
+#include <cstdio> 
+using std::FILE;
+
+#include <string> 
+using std::string;
+
+//using namespace std;
 
 typedef enum
 {

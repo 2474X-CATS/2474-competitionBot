@@ -1,4 +1,4 @@
-#include "vex.h"
+#include "robotConfig.h" 
 
 vex::brain Brain;
 
@@ -13,11 +13,14 @@ vex::controller Controller = vex::controller(vex::controllerType::primary);
 //-------
 //-------
 // Constants: PLACE HERE [regularly]
-double ABSOLUTE_INDEXER_SPEED = 200;
+double ABSOLUTE_INDEXER_SPEED = 200; 
 double DRIVE_WHEEL_RADIUS_MM = 76.2;
-double TRACK_WIDTH_MM = 381;
-double WHEEL_BASE_MM = 203.2;
-double EXTERNAL_GEAR_RATIO = 0.6;
+
+double ROBOT_WIDTH_MM = 381; //mm
+double ROBOT_LENGTH_MM = 355.6;//mm 
+
+double TILE_SIZE_MM = (3.6576/6) * 1000; //mm
+
 
 // Devices: PLACE HERE [regularly]
 

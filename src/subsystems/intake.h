@@ -1,17 +1,9 @@
 #ifndef _INTAKE_H_
 #define _INTAKE_H_
 #include "../architecture/subsystem.h"
-//#include "../architecture/command.cpp"
+
 #include "vex.h"
 
-//options for intake movements 
-/*
-typedef enum { 
-   INTAKE, 
-   OUTTAKE,  
-   HALT
-} IntakeValue; 
-*/
 
 class Intake : public Subsystem {
 public: 
@@ -25,11 +17,15 @@ public:
     void init() override; 
     void periodic() override; 
     void updateTelemetry() override;
+    void stop() override; 
+
+    void intake(); 
+    void outtake();  
 
 private: 
     bool shouldIntake(); 
-    bool shouldOuttake(); 
-    //IntakeValue currentValue; //defult position
+    bool shouldOuttake();   
+    
 };
 
 #endif

@@ -9,16 +9,16 @@ void Intake::init()
 void Intake::periodic()
 {
     if (shouldIntake())
-    { // Checks if you should intake inwards
-        intakeMotor.setVelocity(-100, vex::percentUnits::pct);
+    { 
+        intake();
     }
-    else if (getFromInputs<bool>("Controller/Button_Y") || getFromInputs<bool>("Controller/Button_DOWN"))
-    { // Checks if you should outtake outwards
-        intakeMotor.setVelocity(100, vex::percentUnits::pct);
+    else if (shouldOuttake())
+    {
+        outtake();
     }
     else
     {
-        intakeMotor.setVelocity(0, vex::percentUnits::pct);
+        stop();
     }
     intakeMotor.spin(vex::directionType::fwd);
 };
@@ -30,13 +30,27 @@ void Intake::updateTelemetry()
 
 bool Intake::shouldIntake()
 {
-    return getFromInputs<bool>("Controller/Button_B") ||
+    return getFromInputs<bool>("Controller/Button_Y") ||
            getFromInputs<bool>("Controller/Button_R1") ||
            getFromInputs<bool>("Controller/Button_R2");
 }
 
 bool Intake::shouldOuttake()
 {
-    return getFromInputs<bool>("Controller/Button_Y") ||  
-           getFromInputs<bool>("Controller/Button_DOWN");
-}
+    return getFromInputs<bool>("Controller/Button_B") ||  
+           getFromInputs<bool>("Controller/Button_RIGHT");
+} 
+
+void Intake::intake(){ 
+    intakeMotor.setVelocity(-100, vex::percentUnits::pct);
+}  
+
+void Intake::outtake(){ 
+    intakeMotor.setVelocity(100, vex::percentUnits::pct);
+}  
+
+void Intake::stop(){ 
+    intakeMotor.setVelocity(0, vex::percentUnits::pct);
+} 
+
+

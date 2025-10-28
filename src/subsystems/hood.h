@@ -2,18 +2,9 @@
 #define _HOOD_H_
 
 #include "../architecture/subsystem.h"
-#include "../architecture/command.cpp"
 #include "vex.h"
 
-// hood positions 
-/*
-typedef enum
-{
-    NORMAL,
-    OUT,
-    IN
-} HoodAngle;
-*/
+
 class Hood : public Subsystem
 {
 public:
@@ -27,20 +18,20 @@ public:
 
     void init() override;
     void periodic() override;
-    void updateTelemetry() override;
+    void updateTelemetry() override; 
+    void stop() override;  
+
+    void open(); 
+    void close();
+
 protected: 
     using Subsystem::set;
 private:  
     bool holding = false;  
 
     bool shouldOpen(); 
-    bool shouldClose(); 
-    
-    bool shouldToggleOpen(); 
-    bool shouldToggleClose(); 
-    
+    bool shouldClose();  
     bool isHolding(); 
-    //HoodAngle currentAngle = IN; //default position
 };
 
 #endif

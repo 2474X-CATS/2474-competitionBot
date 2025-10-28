@@ -1,10 +1,12 @@
 #ifndef __ROBOT_H__
 #define __ROBOT_H__
 
-#include <vector>
-#include "vex.h"
+#include <vector> 
+using std::vector; 
+
+
 #include "mirror.h"
-using namespace vex;
+
 
 class CommandInterface;
 
@@ -13,9 +15,9 @@ class Robot
 
 private:
    void registerSystemSubtable(); // Sets up the system data table (handling input values such as axises and buttons from both controllers)
-   void updateSystemSubtable(); // Function tht actually logs data to the telemetry table no matter what state it is currently in
+   void updateSystemSubtable(); // Function that actually logs data to the telemetry table no matter what state it is currently in
    //
-   std::vector<CommandInterface *> autonomousCommand;
+   vector<CommandInterface *> autonomousCommand;
    //
    bool isActive();
 
@@ -51,7 +53,7 @@ public:
    void runTelemetryThread(bool showGraphics); //A constant loop of information logging fom the subsystems (drivebase, intake, etc),  
                                                //and the system (controller axises, buttons) happening on a different thread
 
-   void setAutonomousCommand(std::vector<CommandInterface *> comm); //Sets up the autonomous command that is to be ran in autoncontrol:  
+   void setAutonomousCommand(vector<CommandInterface *> comm); //Sets up the autonomous command that is to be ran in autoncontrol:  
                                                                     //Like building blocks (Put one command on top of the other)
 };
 

@@ -13,14 +13,26 @@ void Matchloader::updateTelemetry(){
 }
 
 void Matchloader::periodic(){
-    if (shouldDeploy()){ //Checks if the matchloader should open
-       matchloaderPiston.open();
+    if (shouldDeploy()){ 
+       deploy();
     } else { 
-       matchloaderPiston.close();
+       retract();
     }
 } 
 
 bool Matchloader::shouldDeploy(){ 
     return getFromInputs<bool>("Controller/Button_L2");
+} 
+
+void Matchloader::deploy(){ 
+    matchloaderPiston.open();
+} 
+
+void Matchloader::retract(){ 
+    matchloaderPiston.close();
+} 
+
+void Matchloader::stop(){ 
+    retract();
 }
 

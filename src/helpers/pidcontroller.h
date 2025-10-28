@@ -38,7 +38,9 @@ public:
 
   double calculate(double position, double timestamp);
 
-  bool atSetpoint();
+  bool atSetpoint(); 
+
+  double getSetpoint();
 
   void setLastTimestamp(double timestamp);
 };

@@ -2,7 +2,7 @@
 #define __INDEXER_H__
 
 #include "../architecture/subsystem.h"
-// #include "../architecture/command.h"
+
 
 class Indexer : public Subsystem
 {
@@ -15,13 +15,18 @@ public:
                    {(EntrySet){"isOn", EntryType::BOOL}}) {}
    void init() override;
    void periodic() override;
-   void updateTelemetry() override;
+   void updateTelemetry() override; 
+   void stop() override; 
+
+   void spinOver(); 
+   void spinUnder();
 
 protected:
    using Subsystem::set; 
 private: 
    bool shouldSpinOver(); 
-   bool shouldSpinUnder();
+   bool shouldSpinUnder(); 
+
 };
 
 #endif

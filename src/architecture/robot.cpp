@@ -1,7 +1,10 @@
 #include "robot.h"
 #include "subsystem.h"
 #include "telemetry.h"
-#include "command.cpp"
+#include "command.h"  
+
+#include "vex.h"
+using namespace vex;
 
 void timelyWait(long lastTimestamp, long timeInterval)
 {
@@ -125,8 +128,8 @@ void Robot::driverControl(bool mirrorControlled)
     { 
       if (mirrorControlled && !isActive()) 
         break;
-      Subsystem::updateSystems();
-      timelyWait(timestamp, 20);
+      Subsystem::updateSystems(); 
+      timelyWait(timestamp, 20); 
       timestamp = Brain.Timer.time();
   } 
 };
@@ -290,16 +293,18 @@ void Robot::hollowLog(){
 }
 
 void Robot::runTelemetryThread(bool showGraphics)
-{ 
+{  
+  int timestamp = Brain.Timer.time();
   while (true)
-  {
+  { 
     updateSystemSubtable();
     Subsystem::refreshTelemetry();
     if (showGraphics)
     {
       displayGraphicalData();
-    }
-    vex::this_thread::sleep_for(20);
+    }  
+    timelyWait(timestamp, 20);
+    timestamp = Brain.Timer.time();
   }
 };
 
@@ -326,6 +331,7 @@ void Robot::detachInput(){
   isAttached = false;
 }
 
+/*
 ////////////////////////////////////////////////////////////////////////////
 void Robot::setAutonomousCommand(std::vector<CommandInterface *> comm)
 {
@@ -340,4 +346,5 @@ void Robot::autonControl()
     command->run();
   }
 };
-/////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////// 
+*/
