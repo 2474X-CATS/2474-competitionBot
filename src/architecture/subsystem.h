@@ -1,7 +1,7 @@
 #ifndef __SUBSYSTEM_H__
 #define __SUBSYSTEM_H__
 
-#include "telemetry.h"  
+#include "telemetry.h"
 
 /*
 //Generalizes the creation of subsystem logic
@@ -50,14 +50,14 @@ protected:
   string label;
 
   template <typename T>
-  void set(string entryName, T val) //Sets a subsystem table value like: DriveBase["Pos_X"], or Intake["Spin_Direction"]
+  void set(string entryName, T val) // Sets a subsystem table value like: DriveBase["Pos_X"], or Intake["Spin_Direction"]
   {
     Telemetry::inst.placeValueAt<T>(val, this->label, entryName);
   };
 
 public:
   template <typename T>
-  T get(string entryName) // Gets a subsystem table value 
+  T get(string entryName) // Gets a subsystem table value
   {
     return Telemetry::inst.getValueAt<T>(this->label, entryName);
   };
@@ -70,20 +70,54 @@ public:
 
   static std::vector<Subsystem *> systems; // A list of all subsystems that is filled on instantiation
 
-  static void initSystems(); // Initializes everything in the subsystem list 
+  static void initSystems(); // Initializes everything in the subsystem list
 
   static void updateSystems(); // Runs logic in everything in the subsystem list
 
   static void refreshTelemetry(); // Logs telemetry data for every subsystem in the subsystem list
-  
-  static void stopAll(); 
-  
+
+  static void stopAll();
+
   Subsystem(string tableLabel, vector<EntrySet> entryNames);
 
-  virtual void init() = 0; //Prep for match: Motor setting / calibration / initial telemetry values
-  virtual void periodic() = 0; //How the robot responds to input 
-  virtual void updateTelemetry() = 0; //The data the robot has to offer  
+  virtual void init() = 0;            // Prep for match: Motor setting / calibration / initial telemetry values
+  virtual void periodic() = 0;        // How the robot responds to input
+  virtual void updateTelemetry() = 0; // The data the robot has to offer
   virtual void stop() = 0;
 };
+
+class DummySystem : public Subsystem
+{
+public:
+  DummySystem() : Subsystem(
+                      "ignore",
+                      {(EntrySet){"exists"}})
+  {
+    systems.erase(systems.begin());
+    Telemetry::inst.deleteSubtable("ignore");
+  };
+
+  void init() override
+  {
+    return;
+  }
+
+  void periodic() override
+  {
+    return;
+  }
+
+  void updateTelemetry() override
+  {
+    return;
+  }
+
+  void stop() override
+  {
+    return;
+  } 
+};
+
+extern DummySystem GLOBAL_DUMMY;
 
 #endif

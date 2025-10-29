@@ -167,6 +167,32 @@ class DeployMatchloader : Command<Matchloader> {
 
       ~DeployMatchloader() override = default;
 
+}; 
+
+class WaitFor : Command<DummySystem> {  
+     private:   
+
+       double timeDuration;
+       double startTime; 
+
+     public: 
+      static CommandInterface *getCommand(double timeDuration)
+      {
+         return new WaitFor(timeDuration);
+      }  
+
+      WaitFor(double timeDuration) :  
+      Command<DummySystem>(GLOBAL_DUMMY), 
+      timeDuration(timeDuration){};   
+
+      ~WaitFor() override = default; 
+
+     protected:
+      void start() override;
+      void periodic() override;
+      bool isOver() override;
+      void end() override; 
+
 };
 
 #endif 

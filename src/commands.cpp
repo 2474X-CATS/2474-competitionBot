@@ -141,6 +141,24 @@ bool DeployMatchloader::isOver(){
 
 void DeployMatchloader::end(){ 
     return;
-}  
+}   
+
+////////////////////////////////////////////////////////////    
+
+void WaitFor::start(){ 
+    startTime = Brain.Timer.time(); 
+} 
+
+void WaitFor::periodic(){ 
+    return;
+} 
+
+bool WaitFor::isOver(){ 
+    return Brain.Timer.time() - startTime >= timeDuration;
+} 
+
+void WaitFor::end(){ 
+    return;
+}
 
 

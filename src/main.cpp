@@ -95,7 +95,7 @@ void driveCommandMatch(std::vector<CommandInterface*> commandGroup){
   robot.stopEverything(); 
   telemThread.join();
 } 
-
+/*
 void declareLocations(){ 
   Location nativeBallCluster = Location(
     "ballClusterNative",
@@ -105,7 +105,7 @@ void declareLocations(){
     180,
     179);  
 } 
-
+*/
 
 int main()
 {
@@ -125,7 +125,7 @@ int main()
   */  
 
   
-  Drivebase drive = Drivebase(); //Tile location right 1 up 1    
+  Drivebase drive = Drivebase(1,1); //Tile location right 1 up 1    
   Intake intake;  
   Matchloader matchloader;   
   Indexer indexer;  
@@ -135,10 +135,10 @@ int main()
   robot.initialize(); 
 
   thread telemThread = thread(runTelemetry);
-  CommandInterface* comm = TurnToHeading::getCommand(drive, 90);  
-  comm->run(); 
+  CommandInterface* comm = WaitFor::getCommand(1000);  
+  comm->run();  
+  Brain.Screen.print("Ended safely");
   delete comm;    
-  //Brain.Screen.print("Ended safely");
   robot.driverControl(false);
  
   

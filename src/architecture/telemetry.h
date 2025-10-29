@@ -61,6 +61,8 @@ private:
 
 public:
   static Telemetry inst; //Only need one telemetry class
+  
+  void deleteSubtable(string tableKey);
 
   void registerSubtable(string tableKeys, vector<struct EntrySet> subKeys); //Create a new subtable with a key, entry names, and types for those entry names using EntryType
                                                                             //Would make like (EntrySet){entry_key, EntryType::type}

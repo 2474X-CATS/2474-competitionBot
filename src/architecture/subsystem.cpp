@@ -37,4 +37,7 @@ void Subsystem::stopAll(){
    {
       system->stop();
    }
-};
+};  
+
+DummySystem GLOBAL_DUMMY;
+

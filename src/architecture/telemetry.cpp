@@ -157,4 +157,8 @@ bool Telemetry::getValueAt<bool>(std::string directory, std::string entryKey)
         __throw_logic_error("Template type must match registered type for this table entry");
         return false;
     }
+}; 
+
+void Telemetry::deleteSubtable(string tableKey){ 
+    table.erase(tableKey);
 };

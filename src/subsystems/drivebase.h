@@ -17,9 +17,6 @@ private:
   
   double startX, startY;
   double speedFactor = 0.85;  
-
-  bool startingFromLeft = true;
-
   //Location* currentLocation = nullptr; 
 
   
