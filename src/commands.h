@@ -7,71 +7,70 @@
 #include "subsystems/matchloader.h"  
 #include "subsystems/indexer.h" 
 #include "subsystems/hopper.h"  
-
 #include "architecture/command.h"  
 
-class DriveLinear : public Command<Drivebase> { 
-     private:
-       Drivebase &driveRef;
-       pidcontroller control; 
+class DriveForwardBy : public Command<Drivebase> {   
+    private:   
 
-       double startingPoint[2];
-       double getDistTraveled(); 
+      Drivebase &driveRef; 
+      pidcontroller* control = nullptr; 
 
-     public: 
+      bool goingForward; 
+      double startingPoint[2]; 
 
-       DriveLinear(Drivebase &drive, double displacement) :    
-       Command<Drivebase>(drive),
-       driveRef(drive),
-       control(pidcontroller(drive.getPowerPID(), displacement)) {}; 
+      double getDistTraveled(); 
 
-       ~DriveLinear();
+    public:
+      static CommandInterface *getCommand(Drivebase& drive, double displacement, bool goingForward)
+      {
+         return new DriveForwardBy(drive, displacement, goingForward);
+      }     
 
-       static CommandInterface *getCommand(Drivebase &drive, double displacement)
-       {
-         return new DriveLinear(drive, displacement);
-       }  
+      DriveForwardBy(Drivebase &drive, double displacement, bool goingForward) : 
+      Command<Drivebase>(drive), 
+      driveRef(drive),   
+      control(new pidcontroller(drive.getPowerPID(), displacement)),
+      goingForward(goingForward){};  
 
-     protected:
-       void start() override;
-       void periodic() override;
-       bool isOver() override;
-       void end() override; 
+      ~DriveForwardBy() override = default;
+
+    protected:   
+      void start() override; 
+      void periodic() override;  
+      bool isOver() override; 
+      void end() override;
+      
 }; 
 
 class TurnToHeading : public Command<Drivebase> { 
-    private:
-     Drivebase &driveRef;
-     pidcontroller *control = nullptr; 
+    private:  
+      Drivebase &driveRef; 
+      pidcontroller* control = nullptr; 
 
-     double startingAngle;
-     bool isClockwise;
-     double angularDifference;  
-     
-     double setpoint;
+      bool isClockwise; 
+      double getAngluarDifference(); 
 
-     double getDistToSpin();
+      double angleSetpoint;
 
-    public: 
+    public:
+      static CommandInterface *getCommand(Drivebase& drive, double heading)
+      {
+         return new TurnToHeading(drive, heading);
+      }     
 
-     TurnToHeading(Drivebase &drive, double degrees) : 
-     Command<Drivebase>(drive), 
-     driveRef(drive), 
-     control(new pidcontroller(drive.getTurningPID(), 0)), 
-     setpoint(degrees){}; 
+      TurnToHeading(Drivebase &drive, double degreeHeading) : 
+      Command<Drivebase>(drive), 
+      driveRef(drive), 
+      control(new pidcontroller(drive.getTurningPID(), 0)),
+      angleSetpoint(degreeHeading){};  
 
-     ~TurnToHeading();
+      ~TurnToHeading() override = default;
 
-     static CommandInterface *getCommand(Drivebase &drive, double degrees)
-     {
-      return new TurnToHeading(drive, degrees);
-     } 
-
-    protected:
-     void start() override;
-     void periodic() override;
-     bool isOver() override;
-     void end() override;
+    protected:   
+      void start() override; 
+      void periodic() override;  
+      bool isOver() override; 
+      void end() override;
 };
 
 class IntakeToHopper : public Command<Intake, Indexer, Hood> { 
@@ -101,9 +100,9 @@ class IntakeToHopper : public Command<Intake, Indexer, Hood> {
       intakeRef(intake), 
       indexerRef(indexer), 
       hoodRef(hood), 
-      timeDuration(timeDuration){};  
+      timeDuration(timeDuration){};   
 
-      ~IntakeToHopper();
+      ~IntakeToHopper() override = default;
 
 };
 
@@ -132,9 +131,9 @@ class ScoreOnGoal : public Command<Intake, Indexer, Hood, Hopper> {
       hoodRef(hood), 
       hopperRef(hopper),  
       timeDuration(timeDuration), 
-      goal(goal){};  
+      goal(goal){};   
 
-      ~ScoreOnGoal();
+      ~ScoreOnGoal() override = default; 
 
     protected: 
       void start() override;
@@ -164,9 +163,10 @@ class DeployMatchloader : Command<Matchloader> {
       DeployMatchloader(Matchloader& matchloader, bool out) :  
       Command<Matchloader>(matchloader), 
       matchLoaderRef(matchloader), 
-      isOut(out){};  
+      isOut(out){};   
 
-      ~DeployMatchloader();
+      ~DeployMatchloader() override = default;
+
 };
 
 #endif 

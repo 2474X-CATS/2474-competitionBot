@@ -1,76 +1,62 @@
 #include "commands.h" 
 
 //////////////////////////////////////////////////////////// 
-
-void DriveLinear::start(){  
-   startingPoint[0] = driveRef.get<double>("Pos_X");
-   startingPoint[1] = driveRef.get<double>("Pos_Y");
-   control.setLastTimestamp(Brain.Timer.time(vex::timeUnits::msec)); 
-   Brain.Screen.print("Made it to start"); 
-   Brain.Screen.newLine(); 
-}; 
-
-void DriveLinear::periodic(){ 
-   driveRef.arcadeDrive(30,0);//control.calculate(getDistTraveled(), Brain.Timer.time(vex::timeUnits::msec)), 0); 
-   Brain.Screen.print("Working"); 
-   Brain.Screen.newLine();
-}; 
-
-bool DriveLinear::isOver(){ 
-   return control.atSetpoint(); 
+void DriveForwardBy::start(){  
+    driveRef.setSpeedFactor(1);
+    startingPoint[0] = driveRef.get<double>("Pos_X"); 
+    startingPoint[1] = driveRef.get<double>("Pos_Y");  
+    control->setLastTimestamp(Brain.Timer.time());  
 };
 
-void DriveLinear::end(){ 
-   driveRef.stop(); 
-   driveRef.setSpeedFactor(0.85);
+void DriveForwardBy::periodic(){ 
+    double output = control->calculate(getDistTraveled(), Brain.Timer.time()); 
+    output = goingForward ? output : -output; 
+    driveRef.manualDriveForward(output); 
 }; 
 
-double DriveLinear::getDistTraveled(){ 
-   double currentPoint[2] = {driveRef.get<double>("Pos_X"), driveRef.get<double>("Pos_Y")};
-   return hypot(currentPoint[0] - startingPoint[0], currentPoint[1] - startingPoint[1]);
+bool DriveForwardBy::isOver(){ 
+    return control->atSetpoint();
 };
 
-DriveLinear::~DriveLinear(){ 
-    return;
-}
+void DriveForwardBy::end(){ 
+    driveRef.stop(); 
+    driveRef.setSpeedFactor(0.85); 
+}; 
+
+double DriveForwardBy::getDistTraveled(){ 
+    return hypot(driveRef.get<double>("Pos_X") - startingPoint[0], driveRef.get<double>("Pos_Y") - startingPoint[1]); 
+};
 
 //////////////////////////////////////////////////////////// 
 
 void TurnToHeading::start(){ 
-   isClockwise = true; 
-   driveRef.setSpeedFactor(1); 
-   angularDifference = fabs(setpoint - driveRef.get<double>("Angle_Degrees"));
-   if (angularDifference > 180)
-   {
-      angularDifference = 360 - angularDifference;
-      isClockwise = false;
-   }  
-   control->setLastTimestamp(Brain.Timer.time(vex::timeUnits::msec));
-   startingAngle = driveRef.get<double>("Angle_Degrees");
-}; 
-
-void TurnToHeading::periodic(){ 
-   double output = control->calculate(getDistToSpin(), Brain.Timer.time(vex::timeUnits::msec));
-   output = !isClockwise ? output * -1 : output; 
-   driveRef.arcadeDrive(0, output);   
-}; 
-
-bool TurnToHeading::isOver(){ 
-   return control->atSetpoint();
-};  
-
-void TurnToHeading::end(){ 
-    driveRef.stop(); 
-    driveRef.setSpeedFactor(0.85);
-};  
-
-double TurnToHeading::getDistToSpin(){ 
-    return fabs(driveRef.get<double>("Angle_Degrees") - startingAngle) - angularDifference;
+   double angularDifference = fabs(angleSetpoint - driveRef.get<double>("Angle_Degrees"));  
+   isClockwise = true;
+   if (angularDifference > 180) 
+       isClockwise = false; 
+   control->setLastTimestamp(Brain.Timer.time());
 };
 
-TurnToHeading::~TurnToHeading(){ 
-    return;
-}
+void TurnToHeading::periodic(){ 
+    double output = control->calculate(getAngluarDifference(), Brain.Timer.time()); 
+    output = isClockwise ? output : -output; 
+    driveRef.manualTurnClockwise(output);
+};
+
+bool TurnToHeading::isOver(){ 
+    return control->atSetpoint();
+}; 
+
+void TurnToHeading::end(){ 
+    driveRef.stop();  
+};
+
+double TurnToHeading::getAngluarDifference(){ 
+   double dist = fabs(angleSetpoint - driveRef.get<double>("Angle_Degrees")); 
+   if (dist > 180) 
+     dist = 360 - dist; 
+   return dist;
+};
 
 ////////////////////////////////////////////////////////////  
 
@@ -81,7 +67,7 @@ void IntakeToHopper::start(){
 
 void IntakeToHopper::periodic(){ 
   intakeRef.intake(); 
-  indexerRef.spinUnder();
+  indexerRef.spinOver();
 };  
 
 bool IntakeToHopper::isOver(){ 
@@ -94,9 +80,6 @@ void IntakeToHopper::end(){
     hoodRef.stop();
 } 
 
-IntakeToHopper::~IntakeToHopper(){ 
-    return;
-} 
 
 ////////////////////////////////////////////////////////////  
 
@@ -136,9 +119,7 @@ void ScoreOnGoal::end(){
     Brain.Screen.newLine();
 } 
 
-ScoreOnGoal::~ScoreOnGoal(){ 
-    return;
-}
+
 
 ////////////////////////////////////////////////////////////   
 
@@ -161,9 +142,5 @@ bool DeployMatchloader::isOver(){
 void DeployMatchloader::end(){ 
     return;
 }  
-
-DeployMatchloader::~DeployMatchloader(){ 
-    return;
-}
 
 

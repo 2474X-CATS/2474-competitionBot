@@ -331,6 +331,9 @@ void Robot::detachInput(){
   isAttached = false;
 }
 
+void Robot::stopEverything(){ 
+  Subsystem::stopAll();
+}
 
 ////////////////////////////////////////////////////////////////////////////
 void Robot::setAutonomousCommand(std::vector<CommandInterface *> comm)

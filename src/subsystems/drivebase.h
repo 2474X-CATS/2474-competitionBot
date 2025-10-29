@@ -5,32 +5,8 @@
 #include "../helpers/pidcontroller.h"
 #include <set>  
 #include "vex.h"
-#include "../helpers/location.h"
-/*
-class Location { 
-   public: 
-     Location(string name, double centerX, double centerY, double zoneRadius, double perfectEntranceAngle, double angleTolerance);
-     
-     string getName(); 
-     
-     static vector<Location*>& getLocations();  
-     bool isRobotVisiting(); //Is the robot facing the locations and is its heading within the angle threshold and if the two are touching
-  
-   
-   private: 
-     double centerX; 
-     double centerY; 
-     double zoneRadius; 
-     double perfectEntranceAngle; 
-     double angleTolerance;    
+//#include "../helpers/location.h"
 
-     string locationName;
-     
-     static vector<Location*>& locations; 
-
-     
-};  
-*/
 
 class Drivebase : public Subsystem
 {
@@ -40,9 +16,11 @@ private:
   PIDConstants turnPID;
   
   double startX, startY;
-  double speedFactor = 0.85; 
+  double speedFactor = 0.85;  
 
-  Location* currentLocation = nullptr;
+  bool startingFromLeft = true;
+
+  //Location* currentLocation = nullptr; 
 
   
 
@@ -52,15 +30,16 @@ protected:
 public:
   using Subsystem::get;
   using Subsystem::getFromInputs;
-  Drivebase(int tileX, int tileY) : Subsystem::Subsystem(
-                                                "drivebase",
-                                                {(EntrySet){"Pos_X", EntryType::DOUBLE},
-                                                 (EntrySet){"Pos_Y", EntryType::DOUBLE},
-                                                 (EntrySet){"Angle_Degrees", EntryType::DOUBLE}, 
-                                                 (EntrySet){"Current_Location", EntryType::STRING}
-                                                 }
-                                                ),
-                                            startX((tileX - 1) * TILE_SIZE_MM), startY((tileY - 1) * TILE_SIZE_MM) {};
+  Drivebase(double tileX, double tileY) : Subsystem(
+                                       "drivebase",
+                                        {(EntrySet){"Pos_X", EntryType::DOUBLE},
+                                         (EntrySet){"Pos_Y", EntryType::DOUBLE},
+                                         (EntrySet){"Angle_Degrees", EntryType::DOUBLE}, 
+                                         (EntrySet){"Current_Location", EntryType::STRING}
+                                        }
+                                    ),
+                startX((tileX - 1) * TILE_SIZE_MM),  
+                startY((tileY - 1) * TILE_SIZE_MM) {};
 
   void init() override;
   void periodic() override;
@@ -72,10 +51,10 @@ public:
   void manualTurnClockwise(double turnDeg); 
   
   void setSpeedFactor(double speedFactor); 
-
-  void updateTileCoordinates();
+  
+  //void updateTileCoordinates();
    
-  void updateLocations();
+  //void updateLocations();
   
   PIDConstants getTurningPID();
 

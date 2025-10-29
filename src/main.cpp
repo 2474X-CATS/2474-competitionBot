@@ -8,7 +8,6 @@
 #include "subsystems/hopper.h" 
 #include "subsystems/intake.h"  
 #include "subsystems/matchloader.h" 
-
 #include "commands.h" 
 
 using namespace vex;
@@ -35,6 +34,7 @@ void freeDrive()
   robot.driverControl(false);
 }
 
+/*
 void mirrorMobilize(MirrorMode mode, string filename)
 {
   switch (mode)
@@ -74,8 +74,10 @@ void startMatch(MatchType type, string auton, string auton_skills)
      this_thread::yield();
   robot.runTelemetryThread(true);
 }
+*/ 
 
-void startCommandMatch(std::vector<CommandInterface*> commandGroup){ 
+void startCommandMatch(std::vector<CommandInterface*> commandGroup){  
+  robot.initialize();
   robot.setAutonomousCommand(commandGroup);
   Competition.autonomous([](){robot.autonControl();}); 
   Competition.drivercontrol([](){robot.driverControl(false);});  
@@ -84,11 +86,14 @@ void startCommandMatch(std::vector<CommandInterface*> commandGroup){
   robot.runTelemetryThread(true);
 }  
 
-void driveCommandMatch(std::vector<CommandInterface*> commandGroup){ 
+void driveCommandMatch(std::vector<CommandInterface*> commandGroup){  
+  robot.initialize();
   robot.setAutonomousCommand(commandGroup);  
   thread telemThread = thread(runTelemetry);
   robot.autonControl(); 
-  robot.detachInput();
+  robot.detachInput();  
+  robot.stopEverything(); 
+  telemThread.join();
 } 
 
 void declareLocations(){ 
@@ -100,26 +105,6 @@ void declareLocations(){
     180,
     179);  
 } 
-
-
-
-/*
-void driveForward(Drivebase driveRef, double forwardDisplacement){ 
-  pidcontroller controller = pidcontroller(driveRef.getPowerPID(), forwardDisplacement);   
-  double startingPoint[2]; 
-  startingPoint[0] = driveRef.get<double>("Pos_X");
-  startingPoint[1] = driveRef.get<double>("Pos_Y");
-  controller.setLastTimestamp(Brain.Timer.time(vex::timeUnits::msec)); 
-  while (!controller.atSetpoint() && !Controller.ButtonA.pressing()){   
-     double currentPoint[2] = {driveRef.get<double>("Pos_X"), driveRef.get<double>("Pos_Y")}; 
-     double distTraveled = hypot(currentPoint[0] - startingPoint[0], currentPoint[1] - startingPoint[1]);
-     driveRef.manualDriveForward(30);//controller.calculate(distTraveled, Brain.Timer.time(vex::timeUnits::msec))); 
-  }   
-  driveRef.stop();
-}
-*/
-
-
 
 
 int main()
@@ -140,17 +125,21 @@ int main()
   */  
 
   
-  Drivebase drive = Drivebase(1, 1); //Tile location right 1 up 1    
+  Drivebase drive = Drivebase(); //Tile location right 1 up 1    
   Intake intake;  
   Matchloader matchloader;   
   Indexer indexer;  
   Hood hood; 
   Hopper hopper;     
-
+   
   robot.initialize(); 
-  thread telemThread = thread(runTelemetry);
-  DriveLinear::getCommand(drive, 500)->run(); 
 
- //driveForward(drive, 500);
+  thread telemThread = thread(runTelemetry);
+  CommandInterface* comm = TurnToHeading::getCommand(drive, 90);  
+  comm->run(); 
+  delete comm;    
+  //Brain.Screen.print("Ended safely");
+  robot.driverControl(false);
+ 
   
 }

@@ -54,37 +54,19 @@ void Drivebase::updateTelemetry()
 
    set<double>("Pos_X", x);
    set<double>("Pos_Y", y);   
+}; 
 
-   /*
-   Location::getLocations();
-   currentLocation = nullptr;
-   for (Location *location : Location::getLocations())
-      { 
-         if (location->isRobotVisiting())
-         {
-            currentLocation = location;
-            break;
-         }
-   }  
-   if (currentLocation != nullptr){
-      set<string>("Current_Location",currentLocation->getName());  
-      Controller.rumble("-");
-   } else { 
-      set<string>("Current_Location","NONE");
-   }  
-   */
-   
-};
-
+/*
 void Drivebase::updateLocations()
 { 
 
 }
+*/
 
 void Drivebase::arcadeDrive(double speed, double rotation)
 { 
-   //speed = speed > 100 ? 100 : (speed < -100 ? -100 : speed); 
-   //rotation = rotation > 100 ? 100 : (rotation < -100 ? -100 : rotation);  
+   speed = speed > 100 ? 100 : (speed < -100 ? -100 : speed); 
+   rotation = rotation > 100 ? 100 : (rotation < -100 ? -100 : rotation);  
    leftDriveMotors.setVelocity((speed + rotation) * speedFactor, vex::percentUnits::pct);
    leftDriveMotors.spin(vex::directionType::fwd);
    rightDriveMotors.setVelocity((speed - rotation) * speedFactor, vex::percentUnits::pct);
@@ -116,11 +98,12 @@ void Drivebase::stop()
    rightDriveMotors.setVelocity(0, vex::percentUnits::pct);
 };
 
+/*
 void Drivebase::updateTileCoordinates()
 {   
  
 }
-
+*/
 PIDConstants Drivebase::getPowerPID()
 {
    return this->powerPID;

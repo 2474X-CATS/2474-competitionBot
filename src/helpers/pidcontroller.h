@@ -34,13 +34,17 @@ private:
   double setpoint;
 
 public:
-  pidcontroller(PIDConstants conts, double destination);
+  pidcontroller(PIDConstants conts, double destination); 
+
+  pidcontroller();
 
   double calculate(double position, double timestamp);
 
   bool atSetpoint(); 
 
-  double getSetpoint();
+  double getSetpoint(); 
+
+  void setSetpoint(double setpoint);
 
   void setLastTimestamp(double timestamp);
 };

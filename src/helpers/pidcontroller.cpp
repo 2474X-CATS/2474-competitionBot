@@ -9,7 +9,18 @@ pidcontroller::pidcontroller(PIDConstants conts, double destination) : kP(conts.
                                                                        iLimit(conts.iLimit)
 {
    setpoint = destination;
-};
+};  
+
+pidcontroller::pidcontroller() : kP(0),
+                                 kI(0),
+                                 kD(0),
+                                 errorTolerance(0),
+                                 iLimit(0)
+{
+   setpoint = 0;
+}; 
+
+
 
 bool pidcontroller::atSetpoint()
 {

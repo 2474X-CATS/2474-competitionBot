@@ -47,6 +47,8 @@ public:
    void initializeMirror(MirrorMode mode, std::string filename); // Sets up input loggin or output projecting for an autonomous routine
 
    void autonControl(); //Runs a series of commands that have been prior set by the "setAutonomusCommand" method
+   
+   void stopEverything();
 
    void detachInput(); //Cuts off robots ability to be controlled. Only used in testing and making autos, never in real matches.
 
