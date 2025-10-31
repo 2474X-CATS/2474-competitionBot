@@ -1,6 +1,9 @@
 #include "vex.h"
 #include "hopper.h"
-// this function runs once when robot starts
+// this function runs once when robot starts 
+
+Hopper* Hopper::globalRef = nullptr; 
+
 void Hopper::init()
 {
     hopperMotor.setStopping(vex::brakeType::brake);     // makes motor hold still when stopped

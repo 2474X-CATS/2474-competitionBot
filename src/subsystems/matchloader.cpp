@@ -2,6 +2,8 @@
 #include "matchloader.h"
 
 
+Matchloader* Matchloader::globalRef = nullptr;
+
 void Matchloader::init() {
     matchloaderPiston.close();
     set<bool>("isOn", true); 

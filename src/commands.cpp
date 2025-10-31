@@ -5,57 +5,111 @@ void DriveForwardBy::start(){
     driveRef.setSpeedFactor(1);
     startingPoint[0] = driveRef.get<double>("Pos_X"); 
     startingPoint[1] = driveRef.get<double>("Pos_Y");  
-    control->setLastTimestamp(Brain.Timer.time());  
+    control->setLastTimestamp(Brain.Timer.time());   
+    Brain.Screen.print("Made it to the start");
 };
 
 void DriveForwardBy::periodic(){ 
-    double output = control->calculate(getDistTraveled(), Brain.Timer.time()); 
-    output = goingForward ? output : -output; 
-    driveRef.manualDriveForward(output); 
+    double output = control->calculate(getDistTraveled(), Brain.Timer.time()) * 2.5;  
+    if (!goingForward) 
+        output = -output;
+    driveRef.manualDriveForward(output);
 }; 
 
 bool DriveForwardBy::isOver(){ 
-    return control->atSetpoint();
+    return control->atSetpoint(getDistTraveled());
 };
 
 void DriveForwardBy::end(){ 
-    driveRef.stop(); 
+    driveRef.stop();  
     driveRef.setSpeedFactor(0.85); 
 }; 
 
 double DriveForwardBy::getDistTraveled(){ 
     return hypot(driveRef.get<double>("Pos_X") - startingPoint[0], driveRef.get<double>("Pos_Y") - startingPoint[1]); 
+}; 
+
+////////////////////////////////////////////////////////////  
+
+void DriveForwardWhileIntaking::start(){  
+    hoodRef.close();
+    startingPoint[0] = driveRef.get<double>("Pos_X"); 
+    startingPoint[1] = driveRef.get<double>("Pos_Y");  
+    control->setLastTimestamp(Brain.Timer.time());   
 };
 
+void DriveForwardWhileIntaking::periodic(){ 
+    double output = control->calculate(getDistTraveled(), Brain.Timer.time()) * 1.5;  
+    if (!goingForward) 
+        output = -output; 
+    intakeRef.intake(); 
+    indexerRef.spinOver();
+    driveRef.manualDriveForward(output);  
+}; 
+
+bool DriveForwardWhileIntaking::isOver(){ 
+    return control->atSetpoint(getDistTraveled());
+};
+
+void DriveForwardWhileIntaking::end(){ 
+    driveRef.stop();   
+    intakeRef.stop();   
+    indexerRef.stop();
+}; 
+
+double DriveForwardWhileIntaking::getDistTraveled(){ 
+    return hypot(driveRef.get<double>("Pos_X") - startingPoint[0], driveRef.get<double>("Pos_Y") - startingPoint[1]); 
+};
+////////////////////////////////////////////////////////////
+
+void DriveForwardForTime::start(){ 
+    drivebaseRef.setSpeedFactor(1); 
+    startingTime = Brain.Timer.time(); 
+}; 
+
+void DriveForwardForTime::periodic(){ 
+    drivebaseRef.arcadeDrive(percentage * 100, 0); 
+};
+
+bool DriveForwardForTime::isOver(){ 
+    return Brain.Timer.time() - startingTime >= timeDuration;
+} 
+
+void DriveForwardForTime::end(){ 
+    drivebaseRef.stop(); 
+    drivebaseRef.setSpeedFactor(0.85);
+}
 //////////////////////////////////////////////////////////// 
 
-void TurnToHeading::start(){ 
-   double angularDifference = fabs(angleSetpoint - driveRef.get<double>("Angle_Degrees"));  
-   isClockwise = true;
-   if (angularDifference > 180) 
-       isClockwise = false; 
-   control->setLastTimestamp(Brain.Timer.time());
+void TurnToHeading::start(){   
+  double startAngle = driveRef.get<double>("Angle_Degrees");
+  double clockwiseDist = startAngle > angleSetpoint ? (360 - startAngle) + angleSetpoint : angleSetpoint - startAngle; 
+  double counterClockwiseDist = 360 - clockwiseDist; 
+  isClockwise = (clockwiseDist < counterClockwiseDist);
+  control->setLastTimestamp(Brain.Timer.time());
 };
 
 void TurnToHeading::periodic(){ 
-    double output = control->calculate(getAngluarDifference(), Brain.Timer.time()); 
-    output = isClockwise ? output : -output; 
+    double output = control->calculate(getAngluarDifference(), Brain.Timer.time()) * 1.5; 
+    output = isClockwise ? -output : output; 
     driveRef.manualTurnClockwise(output);
 };
 
 bool TurnToHeading::isOver(){ 
-    return control->atSetpoint();
+    return control->atSetpoint(getAngluarDifference());
 }; 
 
 void TurnToHeading::end(){ 
     driveRef.stop();  
 };
 
-double TurnToHeading::getAngluarDifference(){ 
-   double dist = fabs(angleSetpoint - driveRef.get<double>("Angle_Degrees")); 
-   if (dist > 180) 
-     dist = 360 - dist; 
-   return dist;
+double TurnToHeading::getAngluarDifference(){  
+    double currentAngle = driveRef.get<double>("Angle_Degrees"); 
+    double dist = currentAngle > angleSetpoint ? (360 - currentAngle) + angleSetpoint : angleSetpoint - currentAngle; 
+    if (!isClockwise){ 
+        dist = 360 - dist;
+    } 
+    return dist;
 };
 
 ////////////////////////////////////////////////////////////  
@@ -115,8 +169,6 @@ void ScoreOnGoal::end(){
     intakeRef.stop(); 
     indexerRef.stop(); 
     hopperMotor.stop();  
-    Brain.Screen.print("Ending"); 
-    Brain.Screen.newLine();
 } 
 
 
@@ -159,6 +211,64 @@ bool WaitFor::isOver(){
 
 void WaitFor::end(){ 
     return;
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CommandInterface* driveForwardByTiles(double tiles){ 
+    return DriveForwardBy::getCommand(fabs(tiles * TILE_SIZE_MM), tiles > 0);
+}; 
+
+CommandInterface* turnToAngle(double goalHeading){ 
+    return TurnToHeading::getCommand(goalHeading);
+}; 
+
+CommandInterface* scoreOnGoal(Goal_Pos position, double timeDuration){ 
+    return ScoreOnGoal::getCommand(static_cast<int>(position), timeDuration);
+}; 
+
+CommandInterface* intakeCubes(double timeDuration){ 
+    return IntakeToHopper::getCommand(timeDuration); 
+}; 
+
+CommandInterface* holdFor(double timeDuration){ 
+    return WaitFor::getCommand(timeDuration);
+}; 
+
+CommandInterface* extend(){ 
+    return DeployMatchloader::getCommand(true);
+};
+
+CommandInterface* retract(){ 
+    return DeployMatchloader::getCommand(false);
+};  
+
+CommandInterface* driveAndIntakeForTiles(double tiles){ 
+    return DriveForwardWhileIntaking::getCommand(fabs(tiles * TILE_SIZE_MM), tiles > 0); 
+}; 
+
+CommandInterface* ramForwardFor(double percentage, double timeDuration){ 
+    return DriveForwardForTime::getCommand(percentage, timeDuration);
 }
 
 

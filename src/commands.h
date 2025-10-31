@@ -9,10 +9,17 @@
 #include "subsystems/hopper.h"  
 #include "architecture/command.h"  
 
+
+typedef enum { 
+   HIGH_GOAL = 1, 
+   MID_GOAL = 2, 
+   LOW_GOAL = 3
+} Goal_Pos; 
+
 class DriveForwardBy : public Command<Drivebase> {   
     private:   
 
-      Drivebase &driveRef; 
+      Drivebase &driveRef;  
       pidcontroller* control = nullptr; 
 
       bool goingForward; 
@@ -21,9 +28,9 @@ class DriveForwardBy : public Command<Drivebase> {
       double getDistTraveled(); 
 
     public:
-      static CommandInterface *getCommand(Drivebase& drive, double displacement, bool goingForward)
+      static CommandInterface *getCommand(double displacement, bool goingForward)
       {
-         return new DriveForwardBy(drive, displacement, goingForward);
+         return new DriveForwardBy(*Drivebase::globalRef, displacement, goingForward);
       }     
 
       DriveForwardBy(Drivebase &drive, double displacement, bool goingForward) : 
@@ -40,7 +47,78 @@ class DriveForwardBy : public Command<Drivebase> {
       bool isOver() override; 
       void end() override;
       
+};  
+
+class DriveForwardWhileIntaking : public Command<Drivebase, Intake, Indexer, Hood> {   
+    private:   
+
+      Drivebase &driveRef;  
+      Intake &intakeRef; 
+      Hood &hoodRef;  
+      Indexer& indexerRef;
+
+      pidcontroller* control = nullptr; 
+
+      bool goingForward; 
+      double startingPoint[2]; 
+
+      double getDistTraveled(); 
+
+    public:
+      static CommandInterface *getCommand(double displacement, bool goingForward)
+      {
+         return new DriveForwardWhileIntaking(*Drivebase::globalRef, *Intake::globalRef, *Indexer::globalRef, *Hood::globalRef,  displacement, goingForward);
+      }     
+
+      DriveForwardWhileIntaking(Drivebase &drive, Intake& intake, Indexer& indexer, Hood& hood, double displacement, bool goingForward) : 
+      Command<Drivebase, Intake, Indexer, Hood>(drive, intake, indexer, hood), 
+      driveRef(drive),    
+      intakeRef(intake),  
+      hoodRef(hood), 
+      indexerRef(indexer),
+      control(new pidcontroller(drive.getPowerPID(), displacement)),
+      goingForward(goingForward){};  
+
+      ~DriveForwardWhileIntaking() override = default;
+
+    protected:   
+      void start() override; 
+      void periodic() override;  
+      bool isOver() override; 
+      void end() override;
+      
+};  
+
+class DriveForwardForTime : Command<Drivebase> { 
+    private:  
+      Drivebase& drivebaseRef;
+      double percentage;   
+
+      double startingTime; 
+
+      double timeDuration; 
+    protected: 
+      void start() override;
+      void periodic() override;
+      bool isOver() override;
+      void end() override; 
+    
+    public: 
+      static CommandInterface *getCommand(double percentage, double timeDuration)
+      {
+         return new DriveForwardForTime(*Drivebase::globalRef, percentage, timeDuration);
+      }  
+
+      DriveForwardForTime(Drivebase& drivebase, double percentage, double timeDuration) :  
+      Command<Drivebase>(drivebase), 
+      drivebaseRef(drivebase),
+      percentage(percentage), 
+      timeDuration(timeDuration){};   
+
+      ~DriveForwardForTime() override = default;
+
 }; 
+
 
 class TurnToHeading : public Command<Drivebase> { 
     private:  
@@ -53,9 +131,9 @@ class TurnToHeading : public Command<Drivebase> {
       double angleSetpoint;
 
     public:
-      static CommandInterface *getCommand(Drivebase& drive, double heading)
+      static CommandInterface *getCommand(double heading)
       {
-         return new TurnToHeading(drive, heading);
+         return new TurnToHeading(*Drivebase::globalRef, heading);
       }     
 
       TurnToHeading(Drivebase &drive, double degreeHeading) : 
@@ -72,6 +150,7 @@ class TurnToHeading : public Command<Drivebase> {
       bool isOver() override; 
       void end() override;
 };
+
 
 class IntakeToHopper : public Command<Intake, Indexer, Hood> { 
     private:   
@@ -90,9 +169,9 @@ class IntakeToHopper : public Command<Intake, Indexer, Hood> {
       void end() override; 
     
     public: 
-      static CommandInterface *getCommand(Intake& intake, Indexer& indexer, Hood& hood, double timeDuration)
+      static CommandInterface *getCommand(double timeDuration)
       {
-         return new IntakeToHopper(intake, indexer, hood, timeDuration);
+         return new IntakeToHopper(*Intake::globalRef, *Indexer::globalRef, *Hood::globalRef, timeDuration);
       }  
 
       IntakeToHopper(Intake& intake, Indexer& indexer, Hood& hood, double timeDuration) : 
@@ -119,9 +198,9 @@ class ScoreOnGoal : public Command<Intake, Indexer, Hood, Hopper> {
       int goal;
     
     public: 
-      static CommandInterface *getCommand(Intake& intake, Indexer& indexer, Hood& hood, Hopper& hopper, int goal, double timeDuration)
+      static CommandInterface *getCommand(int goal, double timeDuration)
       {
-         return new ScoreOnGoal(intake, indexer, hood, hopper, goal, timeDuration);
+         return new ScoreOnGoal(*Intake::globalRef, *Indexer::globalRef, *Hood::globalRef, *Hopper::globalRef, goal, timeDuration);
       };
 
       ScoreOnGoal(Intake& intake, Indexer& indexer, Hood& hood, Hopper& hopper, int goal, double timeDuration) : 
@@ -155,9 +234,9 @@ class DeployMatchloader : Command<Matchloader> {
       void end() override; 
     
     public: 
-      static CommandInterface *getCommand(Matchloader& matchloader, bool out)
+      static CommandInterface *getCommand(bool out)
       {
-         return new DeployMatchloader(matchloader, out);
+         return new DeployMatchloader(*Matchloader::globalRef, out);
       }  
 
       DeployMatchloader(Matchloader& matchloader, bool out) :  
@@ -194,5 +273,18 @@ class WaitFor : Command<DummySystem> {
       void end() override; 
 
 };
+
+CommandInterface* driveForwardByTiles(double tiles); 
+CommandInterface* turnToAngle(double goalHeading);
+CommandInterface* scoreOnGoal(Goal_Pos position, double timeDuration);
+CommandInterface* intakeCubes(double timeDuration);
+CommandInterface* holdFor(double timeDuration);
+CommandInterface* extend(); 
+CommandInterface* retract(); 
+CommandInterface* driveAndIntakeForTiles(double tiles);  
+CommandInterface* ramForwardFor(double percentage, double timeDuration);
+
+
+
 
 #endif 

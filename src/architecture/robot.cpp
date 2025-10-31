@@ -346,7 +346,8 @@ void Robot::setAutonomousCommand(std::vector<CommandInterface *> comm)
 void Robot::autonControl()
 { 
   for (CommandInterface* command : Robot::autonomousCommand){ 
-    command->run();
-  }
+    command->run(); 
+  } 
+  
 };
 ///////////////////////////////////////////////////////////////////// 

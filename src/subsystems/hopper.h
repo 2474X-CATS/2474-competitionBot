@@ -8,12 +8,15 @@ class Hopper : public Subsystem
 public:
     using Subsystem ::get;
     using Subsystem ::getFromInputs;
-   
+    
+    static Hopper* globalRef; 
+
     Hopper() : Subsystem(
                    "hopper",
                    {(EntrySet){"isOn", EntryType::BOOL}} 
                )
-    {
+    { 
+        globalRef = this;
     }
    
     void init() override;           

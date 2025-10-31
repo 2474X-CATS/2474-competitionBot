@@ -1,6 +1,8 @@
 #include "vex.h"
 #include "indexer.h"
 
+Indexer* Indexer::globalRef = nullptr; 
+
 void Indexer::init()
 {
   set<bool>("isOn", true);
@@ -42,7 +44,7 @@ void Indexer::spinOver(){
 } 
 
 void Indexer::spinUnder(){ 
-  indexerMotor.setVelocity(ABSOLUTE_INDEXER_SPEED, vex::velocityUnits::rpm); 
+  indexerMotor.setVelocity(ABSOLUTE_INDEXER_SPEED * 0.75, vex::velocityUnits::rpm); 
   indexerMotor.spin(vex::directionType::fwd);
 } 
 

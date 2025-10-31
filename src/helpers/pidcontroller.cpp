@@ -22,19 +22,17 @@ pidcontroller::pidcontroller() : kP(0),
 
 
 
-bool pidcontroller::atSetpoint()
+bool pidcontroller::atSetpoint(double position)
 {
-   return fabs(error) <= errorTolerance;
+   return fabs(setpoint - position) <= errorTolerance;
 };
 
 double pidcontroller::calculate(double position, double timestamp)
 {
    double dt = timestamp - lastTimestamp;
-   if (dt <= 0)
-      dt = 1e-6;
    lastTimestamp = timestamp;
    error = setpoint - position; 
-   if (atSetpoint()) 
+   if (atSetpoint(position)) 
       return 0;
    integral += error * dt;
    if (iLimit > 0)

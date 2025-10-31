@@ -19,14 +19,15 @@ private:
   double speedFactor = 0.85;  
   //Location* currentLocation = nullptr; 
 
-  
-
 protected:
   using Subsystem::set;
 
 public:
   using Subsystem::get;
-  using Subsystem::getFromInputs;
+  using Subsystem::getFromInputs; 
+
+  static Drivebase* globalRef; 
+
   Drivebase(double tileX, double tileY) : Subsystem(
                                        "drivebase",
                                         {(EntrySet){"Pos_X", EntryType::DOUBLE},
@@ -36,7 +37,9 @@ public:
                                         }
                                     ),
                 startX((tileX - 1) * TILE_SIZE_MM),  
-                startY((tileY - 1) * TILE_SIZE_MM) {};
+                startY((tileY - 1) * TILE_SIZE_MM) { 
+                  globalRef = this;
+                };
 
   void init() override;
   void periodic() override;

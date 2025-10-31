@@ -1,6 +1,8 @@
 #include "vex.h"
 #include "hood.h"
 
+Hood* Hood::globalRef = nullptr; 
+
 void Hood::init()
 {    
     set<bool>("isOn", true);

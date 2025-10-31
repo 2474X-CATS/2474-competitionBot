@@ -10,11 +10,14 @@ class Hood : public Subsystem
 public:
     using Subsystem::get;
     using Subsystem::getFromInputs;
-    
+     
+    static Hood* globalRef;
 
     Hood() : Subsystem(
                  "hood",
-                 {(EntrySet){"isOn", EntryType::BOOL}}) {} 
+                 {(EntrySet){"isOn", EntryType::BOOL}}) { 
+                    globalRef = this;
+                 } 
 
     void init() override;
     void periodic() override;

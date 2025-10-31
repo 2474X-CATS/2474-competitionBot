@@ -5,6 +5,8 @@
 
 //---Drivebase: SUBSYSTEM
 
+Drivebase* Drivebase::globalRef = nullptr; 
+
 void Drivebase::init()
 {
    leftDriveMotors.setStopping(vex::brakeType::brake);
@@ -18,15 +20,15 @@ void Drivebase::init()
 
    driveGyro.setHeading(0, vex::rotationUnits::deg);
 
-   powerPID.P = 0.5;
-   powerPID.I = 0.001;
-   powerPID.D = 0;
-   powerPID.errorTolerance = 10;
+   powerPID.P = 0.8;
+   powerPID.I = 0.0001;
+   powerPID.D = 0.01;
+   powerPID.errorTolerance = 2.5;
    //------------------------------
-   turnPID.P = 1;
-   turnPID.I = 0.01;
+   turnPID.P = 0.8;
+   turnPID.I = 0.0005;
    turnPID.D = 0;
-   turnPID.errorTolerance = 5;
+   turnPID.errorTolerance = 1.2;
 
    set<double>("Pos_X", startX + ROBOT_WIDTH_MM / 2);
    set<double>("Pos_Y", startY + ROBOT_LENGTH_MM / 2);
@@ -53,7 +55,10 @@ void Drivebase::updateTelemetry()
    y += hypotenuse * sin(angleRadians);
 
    set<double>("Pos_X", x);
-   set<double>("Pos_Y", y);   
+   set<double>("Pos_Y", y);    
+
+   Brain.Screen.print(get<double>("Angle_Degrees")); 
+   Brain.Screen.newLine();
 }; 
 
 /*
@@ -77,7 +82,7 @@ void Drivebase::manualDriveForward(double speedMM)
 {
    double netSpeed = speedMM / (DRIVE_WHEEL_RADIUS_MM * 2 * M_PI) * 60;
    leftDriveMotors.setVelocity(netSpeed, vex::velocityUnits::rpm);
-   rightDriveMotors.setVelocity(-netSpeed, vex::velocityUnits::rpm);
+   rightDriveMotors.setVelocity(-netSpeed, vex::velocityUnits::rpm); 
    leftDriveMotors.spin(vex::directionType::fwd);
    rightDriveMotors.spin(vex::directionType::fwd);
 };

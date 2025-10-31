@@ -76,7 +76,9 @@ public:
 
   static void refreshTelemetry(); // Logs telemetry data for every subsystem in the subsystem list
 
-  static void stopAll();
+  static void stopAll(); 
+
+  static Subsystem* getSubsystem(int index);
 
   Subsystem(string tableLabel, vector<EntrySet> entryNames);
 

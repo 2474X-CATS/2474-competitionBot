@@ -8,12 +8,16 @@
 class Intake : public Subsystem {
 public: 
     using Subsystem::get;  
-    using Subsystem::getFromInputs;
+    using Subsystem::getFromInputs; 
+
+    static Intake* globalRef; 
 
     Intake() : Subsystem(
                     "intake",
                     {(EntrySet){"isOn", EntryType::BOOL}
-                    }) {}  
+                    }) { 
+                        globalRef = this;
+                    }  
     void init() override; 
     void periodic() override; 
     void updateTelemetry() override;

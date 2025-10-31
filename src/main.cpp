@@ -76,6 +76,7 @@ void startMatch(MatchType type, string auton, string auton_skills)
 }
 */ 
 
+
 void startCommandMatch(std::vector<CommandInterface*> commandGroup){  
   robot.initialize();
   robot.setAutonomousCommand(commandGroup);
@@ -87,13 +88,12 @@ void startCommandMatch(std::vector<CommandInterface*> commandGroup){
 }  
 
 void driveCommandMatch(std::vector<CommandInterface*> commandGroup){  
-  robot.initialize();
-  robot.setAutonomousCommand(commandGroup);  
-  thread telemThread = thread(runTelemetry);
-  robot.autonControl(); 
-  robot.detachInput();  
-  robot.stopEverything(); 
-  telemThread.join();
+  robot.initialize(); 
+  thread telemThread = thread(runTelemetry); //Start data logging
+  robot.setAutonomousCommand(commandGroup); //Registers the autonomous routine
+  robot.autonControl(); //Runs the autonomous command
+  Controller.rumble("--"); //Signals that the auton is finished
+  robot.driverControl(false); //Free drive
 } 
 /*
 void declareLocations(){ 
@@ -105,7 +105,136 @@ void declareLocations(){
     180,
     179);  
 } 
-*/
+*/ 
+
+vector<CommandInterface*> AUTO_SHORT_ORIGIN(){ 
+    return { 
+      turnToAngle(330), 
+      driveAndIntakeForTiles(1.2),  
+      turnToAngle(45), 
+      driveForwardByTiles(1), 
+      scoreOnGoal(Goal_Pos::MID_GOAL, 2000), 
+      driveForwardByTiles(-1), 
+      turnToAngle(90), 
+      driveAndIntakeForTiles(2), 
+      turnToAngle(315), 
+      driveForwardByTiles(0.6666), 
+      scoreOnGoal(Goal_Pos::LOW_GOAL, 2000),
+    };
+};  
+
+vector<CommandInterface*> AUTO_SHORT_INVERTED(){ 
+    return { 
+      turnToAngle(360 - 330), 
+      driveAndIntakeForTiles(1.2),  
+      turnToAngle(360 - 45), 
+      driveForwardByTiles(1), 
+      scoreOnGoal(Goal_Pos::LOW_GOAL, 2000), 
+      driveForwardByTiles(-1), 
+      turnToAngle(360 - 90), 
+      driveAndIntakeForTiles(2), 
+      turnToAngle(360 - 315), 
+      driveForwardByTiles(0.6666), 
+      scoreOnGoal(Goal_Pos::MID_GOAL, 2000),
+    };
+};  
+
+vector<CommandInterface*> AUTO_CLOSED_SIDE_ORIGIN(){ 
+    return { 
+      turnToAngle(270), 
+      driveForwardByTiles(1.6666), 
+      turnToAngle(180), 
+      extend(), 
+      ramForwardFor(0.60, 3000), 
+      intakeCubes(3000),  
+      retract(), 
+      driveForwardByTiles(-0.75),  
+      turnToAngle(0), 
+      scoreOnGoal(Goal_Pos::HIGH_GOAL, 3000), 
+      driveForwardByTiles(-0.125), 
+      turnToAngle(75), 
+      driveAndIntakeForTiles(1),  
+      driveForwardByTiles(1), 
+      scoreOnGoal(Goal_Pos::MID_GOAL, 3000)
+    };
+};  
+
+vector<CommandInterface*> AUTO_CLOSED_SIDE_INVERTED(){ 
+    return { 
+      turnToAngle(360 - 270), 
+      driveForwardByTiles(1.6666), 
+      turnToAngle(180), 
+      extend(), 
+      ramForwardFor(0.60, 3000), 
+      intakeCubes(3000),  
+      retract(), 
+      driveForwardByTiles(-0.75),  
+      turnToAngle(0), 
+      scoreOnGoal(Goal_Pos::HIGH_GOAL, 3000), 
+      driveForwardByTiles(-0.125), 
+      turnToAngle(360 - 75), 
+      driveAndIntakeForTiles(1),  
+      driveForwardByTiles(1), 
+      scoreOnGoal(Goal_Pos::LOW_GOAL, 3000)
+    };
+};  
+
+vector<CommandInterface*> AUTO_SELF_SUFFICIENT_ORIGIN(){ 
+    return { 
+      turnToAngle(270), 
+      driveForwardByTiles(1.6666), 
+      turnToAngle(180), 
+      extend(), 
+      ramForwardFor(0.60, 3000), 
+      intakeCubes(3000),  
+      retract(), 
+      driveForwardByTiles(-0.75),  
+      turnToAngle(0), 
+      scoreOnGoal(Goal_Pos::HIGH_GOAL, 3000), 
+      driveForwardByTiles(-0.125), 
+      turnToAngle(75), 
+      driveAndIntakeForTiles(1),  
+      driveForwardByTiles(1), 
+      scoreOnGoal(Goal_Pos::MID_GOAL, 2000), 
+      driveForwardByTiles(-1), 
+      turnToAngle(90),
+      driveAndIntakeForTiles(2), 
+      turnToAngle(315), 
+      driveForwardByTiles(0.6666), 
+      scoreOnGoal(Goal_Pos::LOW_GOAL, 2000)
+    };
+};  
+
+vector<CommandInterface*> AUTO_SELF_SUFFICIENT_INVERTED(){ 
+    return { 
+      turnToAngle(360 - 270), 
+      driveForwardByTiles(1.6666), 
+      turnToAngle(180), 
+      extend(), 
+      ramForwardFor(0.60, 3000), 
+      intakeCubes(3000),  
+      retract(), 
+      driveForwardByTiles(-0.75),  
+      turnToAngle(0), 
+      scoreOnGoal(Goal_Pos::HIGH_GOAL, 3000), 
+      driveForwardByTiles(-0.125), 
+      turnToAngle(360 - 75), 
+      driveAndIntakeForTiles(1),  
+      driveForwardByTiles(1), 
+      scoreOnGoal(Goal_Pos::LOW_GOAL, 2000), 
+      driveForwardByTiles(-1), 
+      turnToAngle(360 - 90),
+      driveAndIntakeForTiles(2), 
+      turnToAngle(360 - 315), 
+      driveForwardByTiles(0.6666), 
+      scoreOnGoal(Goal_Pos::MID_GOAL, 2000)
+    };
+};  
+
+vector<CommandInterface*> PROGRAMMING_SKILLS(){ 
+    return {};
+};
+
 
 int main()
 {
@@ -134,12 +263,26 @@ int main()
    
   robot.initialize(); 
 
-  thread telemThread = thread(runTelemetry);
-  CommandInterface* comm = WaitFor::getCommand(1000);  
-  comm->run();  
-  Brain.Screen.print("Ended safely");
-  delete comm;    
-  robot.driverControl(false);
- 
+  //DriveForwardBy::getCommand(drive, 1000, true)->run(); 
   
+  /*
+  driveCommandMatch({ 
+    driveForwardByTiles(0.6), 
+    turnToAngle(360 - 323), 
+    driveAndIntakeForTiles(0.5), 
+    turnToAngle(360 - 225), 
+    driveForwardByTiles(1.6), 
+    turnToAngle(360 - 11.5), 
+    driveForwardByTiles(0.6), 
+    //turnToAngle(0), 
+    //driveForwardByTiles(0.5), 
+    scoreOnGoal(Goal_Pos::HIGH_GOAL, 4500)
+  }); 
+  */ 
+  
+  driveCommandMatch( 
+    { 
+      ramForwardFor(0.75, 1000)
+    }
+  ); 
 }

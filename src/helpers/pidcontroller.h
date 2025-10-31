@@ -40,7 +40,7 @@ public:
 
   double calculate(double position, double timestamp);
 
-  bool atSetpoint(); 
+  bool atSetpoint(double position); 
 
   double getSetpoint(); 
 

@@ -37,7 +37,11 @@ void Subsystem::stopAll(){
    {
       system->stop();
    }
-};  
+};   
+
+Subsystem* Subsystem::getSubsystem(int index){ 
+  return systems.at(index);
+}
 
 DummySystem GLOBAL_DUMMY;
 

@@ -9,11 +9,15 @@ class Matchloader : public Subsystem {
 public:
     using Subsystem::get;
     using Subsystem:: getFromInputs;
+    
+    static Matchloader* globalRef;  
 
     Matchloader() : Subsystem(
         "matchloader",
         {(EntrySet){"isOn", EntryType::BOOL}}
-    ) {}
+    ) { 
+        globalRef = this;
+    };
 
     void init() override;
     void periodic() override;

@@ -1,6 +1,9 @@
 #include "intake.h"
 #include "vex.h"
 
+
+Intake* Intake::globalRef = nullptr; 
+
 void Intake::init()
 {
     set<bool>("isOn", true);
@@ -47,7 +50,7 @@ void Intake::intake(){
 }  
 
 void Intake::outtake(){ 
-    intakeMotor.setVelocity(100, vex::percentUnits::pct); 
+    intakeMotor.setVelocity(75, vex::percentUnits::pct); 
     intakeMotor.spin(vex::directionType::fwd);
 }  
 
