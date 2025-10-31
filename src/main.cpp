@@ -232,15 +232,23 @@ vector<CommandInterface*> AUTO_SELF_SUFFICIENT_INVERTED(){
 };  
 
 vector<CommandInterface*> PROGRAMMING_SKILLS(){ 
-    return {};
+    return { 
+      driveForwardByTiles(0.6), 
+      turnToAngle(323), 
+      driveAndIntakeForTiles(0.5), 
+      turnToAngle(225), 
+      driveForwardByTiles(1.6), 
+      turnToAngle(11.5), 
+      driveForwardByTiles(0.6), 
+      scoreOnGoal(Goal_Pos::HIGH_GOAL, 4500)
+    };
 };
 
 
 int main()
 {
 
-  vexcodeInit(); 
-  //declareLocations(); 
+  vexcodeInit();  
   // Initialize subsystems
   /*
     1: Configure auton
@@ -261,28 +269,6 @@ int main()
   Hood hood; 
   Hopper hopper;     
    
-  robot.initialize(); 
+  driveCommandMatch(AUTO_SHORT_ORIGIN());  
 
-  //DriveForwardBy::getCommand(drive, 1000, true)->run(); 
-  
-  /*
-  driveCommandMatch({ 
-    driveForwardByTiles(0.6), 
-    turnToAngle(360 - 323), 
-    driveAndIntakeForTiles(0.5), 
-    turnToAngle(360 - 225), 
-    driveForwardByTiles(1.6), 
-    turnToAngle(360 - 11.5), 
-    driveForwardByTiles(0.6), 
-    //turnToAngle(0), 
-    //driveForwardByTiles(0.5), 
-    scoreOnGoal(Goal_Pos::HIGH_GOAL, 4500)
-  }); 
-  */ 
-  
-  driveCommandMatch( 
-    { 
-      ramForwardFor(0.75, 1000)
-    }
-  ); 
 }
