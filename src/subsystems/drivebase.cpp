@@ -20,15 +20,17 @@ void Drivebase::init()
 
    driveGyro.setHeading(0, vex::rotationUnits::deg);
 
-   powerPID.P = 0.8;
-   powerPID.I = 0.0001;
-   powerPID.D = 0.01;
-   powerPID.errorTolerance = 2.5;
+   powerPID.P = 0.6;
+   powerPID.I = 0.125;
+   powerPID.D = 0.01; 
+   powerPID.iLimit = 1500;
+   powerPID.errorTolerance = 1;
    //------------------------------
-   turnPID.P = 0.8;
-   turnPID.I = 0.0005;
-   turnPID.D = 0;
-   turnPID.errorTolerance = 3;
+   turnPID.P = 1;
+   turnPID.I = 0.01325;
+   turnPID.D = 0.25; 
+   turnPID.iLimit = 360;
+   turnPID.errorTolerance = 1;
 
    set<double>("Pos_X", startX + ROBOT_WIDTH_MM / 2);
    set<double>("Pos_Y", startY + ROBOT_LENGTH_MM / 2);

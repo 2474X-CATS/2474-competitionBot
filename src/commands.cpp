@@ -10,7 +10,7 @@ void DriveForwardBy::start(){
 };
 
 void DriveForwardBy::periodic(){ 
-    double output = control->calculate(getDistTraveled(), Brain.Timer.time()) * 2;  
+    double output = control->calculate(getDistTraveled(), Brain.Timer.time());  
     if (!goingForward) 
         output = -output;
     driveRef.manualDriveForward(output);
@@ -90,7 +90,7 @@ void TurnToHeading::start(){
 };
 
 void TurnToHeading::periodic(){ 
-    double output = control->calculate(getAngluarDifference(), Brain.Timer.time()) * 1.5; 
+    double output = control->calculate(getAngluarDifference(), Brain.Timer.time()); 
     output = isClockwise ? -output : output; 
     driveRef.manualTurnClockwise(output);
 };

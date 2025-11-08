@@ -333,8 +333,14 @@ int main()
   
   robot.initialize(); 
 
-  startCommandMatch( 
-    AUTONOMOUS_PERIOD()
+  driveCommandMatch( 
+    { 
+      driveForwardByTiles(1), 
+      turnToAngle(90), 
+      driveForwardByTiles(1), 
+      turnToAngle(0), 
+      driveForwardByTiles(1)
+    }
   );
 
 }
