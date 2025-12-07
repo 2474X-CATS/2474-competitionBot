@@ -1,5 +1,7 @@
 #pragma once
 
+#include "vex.h" 
+
 extern vex::brain Brain;
 
 extern vex::controller Controller;
@@ -12,38 +14,49 @@ extern vex::controller Controller;
 
 //-------
 
-// Constants: PLACE HERE [using extern] 
+// Constants: PLACE HERE [using extern]
 
 extern double ABSOLUTE_INDEXER_SPEED;
+
 extern double DRIVE_WHEEL_RADIUS_MM;
-extern double TRACK_WIDTH_MM;      // Dist between the center point of the right and left wheel groups
-extern double WHEEL_BASE_MM;       // Dist between the center point of the front and rear wheels
-extern double EXTERNAL_GEAR_RATIO; // Final result of doing the gear ratio calculation on the drive gear train
 
+extern double ROBOT_WIDTH_MM; 
+extern double ROBOT_LENGTH_MM; 
+
+extern double TILE_SIZE_MM; 
 // Devices: PLACE HERE [using extern]
-extern vex::inertial driveGyro;
+extern vex::inertial driveGyro; 
+
 extern vex::motor driveFrontLeft;
-extern vex::motor driveFrontRight;
-extern vex::motor driveBackLeft;
-extern vex::motor driveBackRight;
 extern vex::motor driveMidLeft;
-extern vex::motor driveMidRight; 
+extern vex::motor driveBackLeft; 
 
-extern vex::motor_group leftDriveMotors; 
-extern vex::motor_group rightDriveMotors; 
+extern vex::motor driveBackRight;
+extern vex::motor driveFrontRight;
+extern vex::motor driveMidRight;
 
-extern vex::motor indexerMotor;  
-extern vex::pneumatics hoodPiston;   
+extern vex::motor_group leftDriveMotors;
+extern vex::motor_group rightDriveMotors;
 
-extern vex::motor intakeMotor;
+//Hopper System
+extern vex::motor hopperMotor; // Motor that moves discs inside robot
 
+//MatchLoader System
+extern vex::pneumatics matchloaderPiston; // Piston that loads discs
+
+extern vex::motor intakeMotor; 
+
+extern vex::motor indexerMotor;
+extern vex::pneumatics hoodPiston;
 
 
 // extern encoder driveRotationEncoder;
 // extern encoder drivePowerEncoder;
 
-//extern vex::smartdrive driveMotors; // Drivetrain
+// extern vex::smartdrive driveMotors; // Drivetrain
 
-//------- 
+//-------
 
-void vexcodeInit();
+void vexcodeInit(); 
+
+void stopEverything();

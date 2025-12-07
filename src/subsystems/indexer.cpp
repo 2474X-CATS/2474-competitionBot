@@ -1,6 +1,7 @@
 #include "vex.h"
-#include "indexer.h"   
-//#include "../architecture/telemetry.h"
+#include "indexer.h"
+
+Indexer* Indexer::globalRef = nullptr; 
 
 void Indexer::init(){  
   hoodPiston.close(); 
@@ -9,7 +10,8 @@ void Indexer::init(){
   colorSensor.setLight(vex::ledState::on);
 };  
 
-void Indexer::updateTelemetry(){ 
+void Indexer::updateTelemetry()
+{
   return;
 }; 
 

@@ -1,33 +1,35 @@
+#ifndef _INTAKE_H_
 #define _INTAKE_H_
 #include "../architecture/subsystem.h"
-#include "../architecture/command.h"
+
 #include "vex.h"
 
-//options for intake movements
-typedef enum { 
-   INTAKE, 
-   OUTTAKE,  
-   STOP,
-} IntakeValue;
 
 class Intake : public Subsystem {
 public: 
     using Subsystem::get;  
-    using Subsystem::getFromInputs;
+    using Subsystem::getFromInputs; 
+
+    static Intake* globalRef; 
 
     Intake() : Subsystem(
                     "intake",
                     {(EntrySet){"isOn", EntryType::BOOL}
-                    }) {}  
+                    }) { 
+                        globalRef = this;
+                    }  
     void init() override; 
     void periodic() override; 
     void updateTelemetry() override;
+    void stop() override; 
 
-private:
-    IntakeValue currentValue = STOP; //defult position
+    void intake(); 
+    void outtake();  
 
-    //include port number and gear ratio
-    vex::motor intakeMotor = vex::motor(vex::PORT18, false);
+private: 
+    bool shouldIntake(); 
+    bool shouldOuttake();   
+    
 };
 
 #endif

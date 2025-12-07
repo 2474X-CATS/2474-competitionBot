@@ -1,30 +1,31 @@
 #ifndef __MIRROR_H__
 #define __MIRROR_H__
 
-#include <vector>
-#include <cstdio> 
-#include <string>
+#include <vector> 
+using std::vector; 
 
-using namespace std;
+#include <cstdio> 
+using std::FILE;
+
+#include <string> 
+using std::string;
+
+//using namespace std;
 
 typedef enum
 {
-    REFLECT,
-    ABSORB,
-    OPAQUE
+    REFLECT, //Projecting a file to the telemetry table
+    ABSORB,  //Making a file from the telemetry table
+    OPAQUE   //Nothing
 } MirrorMode;
 
 typedef struct
 {
     int axises[4];
     bool buttons[12];
-} FrameData;
+} FrameData; //Stores a single frame of input [axises: int[4], buttons: bool[12]]
 
-extern FrameData defaultFrame;
-
-string getStringFromFrame(FrameData data);
 FrameData getFrameFromString(string str);
-
 
 
 class AbsorbtiveMirror
@@ -35,31 +36,30 @@ private:
     static int SKILLFRAMES;
     int maximumFrames;
     int writtenFrames = 0;
-    FILE* writeStream;
+    FILE *writeStream; 
+    bool isFlipped;
 
 public:
     void captureFrame(int axises[4], bool buttons[12]);
-    
-    int getWrittenFrames(); 
+
+    int getWrittenFrames();
 
     bool isFull();
 
-    AbsorbtiveMirror(string filename);
+    AbsorbtiveMirror(string filename, bool isFlipped);
     ~AbsorbtiveMirror();
 };
 
 class ReflectiveMirror
 {
 
-private: 
-
-    FILE* readStream;
-
+private:
+    FILE *readStream;
 
 public:
     FrameData getNextFrame();
     bool isDone();
-    ReflectiveMirror(string filename);   
+    ReflectiveMirror(string filename);
     ~ReflectiveMirror();
 };
 

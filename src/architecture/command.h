@@ -1,14 +1,15 @@
 #ifndef __COMMAND_H__
 #define __COMMAND_H__
 
-#include "subsystem.h"
-#include <vector>
-#include <stdexcept>
-#include <vex.h>
-#include <cstdlib>
-#include <atomic> 
-#include <functional> 
-#include "robotConfig.h"
+#include "subsystem.h" 
+#include "robotConfig.h"   
+#include <vex.h>   
+#include <type_traits>
+#include <functional>
+
+
+
+
 
 /*
 Makes a task that can be stacked on other tasks to run in the autonomous period
@@ -63,78 +64,53 @@ and Intake which spins the intake inwards for a certain amount of time you could
                 /Turns to 180 degrees
                         WHILE
             Intaking inwards for 10 seconds/
-
-
 */
+
+
 
 class CommandInterface
 { // Interface made for autonomous commands that use various types of subsystems
 public:
-  // CommandInterface(){};
-  ~CommandInterface() {};
-  virtual void run() = 0;
-protected:
-  virtual void occupySubsystem() = 0;
-  virtual bool isSubsystemOccupied() = 0;
-
-public:
-  static void runCommandGroup(std::vector<std::vector<CommandInterface *>> systems);
-
-  static std::atomic<int> completedTasks;
+  virtual ~CommandInterface() = default;
+  virtual void run() = 0; // Establishes that at the very least a command has the ability to run
 };
 
+template <typename T> 
+struct is_a_subsystem : is_base_of<Subsystem, T>{}; 
+
+template <typename Sub, typename...Subs> 
+struct all_are_subsystems : std::integral_constant<bool, is_a_subsystem<Sub>::value && all_are_subsystems<Subs...>::value>{}; 
+
+template <typename Sub> 
+struct all_are_subsystems<Sub> : is_a_subsystem<Sub> {}; 
+
+
 template <typename... Subsystems>
-class Command : protected CommandInterface
+class Command : public CommandInterface
 {
 
-  static_assert((std::is_base_of<Subsystem, Subsystems>::value && ...), "Command must wrap around a Subsystem type");
-
+  static_assert(all_are_subsystems<Subsystems...>::value, "Command must wrap around a Subsystem type");
+  
 public:
-  Command(Subsystems &...systems) : subsystems_{std::ref(static_cast<Subsystem &>(systems))...} {};
-
-  void run() override
-  {
+  Command(Subsystems &...systems) : subsystems_{std::reference_wrapper<Subsystem>(systems)...} {};   
+  virtual ~Command() override = default;
+  void run() override { 
     this->start();
-    while (!isOver()){
-      this->periodic(); 
+    while (!isOver())
+    {
+      this->periodic();
       vex::this_thread::sleep_for(20);
-    } while (!isOver()); 
-    end();
-    for (Subsystem &sub : subsystems_)
-    {
-      sub.inCommand = false;
     }
-  };
-
-  void occupySubsystem() override
-  {
-    for (Subsystem &sub : subsystems_)
-    {
-      sub.inCommand = true;
-    }
-  };
-
-  bool isSubsystemOccupied() override
-  {
-    for (Subsystem &sub : subsystems_)
-    {
-      if (sub.inCommand)
-      {
-        return false;
-      }
-    }
-    return true;
-  };
-
+    this->end();
+  }  
 protected:
   std::vector<std::reference_wrapper<Subsystem>> subsystems_;
 
-  virtual void start() {};
+  virtual void start() = 0;
   virtual void periodic() = 0;
-  virtual bool isOver() { return true; };
-  virtual void end() = 0;
+  virtual bool isOver() = 0;
+  virtual void end() = 0;  
 
-  virtual ~Command() = default;
 };
 
-#endif
+#endif 

@@ -1,14 +1,17 @@
 #include "robot.h"
 #include "subsystem.h"
 #include "telemetry.h"
-#include "command.h"
+#include "command.h"  
+
+#include "vex.h"
+using namespace vex;
 
 void timelyWait(long lastTimestamp, long timeInterval)
-{  
+{
   long nextTimestamp = lastTimestamp + timeInterval;
   long waitTime = nextTimestamp - Brain.Timer.time();
-  if (waitTime < 0) 
-     waitTime = 0;
+  if (waitTime < 0)
+    waitTime = 0;
   wait(waitTime, msec);
 }
 
@@ -79,16 +82,16 @@ void displayGraphicalData()
 
 Robot::Robot() {
 
-};
+}; 
 
 void Robot::initialize()
-{ 
+{
   registerSystemSubtable();
   Subsystem::initSystems();
 };
 
 void Robot::registerSystemSubtable()
-{ 
+{
   Telemetry::inst.registerSubtable(
       "system",
       {
@@ -112,72 +115,82 @@ void Robot::registerSystemSubtable()
 };
 
 void Robot::driverControl(bool mirrorControlled)
-{
-  if (!isActive() && mirrorControlled){
-    mirrorControlled = false;  
-  }  
-  Subsystem::initSystems(); 
-  double timestamp; 
-  if (mirrorControlled)
-  { 
-    timestamp = Brain.Timer.time();
-    while (isActive())
+{ 
+ 
+  if (!isActive() && mirrorControlled)
+  {
+    mirrorControlled = false;
+  } 
+  double timestamp;
+  Controller.rumble("---");  
+  timestamp = Brain.Timer.time();
+  while (true)
     { 
-      Subsystem::updateSystems();
+      if (mirrorControlled && !isActive()) 
+        break;
+      Subsystem::updateSystems(); 
       timelyWait(timestamp, 20); 
       timestamp = Brain.Timer.time();
-    }
-  }
-  else
-  { 
-    timestamp = Brain.Timer.time();
-    while (true)
-    {
-      Subsystem::updateSystems();
-      timelyWait(timestamp, 20); 
-      timestamp  = Brain.Timer.time();
-    }
-  }
+  } 
 };
 
 bool Robot::isActive()
 {
-  return (inputTracker != nullptr || outputLogger != nullptr);
+  return (inputTracker != nullptr || outputLogger != nullptr || inverseInputTracker != nullptr);
+} 
+
+void Robot::absorb(){ 
+   if (inputTracker->isFull()) //Inverse tracking is also completed
+    {
+      delete inputTracker; 
+      delete inverseInputTracker; // Which is why this line is called
+      inputTracker = nullptr; 
+      inverseInputTracker = nullptr;
+      Controller.rumble("...");  
+      return;
+    }
+    rawLog();
+    saveFrame();
+}   
+
+void Robot::reflect(){ 
+   if (outputLogger->isDone())
+    {
+      delete outputLogger;
+      outputLogger = nullptr;
+      Controller.rumble("...");  
+      return;
+    }
+    artificialLog();
+} 
+
+void Robot::logRegular(){ 
+   if (isAttached) {
+     rawLog(); 
+   } else { 
+     hollowLog(); 
+   }
 }
+
 
 void Robot::updateSystemSubtable()
 {
   if (inputTracker != nullptr)
-  { 
-    if (inputTracker->isFull())
-    {
-      delete inputTracker;
-      inputTracker = nullptr;  
-      Controller.rumble("---");  
-      return;
-    } 
-    rawLog();
-    saveFrame();
+  {
+    absorb();
   }
   else if (outputLogger != nullptr)
-  { 
-    if (outputLogger->isDone())
-    {
-      delete outputLogger;
-      outputLogger = nullptr;  
-      Controller.rumble("...");  
-      return;
-    }
-    artificialLog(); 
+  {
+    reflect(); 
   }
   else
   { 
-    rawLog();
+    logRegular();
   }
 };
 
 void Robot::saveFrame()
-{ 
+{
   inputTracker->captureFrame(
       new int[4]{
           Controller.Axis3.position(),
@@ -196,11 +209,31 @@ void Robot::saveFrame()
           Controller.ButtonL1.pressing(),
           Controller.ButtonL2.pressing(),
           Controller.ButtonR1.pressing(),
-          Controller.ButtonR2.pressing()}); 
+          Controller.ButtonR2.pressing()});  
+  inverseInputTracker->captureFrame(
+      new int[4]{
+          Controller.Axis3.position(),
+          Controller.Axis4.position(),
+          Controller.Axis2.position(),
+          Controller.Axis1.position()},
+      new bool[12]{
+          Controller.ButtonA.pressing(),
+          Controller.ButtonB.pressing(),
+          Controller.ButtonX.pressing(),
+          Controller.ButtonY.pressing(),
+          Controller.ButtonDown.pressing(),
+          Controller.ButtonUp.pressing(),
+          Controller.ButtonLeft.pressing(),
+          Controller.ButtonRight.pressing(),
+          Controller.ButtonL1.pressing(),
+          Controller.ButtonL2.pressing(),
+          Controller.ButtonR1.pressing(),
+          Controller.ButtonR2.pressing()});
+      
 }
 
 void Robot::artificialLog()
-{ 
+{
   FrameData data = outputLogger->getNextFrame();
   Telemetry::inst.placeValueAt<int>(data.axises[0], "system", "Controller/Axis-Vert-Left");
   Telemetry::inst.placeValueAt<int>(data.axises[1], "system", "Controller/Axis-Hori-Left");
@@ -221,7 +254,7 @@ void Robot::artificialLog()
 }
 
 void Robot::rawLog()
-{ 
+{
   Telemetry::inst.placeValueAt<int>(Controller.Axis3.position(), "system", "Controller/Axis-Vert-Left");
   Telemetry::inst.placeValueAt<int>(Controller.Axis4.position(), "system", "Controller/Axis-Hori-Left");
   Telemetry::inst.placeValueAt<int>(Controller.Axis2.position(), "system", "Controller/Axis-Vert-Right");
@@ -238,10 +271,30 @@ void Robot::rawLog()
   Telemetry::inst.placeValueAt<bool>(Controller.ButtonL2.pressing(), "system", "Controller/Button_L2");
   Telemetry::inst.placeValueAt<bool>(Controller.ButtonR1.pressing(), "system", "Controller/Button_R1");
   Telemetry::inst.placeValueAt<bool>(Controller.ButtonR2.pressing(), "system", "Controller/Button_R2");
+} 
+
+void Robot::hollowLog(){ 
+  Telemetry::inst.placeValueAt<int>(0, "system", "Controller/Axis-Vert-Left");
+  Telemetry::inst.placeValueAt<int>(0, "system", "Controller/Axis-Hori-Left");
+  Telemetry::inst.placeValueAt<int>(0, "system", "Controller/Axis-Vert-Right");
+  Telemetry::inst.placeValueAt<int>(0, "system", "Controller/Axis-Hori-Right");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_A");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_B");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_X");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_Y");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_DOWN");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_UP");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_LEFT");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_RIGHT");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_L1");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_L2");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_R1");
+  Telemetry::inst.placeValueAt<bool>(false, "system", "Controller/Button_R2");
 }
 
 void Robot::runTelemetryThread(bool showGraphics)
-{
+{  
+  int timestamp = Brain.Timer.time();
   while (true)
   { 
     updateSystemSubtable();
@@ -249,28 +302,41 @@ void Robot::runTelemetryThread(bool showGraphics)
     if (showGraphics)
     {
       displayGraphicalData();
-    }
-    vex::this_thread::sleep_for(20);
+    }  
+    timelyWait(timestamp, 20);
+    timestamp = Brain.Timer.time();
   }
 };
 
 void Robot::initializeMirror(MirrorMode mode, string filename)
-{  
+{
 
-  if (!Brain.SDcard.isInserted()){
+  if (!Brain.SDcard.isInserted())
+  {
     Brain.Screen.print("----ERROR: NEED SDCARD TO MANIPULATE FILES----\n");
-    return;  
+    return;
   }
-  if (mode == MirrorMode::REFLECT){
-    outputLogger = new ReflectiveMirror(filename);  
-  }  
-  if (mode == MirrorMode::ABSORB) {
-    inputTracker = new AbsorbtiveMirror(filename); 
+  if (mode == MirrorMode::REFLECT)
+  {
+    outputLogger = new ReflectiveMirror(filename);
   }
+  if (mode == MirrorMode::ABSORB)
+  {
+    inputTracker = new AbsorbtiveMirror(filename, false); //Difference in file names: Doesn't end in "_FLIPPED"
+    inverseInputTracker = new AbsorbtiveMirror(filename, true); // Ends in "_FLIPPED"
+  }
+} 
+
+void Robot::detachInput(){ 
+  isAttached = false;
+}
+
+void Robot::stopEverything(){ 
+  Subsystem::stopAll();
 }
 
 ////////////////////////////////////////////////////////////////////////////
-void Robot::setAutonomousCommand(std::vector<std::vector<CommandInterface *>> comm)
+void Robot::setAutonomousCommand(std::vector<CommandInterface *> comm)
 {
   autonomousCommand = comm;
 };
@@ -278,7 +344,10 @@ void Robot::setAutonomousCommand(std::vector<std::vector<CommandInterface *>> co
 
 ////////////////////////////////////////////////////////////////////
 void Robot::autonControl()
-{
-  CommandInterface::runCommandGroup(Robot::autonomousCommand);
+{ 
+  for (CommandInterface* command : Robot::autonomousCommand){ 
+    command->run(); 
+  } 
+  
 };
-/////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////// 

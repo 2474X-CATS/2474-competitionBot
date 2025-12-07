@@ -2,6 +2,7 @@
 #define __INDEXER_H__
 
 #include "../architecture/subsystem.h"
+
 #include "../architecture/command.h"
 #include "vex.h"
 
@@ -13,18 +14,31 @@ typedef enum {
 } Feed; 
 
 class Indexer : public Subsystem
-{ 
-public: 
-    using Subsystem::get;  
-    using Subsystem::getFromInputs;
+{
+public:
+   using Subsystem::get;
+   using Subsystem::getFromInputs;
+   
+   static Indexer* globalRef; 
 
-    Indexer() : Subsystem(
-                    "indexer",
-                    {(EntrySet){"isOn", EntryType::BOOL}
-                    }) {}  
-    void init() override; 
-    void periodic() override; 
-    void updateTelemetry() override;  
+   Indexer() : Subsystem(
+                   "indexer",
+                   {(EntrySet){"isOn", EntryType::BOOL}}) { 
+                     globalRef = this;
+                   }
+   void init() override;
+   void periodic() override;
+   void updateTelemetry() override; 
+   void stop() override; 
+
+   void spinOver(); 
+   void spinUnder();
+
+protected:
+   using Subsystem::set; 
+private: 
+   bool shouldSpinOver(); 
+   bool shouldSpinUnder(); 
 
 protected: 
    using Subsystem::set;

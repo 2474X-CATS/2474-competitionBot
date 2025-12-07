@@ -1,37 +1,60 @@
 #include "vex.h"
-#include "intake.h"
+#include "hood.h"
 
-void Hood::init() {
-    currentAngle = NORMAL; //cureent hood angle to normal
-    set<bool>("isOn", true); // changes entry in telmetry system (updates telemetry)
-    hoodMotor.stop(vex::brakeType::hold); //stops hood motor and holds its position
+Hood* Hood::globalRef = nullptr; 
+
+void Hood::init()
+{    
+    set<bool>("isOn", true);
 }
 
-//if up which direction hood goes to the angle then angle chnages to that button pressed. 
-void Hood::periodic() {
-    if(getFromInputs<bool>("Controller/Button_Up")) {
-        currentAngle = HIGH;
-    } else if (getFromInputs<bool>("Controller/Button_Right")){ //
-        currentAngle = IN;//storage aka in 
-    } else if (getFromInputs<bool>("Controller/Button_Left")) {
-        currentAngle = OUT; //score aka out
+void Hood::periodic()
+{   
+    if (isHolding()){  
+      holding = true;
+    } else {   
+      if (holding){ 
+        if (hoodPiston.value() == 1)
+         close();   
+        else
+         open();   
+        holding = false;
+        return;
+      }
     }
-
-    switch(currentAngle) {
-        case IN:
-            hoodMotor.setVelocity(30, vex::percentUnits::pct);
-            hoodPiston.set(true); //piston in
-            break;
-        case OUT:
-            hoodMotor.setVelocity(30, vex::percentUnits::pct);
-            hoodPiston.set(false); //piston out
-            break;
+    if (shouldClose()){ 
+      close();
+    } else if (shouldOpen()) //Checks if the hood should close towards the hopper side 
+    { 
+      open(); 
     }
+}
 
-    void Hood::updateTelemetry() {
+void Hood::open(){ 
+  hoodPiston.open();
+}  
+
+void Hood::close(){ 
+  hoodPiston.close();
+}  
+
+void Hood::stop(){ 
+  close();
+}
+
+bool Hood::isHolding(){ 
+  return getFromInputs<bool>("Controller/Button_L1");
+} 
+
+bool Hood::shouldOpen(){ 
+  return getFromInputs<bool>("Controller/Button_R1") || getFromInputs<bool>("Controller/Button_R2");
+} 
+
+bool Hood::shouldClose(){ 
+  return getFromInputs<bool>("Controller/Button_Y");
+} 
+
+void Hood::updateTelemetry()
+{
     return;
 }
-}
-
-
-

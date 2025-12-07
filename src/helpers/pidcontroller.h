@@ -19,7 +19,7 @@ private:
   double kP;
   double kI;
   double kD;
-  
+
   double lastTimestamp = 0;
 
   double error = 0;
@@ -34,11 +34,17 @@ private:
   double setpoint;
 
 public:
-  pidcontroller(PIDConstants conts, double destination);
+  pidcontroller(PIDConstants conts, double destination); 
+
+  pidcontroller();
 
   double calculate(double position, double timestamp);
 
-  bool atSetpoint(); 
+  bool atSetpoint(double position); 
+
+  double getSetpoint(); 
+
+  void setSetpoint(double setpoint);
 
   void setLastTimestamp(double timestamp);
 };

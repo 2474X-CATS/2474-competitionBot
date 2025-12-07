@@ -8,30 +8,50 @@ pidcontroller::pidcontroller(PIDConstants conts, double destination) : kP(conts.
                                                                        errorTolerance(conts.errorTolerance),
                                                                        iLimit(conts.iLimit)
 {
-   setpoint = destination;  
-};
+   setpoint = destination;
+};  
 
-bool pidcontroller::atSetpoint()
+pidcontroller::pidcontroller() : kP(0),
+                                 kI(0),
+                                 kD(0),
+                                 errorTolerance(0),
+                                 iLimit(0)
 {
-   return fabs(error) <= errorTolerance;
+   setpoint = 0;
+}; 
+
+
+
+bool pidcontroller::atSetpoint(double position)
+{
+   return fabs(setpoint - position) <= errorTolerance;
 };
 
 double pidcontroller::calculate(double position, double timestamp)
-{ 
-   double dt = timestamp - lastTimestamp;   
-   if (dt <= 0) dt = 1e-6;
-   lastTimestamp = timestamp; 
-   error = setpoint - position;
+{
+   double dt = timestamp - lastTimestamp;
+   lastTimestamp = timestamp;
+   error = setpoint - position; 
+   if (atSetpoint(position)) 
+      return 0;
    integral += error * dt;
-   if (iLimit > 0) {
-        if (integral > iLimit) integral = iLimit;
-        else if (integral < -iLimit) integral = -iLimit;
+   if (iLimit > 0)
+   {
+      if (integral > iLimit)
+         integral = iLimit;
+      else if (integral < -iLimit)
+         integral = -iLimit;
    }
    derivative = (error - prevError) / dt;
    prevError = error;
    return (kP * error) + (kI * integral) + (kD * derivative);
+};
+
+void pidcontroller::setLastTimestamp(double timestamp)
+{
+   lastTimestamp = timestamp;
 }; 
 
-void pidcontroller::setLastTimestamp(double timestamp){ 
-   lastTimestamp = timestamp;
-};
+double pidcontroller::getSetpoint(){ 
+   return setpoint;
+}

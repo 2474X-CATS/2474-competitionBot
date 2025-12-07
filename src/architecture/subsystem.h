@@ -1,8 +1,6 @@
 #ifndef __SUBSYSTEM_H__
 #define __SUBSYSTEM_H__
 
-#include <vector>
-#include <string>
 #include "telemetry.h"
 
 /*
@@ -49,42 +47,79 @@ class Drivebase : public Subsystem {
 class Subsystem
 {
 protected:
-   string label;
+  string label;
 
-   template <typename T>
-   void set(string entryName, T val)
-   {
-     Telemetry::inst.placeValueAt<T>(val, this->label, entryName);
-   };
+  template <typename T>
+  void set(string entryName, T val) // Sets a subsystem table value like: DriveBase["Pos_X"], or Intake["Spin_Direction"]
+  {
+    Telemetry::inst.placeValueAt<T>(val, this->label, entryName);
+  };
 
-public: 
-   template <typename T>
-   T get(string entryName)
-   {
-     return Telemetry::inst.getValueAt<T>(this->label, entryName);
-   };  
+public:
+  template <typename T>
+  T get(string entryName) // Gets a subsystem table value
+  {
+    return Telemetry::inst.getValueAt<T>(this->label, entryName);
+  };
 
-   template <typename T>
-   T getFromInputs(string entryName)
-   {
-     return Telemetry::inst.getValueAt<T>("system", entryName);
-   }; 
-   
-   static std::vector<Subsystem*> systems;
+  template <typename T>
+  T getFromInputs(string entryName) // Gets a telemtry input value (controllers / files / neither)
+  {
+    return Telemetry::inst.getValueAt<T>("system", entryName);
+  };
 
-  static void initSystems();
+  static std::vector<Subsystem *> systems; // A list of all subsystems that is filled on instantiation
 
-  static void updateSystems();
+  static void initSystems(); // Initializes everything in the subsystem list
 
-  static void refreshTelemetry();
+  static void updateSystems(); // Runs logic in everything in the subsystem list
+
+  static void refreshTelemetry(); // Logs telemetry data for every subsystem in the subsystem list
+
+  static void stopAll(); 
+
+  static Subsystem* getSubsystem(int index);
 
   Subsystem(string tableLabel, vector<EntrySet> entryNames);
 
-  virtual void init() = 0;
-  virtual void periodic() = 0;
-  virtual void updateTelemetry() = 0;
-
-  bool inCommand = false;
+  virtual void init() = 0;            // Prep for match: Motor setting / calibration / initial telemetry values
+  virtual void periodic() = 0;        // How the robot responds to input
+  virtual void updateTelemetry() = 0; // The data the robot has to offer
+  virtual void stop() = 0;
 };
+
+class DummySystem : public Subsystem
+{
+public:
+  DummySystem() : Subsystem(
+                      "ignore",
+                      {(EntrySet){"exists"}})
+  {
+    systems.erase(systems.begin());
+    Telemetry::inst.deleteSubtable("ignore");
+  };
+
+  void init() override
+  {
+    return;
+  }
+
+  void periodic() override
+  {
+    return;
+  }
+
+  void updateTelemetry() override
+  {
+    return;
+  }
+
+  void stop() override
+  {
+    return;
+  } 
+};
+
+extern DummySystem GLOBAL_DUMMY;
 
 #endif

@@ -1,33 +1,40 @@
+#ifndef _HOOD_H_
 #define _HOOD_H_
 
 #include "../architecture/subsystem.h"
-#include "../architecture/command.h"
 #include "vex.h"
 
-//hood positions
-typedef enum{
-    NORMAL,
-    LOW,
-    MID,
-    HIGH
-} HoodAngle;
 
-class Hood : public Subsystem {
+class Hood : public Subsystem
+{
 public:
     using Subsystem::get;
-    using Subsystem::set;
     using Subsystem::getFromInputs;
+     
+    static Hood* globalRef;
 
     Hood() : Subsystem(
-                    "hood",
-                    {(EntrySet){"isOn", EntryType::BOOL}
-                    }) {}
+                 "hood",
+                 {(EntrySet){"isOn", EntryType::BOOL}}) { 
+                    globalRef = this;
+                 } 
+
     void init() override;
     void periodic() override;
-    void updateTelemetry() override;
-    
-private:
-    HoodAngle currentAngle = NORMAL; //defult position 
+    void updateTelemetry() override; 
+    void stop() override;  
+
+    void open(); 
+    void close();
+
+protected: 
+    using Subsystem::set;
+private:  
+    bool holding = false;  
+
+    bool shouldOpen(); 
+    bool shouldClose();  
+    bool isHolding(); 
 };
 
 #endif
