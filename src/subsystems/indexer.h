@@ -3,6 +3,7 @@
 
 #include "../architecture/subsystem.h"
 #include "../architecture/command.h"
+#include "vex.h"
 
 typedef enum { 
    HIGH, 
@@ -30,6 +31,10 @@ protected:
     
 private:   
    Feed getScoringMode();
+
+   vex::optical colorSensor{vex::PORT##}; // add port number
+   vex:color neededColor = vex::color::COLOR; // add color name
+   void colorLogic(); // helper function 
 };
 
 #endif
