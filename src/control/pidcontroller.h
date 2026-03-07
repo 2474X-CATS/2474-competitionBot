@@ -30,7 +30,8 @@ private:
 
   double prevError = 0;
 
-  double setpoint;
+  double setpoint; 
+
 
 public:
   pidcontroller(PIDConstants conts, double destination);
@@ -47,7 +48,7 @@ public:
 
   void setSetpoint(double setpoint);
 
-  void setLastTimestamp(double timestamp);
+  void setLastTimestamp(double timestamp); 
 
   void reset();
 };

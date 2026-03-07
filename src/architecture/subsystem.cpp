@@ -91,11 +91,16 @@ void RobotState::initializeState()
 
         (EntrySet){"scoring_high", EntryType::BOOL},
         (EntrySet){"scoring_mid", EntryType::BOOL},
-        (EntrySet){"scoring_low", EntryType::BOOL}, 
+        (EntrySet){"scoring_low", EntryType::BOOL},  
         (EntrySet){"matchloader_out", EntryType::BOOL},
         (EntrySet){"descore_in", EntryType::BOOL},   
         (EntrySet){"outtaking", EntryType::BOOL},
-        (EntrySet){"intaking", EntryType::BOOL}, 
+        (EntrySet){"intaking", EntryType::BOOL},  
+      
+        (EntrySet){"launch_trigger", EntryType::BOOL}, 
+        
+        (EntrySet){"k_lowered", EntryType::BOOL}, 
+        (EntrySet){"lowered", EntryType::BOOL},
 
         (EntrySet){"k_inversion_held", EntryType::BOOL},
         (EntrySet){"is_drive_inverted", EntryType::BOOL}, 
@@ -117,11 +122,24 @@ void RobotState::updateRegular()
          manuallyModifyState("k_inversion_held", false); 
          manuallyModifyState("is_drive_inverted", !getStateOf("is_drive_inverted")); 
       }
-   }  
+   } 
+   
+   if (Controller.ButtonLeft.pressing()){ 
+      manuallyModifyState("k_lowered", true);  
+   } else { 
+      if (getStateOf("k_lowered")){ 
+         manuallyModifyState("k_lowered", false); 
+         manuallyModifyState("lowered", !getStateOf("lowered"));
+      }
+   }
+
+   
+   manuallyModifyState("launch_trigger", Controller.ButtonR2.pressing() && (!getExternalState("catapult","active")));
 
    manuallyModifyState("outtaking", Controller.ButtonDown.pressing()); 
    manuallyModifyState("descore_in", Controller.ButtonL1.pressing()); 
-   manuallyModifyState("matchloader_out", Controller.ButtonL2.pressing());   
+   manuallyModifyState("matchloader_out", Controller.ButtonL2.pressing());    
+  
     
 }
 
@@ -134,7 +152,9 @@ void RobotState::updateStopped()
    manuallyModifyState("matchloader_out", false); 
    manuallyModifyState("k_inversion_held", false);    
    manuallyModifyState("descore_in", false); 
-   manuallyModifyState("intaking", false);  
+   manuallyModifyState("intaking", false);   
+   manuallyModifyState("outtaking", false); 
+   manuallyModifyState("launch_trigger", false);
 
 }; 
 

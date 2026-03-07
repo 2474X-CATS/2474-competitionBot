@@ -59,6 +59,11 @@ double pidcontroller::getSetpoint()
    return setpoint;
 }
 
+double pidcontroller::setSetpoint(double setpoint){ 
+   this->setpoint = setpoint; 
+   reset();
+}
+
 void pidcontroller::reset()
 {
    integral = 0;
